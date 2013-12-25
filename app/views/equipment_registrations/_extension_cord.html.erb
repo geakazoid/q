@@ -1,0 +1,11 @@
+<div class='equipment'>
+  <p>
+    <span class='removal_link'><%= remove_link( form ) %></span>
+    <span class='title'>Extension Cord</span>
+    <%= form.hidden_field :equipment_type, :value => 'extension_cord' %>
+  </p>
+  <p>
+    <%= form.label :color, 'Color: ' %><%= form.text_field :color, :size => 10 %>
+    &nbsp;&nbsp;<%= form.label :length, 'Length: ' %><%= form.text_field :length, :size => 10 %>
+  </p>
+</div>

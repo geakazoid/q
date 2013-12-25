@@ -1,0 +1,29 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <% if AppConfig.test_mode %>
+      <p style='background: none repeat scroll 0 0 #DDFF99; border: 1px solid #BBDD77; font-size: 0.9em; margin-top: 0; padding: 7px 15px;'>
+        System is in test mode. The following email would have been sent to <b>[<%= h @original_email %>]</b>,
+        but is instead being sent to the currently logged in user.
+      </p>
+    <% end %>
+    <p>Hello <%= h @evaluation.sent_to_name %>!</p>
+    <p>
+      Please complete the following recommendation form for <%= h @evaluation.official.full_name %> for Q2012.
+      Please complete this request as soon as you can.
+    </p>
+    <p>
+      <%= link_to "#{AppConfig.site_url}/evaluation/#{@evaluation.key}", "#{AppConfig.site_url}/evaluation/#{@evaluation.key}" %>
+    </p>
+    <p>
+      If you have any questions, please let me know.
+    </p>
+    <p>
+      Thanks,<br/>
+      Todd Olson<br/>
+      Q2010 Coordinator of Officials<br/>
+      tolson27@gmail.com
+    </p>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <% if AppConfig.test_mode %>
+      <p style='background: none repeat scroll 0 0 #DDFF99; border: 1px solid #BBDD77; font-size: 0.9em; margin-top: 0; padding: 7px 15px;'>
+        System is in test mode. The following email would have been sent to <b>[<%= h @original_email %>]</b>,
+        but is instead being sent to the currently logged in user.
+      </p>
+    <% end %>
+    <p>Dear <%= h @user.first_name %>,</p>
+    <p>
+      Thanks for registering an official on <a href='http://www.q2012.org'>Q2012.org</a>. Your registration details
+      are listed below. Someone will contact you shortly regarding this registration.
+    </p>
+    <div style='border: 1px solid #999; background: #ddd; padding: 0px 10px;'>
+      <p>
+        Name: <%= h @official.full_name %><br/>
+        Roles: <%= h@official.list_roles %><br/>
+        District / Region: <%= h @official.district.display_with_region %><br/>
+        Phone: <%= h @official.phone %><br/>
+        Email: <%= h @official.email %>
+      </p>
+      <p>
+        Registration Time: <%= Time.now.strftime("%m.%d.%Y %H:%M") %>
+      </p>
+    </div>
+    <p>
+      Sincerely,<br/>
+      Q2012 Staff
+    </p>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+<div style='float: right; padding-top: 12px; vertical-align: bottom;'>
+  <%= link_to "Download Equipment Registrations Report", :controller => 'reports', :action => 'equipment_registrations' %>
+</div>
+<div id='page_title' style='float: left;'>
+  <h1 style='margin: 0 0 5px 0'>Equipment Manager</h1>
+  <% title('Equipment Manager') %>
+</div>
+
+<table id='equipment_list' class='display' cellspacing='0' cellpadding='0'>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Equipment Type</th>
+      <th>Owner</th>
+      <th>Details</th>
+      <th>Interface Box Type</th>
+      <th>Color</th>
+      <th>Monitor Size</th>
+      <th>Status</th>
+      <th>Room</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% i = 0 %>
+    <% @equipment.each do |equipment| %>
+      <% next if equipment.equipment_type == 'interface_boxes' or equipment.equipment_type == 'pads'%>
+      <tr>
+        <td><%= equipment.id.to_s %></td>
+        <td><%= equipment.formatted_equipment_type %></td>
+        <td><%= equipment.equipment_registration.full_name_reversed %></td>
+        <td>
+          <%= "Brand: " + equipment.brand + "<br/>" unless equipment.brand.blank? %>
+          <%= "OS: " + equipment.operating_system + "<br/>" unless equipment.operating_system.blank? %>
+          <%= "Parallel Port: " + equipment.parallel_port + "<br/>" unless equipment.parallel_port.blank? %>
+          <%= "QM Version: " + equipment.quizmachine_version + "<br/>" unless equipment.quizmachine_version.blank? %>
+          <%= "Username: " + equipment.username + "<br/>" unless equipment.username.blank? %>
+          <%= "Password: " + equipment.password + "<br/>" unless equipment.password.blank? %>
+          <%= "Make: " + equipment.make + "<br/>" unless equipment.make.blank? %>
+          <%= "Model: " + equipment.model + "<br/>" unless equipment.model.blank? %>
+          <%= "Number of Plugs: " + equipment.number_of_plugs + "<br/>" unless equipment.number_of_plugs.blank? %>
+          <%= "Length: " + equipment.length + "<br/>" unless equipment.length.blank? %>
+        </td>
+        <td>
+          <% if equipment.equipment_type == 'interface_box' %>
+            <%= equipment.ib_type unless equipment.ib_type.blank? %>
+          <% end %>
+        </td>
+        <td><%= equipment.color unless equipment.color.blank? %></td>
+        <td>
+          <% if equipment.equipment_type == 'monitor' %>
+            <%= equipment.ib_type unless equipment.ib_type.blank? %>
+          <% end %>
+        </td>
+        <td>
+          <%= select_tag :room,
+            '<option></option>' + options_for_select(['Assigned','Deleted','In Use','In Room','Received','Returned'], equipment.status),
+            :onchange => '$.ajax({ url: "/equipment/save_status/' + equipment.id.to_s + '?status=" + this.value, context: document.body });' %>
+        </td>
+        <td>
+          <% selected_room = !equipment.room.blank? ? equipment.room.id.to_i : nil %>
+          <%= select_tag :room,
+            '<option></option>' + options_for_select(@rooms.collect {|r| [ r[:name], r[:id] ]}, selected_room),
+            :onchange => '$.ajax({ url: "/equipment/save_room/' + equipment.id.to_s + '?room_id=" + this.value, context: document.body });' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

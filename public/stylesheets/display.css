@@ -1,0 +1,1392 @@
+body
+{
+    background:#d7d7d7;
+    font-family:'Lucida Grande', 'Trebuchet MS', Arial, Helvetica, sans-serif;
+    font-size:90%;
+    margin:0;
+    padding:0;
+}
+
+h1
+{
+    font-size:1.2em;
+    margin:0;
+}
+
+a
+{
+    color:#24b;
+}
+
+#content
+{
+    width:70%;
+    background:#FFF;
+    border:5px solid #bbb;
+    float:left;
+    min-width:425px;
+    min-height:165px;
+    border-width:0 5px 5px 0;
+    margin:1em 0;
+    padding:20px;
+}
+
+#content_stats
+{
+    width:95%;
+    background:#FFF;
+    border:5px solid #bbb;
+    float:left;
+    min-width:425px;
+    min-height:165px;
+    border-width:0 5px 5px 0;
+    margin:1em 0;
+    padding:25px;
+}
+
+#right
+{
+    margin-top:1em;
+    float:left;
+    width:19%;
+    font-family:'Lucida Grande', 'Trebuchet MS', Arial, Helvetica, sans-serif;
+    margin-left:3%;
+    margin-right:0;
+}
+
+#right p
+{
+    font-size:0.9em;
+}
+
+#right a.hidden
+{
+    color:#000;
+    text-decoration:none;
+    border-bottom:1px solid #999;
+}
+
+#right a.hidden:hover
+{
+    color:blue;
+    text-decoration:none;
+    border-bottom:1px solid #963;
+}
+
+#right p.help
+{
+    font-weight:400;
+    font-size:0.75em;
+}
+
+#footer
+{
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    font-size:0.75em;
+    color:#333;
+    width:67%;
+    min-width:545px;
+    margin:0 auto 3.5em 3%;
+    padding:0 15px;
+}
+
+#footer_stats
+{
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    font-size:0.75em;
+    color:#333;
+    width:95%;
+    min-width:545px;
+    margin:0 auto 3.5em 3%;
+    padding:0 15px;
+}
+
+#content p.subtle
+{
+    float:right;
+    margin:0 0 0.5em;
+}
+
+#content .subtle a
+{
+    color:#999;
+    font-size:0.7em;
+}
+
+#header
+{
+    background:#000;
+    border-bottom:3px solid #999;
+    padding:10px 4%;
+}
+
+#search_box
+{
+    font-size:0.85em;
+}
+
+img
+{
+    border-width:0;
+}
+
+p.pages
+{
+    font-size:0.85em;
+    margin-top:1.2em;
+}
+
+span.pipe
+{
+    color:#999;
+    margin:0 0.15em;
+}
+
+div.news
+{
+    background:#cfc;
+    text-align:center;
+    width:40em;
+    font-size:0.7em;
+    font-weight:700;
+    margin:1em auto 0;
+    padding:7px 15px;
+}
+
+p.notice, p.sections, span.notice
+{
+    background:#df9;
+    border:1px solid #bd7;
+    margin-top:0;
+    font-size:0.9em;
+    padding:7px 15px;
+}
+
+p.error
+{
+    background:#c00;
+    color:#FFF;
+}
+
+div.errorExplanation
+{
+    font-size:1em;
+    background:#c00;
+    color:#FFF;
+    border:1px solid #bd7;
+    padding:7px 15px;
+}
+
+p.info, span.error
+{
+    background:#ff999f;
+    border:0.9px solid #dd777d;
+    margin-top:0;
+    font-size:1em;
+    padding:7px 15px;
+}
+
+.hasfile
+{
+    color:#090;
+    font-weight:700;
+    margin-left:10em;
+}
+
+h1 img
+{
+    vertical-align:middle;
+}
+
+p.subtitle
+{
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    font-size:0.75em;
+    color:#888;
+    font-weight:700;
+    margin-top:0;
+}
+
+h1 span
+{
+    font-size:0.7em;
+    color:#999;
+    font-weight:400;
+    padding-left:1em;
+}
+
+h2
+{
+    font-size:1.1em;
+}
+
+h2 span
+{
+    color:#999;
+    font-size:0.7em;
+    margin-left:1em;
+}
+
+h3
+{
+    background:#333;
+    color:#FFF;
+    font-size:1em;
+    border-bottom:1px solid #999;
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    padding:2px 10px 3px;
+}
+
+pre.explain
+{
+    background:#e7e7e7;
+    border:1px solid #ccc;
+    margin:0 2em;
+    padding:7px 15px;
+}
+
+hr
+{
+    height:0;
+    border:0;
+    border-bottom:1px solid #ccc;
+    margin:1em 0;
+}
+
+#right hr
+{
+    border-color:#bbb;
+}
+
+#monitor_topic .icon
+{
+    background-image:none;
+}
+
+#footer p.credit a.subtle
+{
+    color:#333;
+}
+
+#footer p.legal
+{
+    float:left;
+    margin-right:1.5em;
+}
+
+#footer p.disclaim,#footer_stats p.disclaim
+{
+    float:left;
+    color:#080;
+}
+
+ul.quotes,ul.flat
+{
+    margin-left:0;
+    padding-left:0;
+    font-size:0.75em;
+    list-style-type:none;
+}
+
+ul.flat li
+{
+    background:url(/images/small_circle.gif) no-repeat 5px 6px;
+    padding-left:15px;
+}
+
+ul.quotes li
+{
+    margin-bottom:1em;
+}
+
+ul.why
+{
+    font-family:'Lucida Grande', Arial, Helvetica, sans-serif;
+    font-size:1em;
+    line-height:1.25em;
+    margin-top:2em;
+}
+
+ul.why li p
+{
+    margin-top:0.5em;
+    color:#666;
+    font-size:0.9em;
+}
+
+a.utility
+{
+    font-weight:400;
+    color:#c00;
+    font-size:0.8em;
+}
+
+a.utility:hover
+{
+    color:#c00;
+    text-decoration:underline;
+}
+
+a.subtle:hover
+{
+    color:blue;
+}
+
+div.asset
+{
+    background:#e7e7e7;
+    border-bottom:1px solid #ccc;
+    font-family:'Lucida Grande',Tahoma, Arial, Helvetica, sans-serif;
+    font-size:0.8em;
+    margin-bottom:1em;
+    text-align:center;
+    padding:7px 15px;
+}
+
+input.primary
+{
+    font-size:1.2em;
+}
+
+input.submit
+{
+    margin-right:1em;
+    float:right;
+}
+
+p.private,#content .legend
+{
+    margin-top:0;
+    color:#999;
+    font-size:0.8em;
+}
+
+#content .legend span
+{
+    margin-right:5em;
+}
+
+p.psmall
+{
+    font-size:0.7em;
+    font-weight:400;
+}
+
+div.upload
+{
+    margin-top:-0.5em;
+    float:left;
+    margin-left:0.5em;
+    padding:7px 0;
+}
+
+div.upload p label
+{
+    font-size:0.7em;
+    font-weight:700;
+}
+
+div.upload input
+{
+    margin-left:0.75em;
+}
+
+.pastePreview p
+{
+    color:#777;
+    font-size:0.7em;
+    margin:0 0 0.5em;
+}
+
+#news
+{
+    background:#475f30;
+    border:2px solid #778f60;
+    color:#ffc;
+    font-size:0.7em;
+    text-align:center;
+    position:fixed;
+    bottom:0;
+    width:100%;
+    z-index:50;
+    border-width:2px 0;
+    padding:6px 0 7px;
+}
+
+#news a.subtle
+{
+    color:#ffc;
+    font-weight:400;
+}
+
+#news a
+{
+    color:#FFD700;
+    font-weight:700;
+}
+
+#header img
+{
+    vertical-align:bottom;
+    margin-right:0.25em;
+}
+
+#header h1,#header h1 a
+{
+    font-weight:400;
+    color:#cf4;
+    border:0;
+    text-decoration:none;
+    margin:0;
+}
+
+#header h1 .count
+{
+    color:#ddd;
+    font-size:0.6em;
+    font-weight:400;
+    padding-left:1em;
+}
+
+#header ul#nav
+{
+    list-style-type:none;
+    margin:0 0 0 -2em;
+    overflow:hidden;
+}
+
+#header ul#nav li
+{
+    color:#FFD700;
+    font-family:'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
+    font-size:0.8em;
+    float:left;
+    margin:0.5em 2em 0 0;
+}
+
+#header ul#nav li a
+{
+    display:block;
+    float:left;
+    color:#CF010B;
+}
+
+#header ul#nav li.login a
+{
+    color:#D8CA31;
+    text-decoration:none;
+}
+
+#header ul#nav li.active a
+{
+    font-weight:700;
+    color:#ca8;
+}
+
+#header ul#nav li.hot a
+{
+    color:orange;
+}
+
+.line_numbers,.lineNumbers
+{
+    color:#999;
+    padding-right:0.5em;
+    text-align:right;
+}
+
+.line_numbers strong
+{
+    color:#555;
+}
+
+td.code,.thePaste
+{
+    padding-left:0.75em;
+}
+
+label
+{
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    color:#666;
+    font-size:0.9em;
+    font-weight:700;
+}
+
+.photo
+{
+    background:#aaa url(/images/clearbits/smile.gif) no-repeat 8px 8px;
+}
+
+.smallutils
+{
+    margin-top:-0.5em;
+    margin-bottom:0;
+    text-align:right;
+}
+
+.smallutils a
+{
+    color:#666;
+    font-size:0.7em;
+}
+
+table.nopad td
+{
+    padding-left:0;
+}
+
+table
+{
+    border-collapse:collapse;
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    margin-top:0.3em;
+}
+
+table tr th
+{
+    background:#333;
+    color:#FFF;
+    font-size:0.8em;
+    border:1px solid #222;
+    padding:3px 10px;
+}
+
+table tr td
+{
+    border:1px solid #ddd;
+    padding:7px;
+}
+
+table.round tr td
+{
+    border:1px solid #000;
+    font-size:10px;
+    padding:2px;
+}
+
+table.round tr td.score
+{
+    text-align:center;
+    border:1px solid #000;
+    font-size:10px;
+    padding:2px;
+}
+
+table tr.incomplete td
+{
+    background:#FA9;
+    border:1px solid #ddd;
+    padding:7px;
+}
+
+#forum_description,#topic_body
+{
+    width:99%;
+}
+
+table.forums tr td .title
+{
+    font-size:1.4em;
+}
+
+table.forums tr td
+{
+    padding:4px 15px;
+}
+
+table.forums a.tiny
+{
+    font-size:0.8em;
+    color:#666;
+}
+
+table.forums .posts
+{
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    color:#666;
+    font-size:0.8em;
+}
+
+table tr th.la
+{
+    text-align:left;
+}
+
+table tr td.ca
+{
+    text-align:center;
+}
+
+table tr td.inv
+{
+    background:#eee;
+}
+
+table tr td.vat
+{
+    vertical-align:top;
+}
+
+table tr td.narrow
+{
+    padding:2px 5px;
+}
+
+table#user_nav tr td
+{
+    border:0;
+    padding:7px;
+}
+
+table#user_nav tr td.search_box
+{
+    font-size:0.85em;
+    text-align:right;
+}
+
+table tr td.lp
+{
+    font-size:0.85em;
+    color:#333;
+}
+
+table.topics tr td.c1
+{
+    border-right:0;
+    padding-right:2px;
+}
+
+table.topics tr td.c2
+{
+    border-left:0;
+    padding-left:2px;
+}
+
+table.topics tr td.c3
+{
+    border-left:0;
+}
+
+table.forums tr td.c1
+{
+    border-right:0;
+    padding-right:5px;
+    padding-top:7px;
+}
+
+table.forums tr td.c2
+{
+    padding-left:5px;
+    border-width:1px 0;
+}
+
+table.forums tr td.c3
+{
+    border-left:0;
+    padding-left:5px;
+}
+
+table.topics tr td .flag
+{
+    background:#333;
+    color:#FFF;
+    margin-right:0.5em;
+    padding:1px 5px;
+}
+
+.button_or
+{
+    color:#666;
+    padding-left:0.5em;
+    font-size:0.75em;
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+}
+
+form.dialog
+{
+    margin-top:3em;
+    background:#eee;
+    width:300px;
+    padding:15px;
+}
+
+form .entryhelp
+{
+    font-size:0.7em;
+}
+
+span.arrow
+{
+    font-weight:400;
+    font-size:0.9em;
+    color:#999;
+}
+
+div.stats
+{
+    margin-top:2em;
+    background:#ded;
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    font-size:0.8em;
+    border:2px solid #393;
+    border-width:1px 0;
+    padding:15px;
+}
+
+.crumbs
+{
+    font-size:0.75em;
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+}
+
+.crumbs a
+{
+    color:#468;
+}
+
+.crumbs a:hover
+{
+    color:#00c;
+    text-decoration:underline;
+}
+
+table.posts
+{
+    border-bottom:2px solid #eee;
+}
+
+table.posts tr.spacer td
+{
+    font-size:1px;
+}
+
+.post .author .edit a
+{
+    font-size:0.7em;
+    color:#666;
+}
+
+.post .author img
+{
+    float:left;
+    margin-right:0.5em;
+}
+
+.post .author
+{
+    border-top:2px solid #eee;
+    background:#eee;
+    font-weight:700;
+    color:#333;
+    font-size:0.9em;
+    min-height:32px;
+    width:10em;
+    min-width:8em;
+    vertical-align:top;
+    padding:5px 10px;
+}
+
+.post .author .posts,.post .author .admin
+{
+    display:block;
+    font-size:0.75em;
+    color:#666;
+}
+
+.post .author a
+{
+    color:#333;
+    text-decoration:none;
+}
+
+.post .author a.threadauthor
+{
+    color:#080;
+}
+
+.post .author a:hover
+{
+    color:#369;
+    text-decoration:underline;
+}
+
+.post .date
+{
+    font-size:0.75em;
+    color:#666;
+    font-weight:400;
+    margin-bottom:0.5em;
+}
+
+.posts .post .body
+{
+    border-top:2px solid #eee;
+    font-size:0.9em;
+    padding:10px 20px;
+}
+
+.posts .post .body blockquote
+{
+    border:1px solid #cda;
+    border-left:3px solid #9a7;
+    border-right:0;
+    background:#efc;
+    margin-left:0;
+    padding:1px 10px;
+}
+
+.posts .post .body pre
+{
+    font-size:0.8em;
+    background:#eee;
+    border:1px solid #ccc;
+    border-left:3px solid #ddd;
+    border-right:0;
+    overflow:auto;
+    font-family:"Monaco", "Bitstream Vera Sans Mono", "Courier New", serif;
+    padding:5px 10px;
+}
+
+.posts .post .body a:hover
+{
+    color:#A52A2A;
+}
+
+.post .body p.topic
+{
+    font-size:0.8em;
+    font-weight:700;
+    background:#eee;
+    padding:2px 10px;
+}
+
+img.icon
+{
+    background:#696;
+    background-image:url(/images/clearbits/bg_rounded.gif);
+    background-repeat:no-repeat;
+    vertical-align:bottom;
+}
+
+img.orange
+{
+    background-color:#FF8C00;
+}
+
+img.grey
+{
+    background-color:#ccc;
+}
+
+img.darkgrey
+{
+    background-color:#999;
+}
+
+img.green
+{
+    background-color:#0c0;
+}
+
+div.editbox textarea
+{
+    width:100%;
+    background:#FFF;
+    font-size:0.8em;
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+}
+
+div.editbox .button_or a
+{
+    color:#ccc;
+}
+
+div.editbox a.utility
+{
+    color:#f99;
+    font-size:0.65em;
+    display:block;
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    float:right;
+    text-align:right;
+    margin-top:0.2em;
+    padding:2px 5px 4px;
+}
+
+div.editbox h5
+{
+    background:#222;
+    color:#FFF;
+    font-size:0.7em;
+    margin:0.2em 0 0.5em;
+    padding:2px 10px 3px;
+}
+
+div.editbox p.help,div.editbox ul.help
+{
+    font-size:0.75em;
+    color:#ccc;
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    padding:3px 10px;
+}
+
+div.editbox ul.help
+{
+    list-style-type:none;
+    margin:0;
+}
+
+.fieldWithErrors label
+{
+    color:red;
+}
+
+.comment_textarea
+{
+    width:400px;
+    height:150px;
+}
+
+div#total_footer .container
+{
+    color:#CF4;
+    font-size:1.5em;
+    padding:5px 0 5px 15px;
+}
+
+div#total_footer .container .small
+{
+    color:#CF4;
+    font-size:0.6em;
+}
+
+#page_title
+{
+    margin:0 0 10px;
+}
+
+table.team_selection tr td
+{
+    border:none;
+    padding:0 15px 0 0;
+}
+
+#container,div.editbox .container
+{
+    width:92%;
+    min-width:760px;
+    margin:0 auto;
+}
+
+#content form,h6,p.online
+{
+    margin-bottom:0;
+}
+
+div.news p,#footer p,#footer_stats p,div.upload p,#news p,table#user_nav tr td p.pages
+{
+    margin:0;
+}
+
+p.sections a.action,ul.why li p strong,a.remove,.button_or a
+{
+    color:#c00;
+}
+
+h1,h2,h3,h4,h5,h6,p
+{
+    font-family:'Lucida Grande', 'Trebuchet MS', Arial, Helvetica, sans-serif;
+}
+
+p
+{
+    font-size: 1em;
+}
+
+p.subtitle img,p.private img
+{
+    vertical-align:bottom;
+}
+
+#monitor_topic,.user,table.small_text
+{
+    font-size:12px;
+}
+
+#footer p.credit,div.stats .posts
+{
+    float:right;
+    text-align:right;
+}
+
+ul.talking li span,div.upload a
+{
+    color:#666;
+    font-size:0.8em;
+}
+
+ul.ways li span,ul.quotes span
+{
+    color:#666;
+    font-size:0.9em;
+}
+
+ul.quotes,table.forums,table.topics,table.forums tr th,form .help
+{
+    font-size:0.8em;
+}
+
+a.subtle,.smallutils a:hover,table tr td.lp span a
+{
+    color:#369;
+}
+
+.pastebox,table.wide,table#user_nav
+{
+    width:100%;
+}
+
+#content .legend span strong,.pastePreview .when strong
+{
+    color:#000;
+}
+
+p.private,a.admin
+{
+    color:#c00;
+    font-weight:700;
+}
+
+.pastePreview pre,table.topics tr td.stat
+{
+    font-size:0.9em;
+}
+
+.pastePreview .when,img.reply,.post .author .icon
+{
+    float:right;
+}
+
+table tr td.lp span,table.topics tr td.c2 small a,.crumbs small a,div.editbox p.help span,div.editbox ul.help span,#monitor_topic a
+{
+    color:#666;
+}
+
+#header ul#nav li.logout a
+{
+    color:#C8CACE;
+}
+
+table.noborder td,table.posts tr td,div.editbox table td
+{
+    border:0;
+}
+
+table.forums tr td .desc,.posts .post .body blockquote p,div.editbox p
+{
+    margin:0.5em 0;
+}
+
+div.editbox,div#total_footer
+{
+    background:url(/images/reply_background.png);
+    border:2px solid #333;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    z-index:50;
+    border-width:2px 0;
+    padding:6px 0 7px;
+}
+
+#revision_info {
+    float:right;
+    color:#fff;
+    font-size: .8em;
+}
+
+#revision_info a
+{
+    color:#CF010B;
+}
+
+table.extras, table.breakdown
+{
+    border-collapse:collapse;
+    font-family:'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
+    margin-top:0.3em;
+}
+
+table.extras tr th, table.breakdown tr th
+{
+    text-align:left;
+    background:#fff;
+    color:#000;
+    border:1px solid #ddd;
+    padding:3px 10px;
+    font-size:1em;
+}
+
+table tr td
+{
+    border:1px solid #ddd;
+    padding:7px;
+}
+
+/* autocomplete styles */
+div.autocomplete {
+    position:absolute;
+    width:250px;
+    background-color:white;
+    border:1px solid #888;
+    margin:0;
+    padding:0;
+}
+
+div.autocomplete ul {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+
+div.autocomplete ul li.selected { background-color: #ffb;}
+div.autocomplete ul li {
+    list-style-type:none;
+    display:block;
+    margin:0;
+    padding:3px;
+    cursor:pointer;
+}
+
+/* filter */
+table.filters td {
+    border: 0px;
+}
+
+/* equipment */
+div.equipment {
+    border: 1px solid #000000;
+    background: #cccccc;
+    padding: 0px 10px 5px 10px;
+    margin: 0px 0px 5px 0px;
+}
+
+div.equipment p {
+    margin: 5px 0px 0px 0px;
+}
+
+div.equipment span.removal_link {
+    float: right;
+}
+
+div.equipment span.title {
+    font-weight: bold;
+}
+
+div.equipment p label {
+    font-weight: bold;
+    color: #000000;
+}
+
+p#equipment_selectors {
+	line-height: 30px;
+}
+
+/* officials */
+div.new_registration {
+  border: solid 1px #999;
+  background: #ddd;
+  padding: 5px;
+  margin: 0px 0px 10px 0px;
+  font-size: 1em;
+}
+
+div.registration {
+  border: solid 1px #999;
+  background: #ddd;
+  padding: 5px;
+  margin: 0px 0px 10px 0px;
+  font-size: 1em;
+}
+
+div.new_registration {
+  border: none;
+  background: none;
+}
+
+div.registration div {
+  padding: 10px 0px 10px 0px;
+}
+
+div.registration div.quizzer_list div {
+  float: left;
+  padding-right: 10px;
+  padding: 0px;
+}
+
+div.registration div.quizzer_list div a {
+  color: #000;
+  text-decoration: none;
+}
+
+div.registration span.event {
+  font-size: 0.75em;
+  font-weight: bold;
+}
+
+div.registration span.team, div.registration span.fullname {
+  font-weight: bold;
+}
+
+div.unconfirmed {
+  background: #ddd;
+}
+
+div.confirmed {
+  background: #df9;
+}
+
+div.registration div.footer {
+  margin: 0px;
+  padding: 0px;
+  clear: both;
+}
+
+div.registration div.time {
+  font-size: 8pt;
+  margin: 0px;
+  padding: 0px;
+}
+
+div.registration div.update {
+  text-align: center;
+  margin-bottom: -12px;
+  padding: 0px 15px 0px 15px;
+}
+
+div.registration div.notice {
+  text-align: center;
+  margin-bottom: -12px;
+  padding: 0px 15px 0px 15px;
+}
+
+div.registration div.status {
+  text-align: center;
+  background: #df9;
+  padding:7px 15px;
+  margin: 10px 0px 5px 0px;
+  border:1px solid #bd7;
+  font-size:0.8em;
+}
+
+div.registration div.menu {
+  float: right;
+  padding: 0px;
+}
+
+div.registration div.header {
+  padding: 0px;
+}
+
+div.registration div.left {
+  float:left;
+  width: 50%;
+  padding: 0px;
+}
+
+div.registration div.left ul {
+  list-style-type: none;
+}
+
+div.registration div.right {
+  float:left;
+  width: 50%;
+  padding: 0px;
+}
+
+div.registration div.errorExplanation {
+  font-size:0.8em;
+  background:#c00;
+  color:white;
+  padding:7px 15px;
+  border:1px solid #bd7;
+}
+
+div.evaluations div.left {
+	float: left;
+	width: 60%;
+}
+
+div.evaluations div.right {
+	float: right;
+	width: 39%;
+}
+
+div.evaluations div.separator {
+	clear: both;
+	padding: 4px 0;
+}
+
+div.evaluations div.bottom {
+	clear: both;
+	padding: 0;
+}
+
+/* payments */
+div#payment_details {
+  margin: 0px 0px 30px 0px;
+  font-size: 1em;
+}
+
+div#billing_details {
+  padding: 5px;
+  margin: 0px 0px 10px 0px;
+  font-size: 1em;
+}
+
+div#billing_details div {
+  padding: 5px 10px 5px 0px;
+}
+
+div#billing_details div.errorExplanation {
+    padding: 7px 15px;
+}
+
+/* receipt */
+div.receipt_details {
+	width: 485px;
+}
+
+div.receipt_details div.row {
+    clear: both;
+    padding-top: 5px;
+}
+
+div.receipt_details div.row span.label {
+    float: left;
+    width: 140px;
+    text-align: right;
+}
+
+div.receipt_details div.row span.details {
+    float: right;
+    width: 335px;
+    text-align: left;
+} 
+
+/* test output */
+div.test_output {
+	background: none repeat scroll 0 0 #DDFF99;
+    border: 1px solid #BBDD77;
+    font-size: 0.9em;
+    margin: 0px;
+    padding: 7px 15px;
+}
+
+/* seminars */
+div#seminars p.seminar {
+	border-bottom: 1px dashed #ccc;
+	padding-bottom: 10px;
+}

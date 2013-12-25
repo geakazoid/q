@@ -1,0 +1,20 @@
+<% if AppConfig.test_mode %>
+System is in test mode. The following email would have been sent to <%= @original_email %>,
+but is instead being sent to the currently logged in user.
+
+------
+
+<% end %>
+Hello <%= @evaluation.sent_to_name %>!
+
+Please complete the following recommendation form for <%= [@evaluation.official.full_name] %> for Q2012.
+Please complete this request as soon as you can.
+
+<%= "#{AppConfig.site_url}/evaluation/#{@evaluation.key}" %>
+
+If you have any questions, please let me know.
+
+Thanks,
+Todd Olson
+Q2010 Coordinator of Officials
+tolson27@gmail.com

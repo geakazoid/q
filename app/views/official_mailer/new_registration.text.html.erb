@@ -1,0 +1,35 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <% if AppConfig.test_mode %>
+      <p style='background: none repeat scroll 0 0 #DDFF99; border: 1px solid #BBDD77; font-size: 0.9em; margin-top: 0; padding: 7px 15px;'>
+        System is in test mode. The following email would have been sent to <b>[<%= h @original_email %>]</b>,
+        but is instead being sent to the currently logged in user.
+      </p>
+    <% end %>
+    <p>Dear Admin,</p>
+    <p>The following official has been registered on <a href='http://www.q2012.org'>Q2012.org</a>. Details are below.</p>
+    <div style='border: 1px solid #999; background: #ddd; padding: 0px 10px;'>
+      <p>
+        Owner: <%= h @official.user.fullname %> (<%= @official.user.email %>)<br/>
+        <%- if @official.user != @official.creator -%>
+        Registering User: <%= h @official.creator.fullname %> (<%= @official.creator.email %>)<br/>
+        <%- end -%>
+        Registration Time: <%= Time.now.strftime("%m.%d.%Y %H:%M") %>
+      </p>
+      <p>
+        Name: <%= h @official.full_name %><br/>
+        Roles: <%= h @official.list_roles %><br/>
+        District / Region: <%= @official.district.display_with_region %><br/>
+        Phone: <%= h @official.phone %><br/>
+        Email: <%= h @official.email %>
+      </p>
+    </div>
+    <p>Further actions will need to be taken in order to send evaluations and approve this registration.</p>
+    <p>
+      Sincerely,<br/>
+      Q2012 Staff
+    </p>
+  </body>
+</html>

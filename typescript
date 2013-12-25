@@ -1,0 +1,453 @@
+Script started on Fri Jul  3 11:15:56 2009
+bash-3.2$ tail -f log/development.log 
+.loadpath       Capfile         app/            doc/            public/         stories/        typescript
+.project        README.textile  config/         lib/            script/         test/           vendor/
+.svn/           Rakefile        db/             log/            spec/           tmp/            
+bash-3.2$ tail -f log/development.log [C[C[C[C[C[C[C[C[C[C[Kscript/
+.svn/        autospec     dbconsole    generate     plugin       runner       spec         
+about        console      destroy      performance/ process/     server       spec_server  
+bash-3.2$ script/console 
+Loading development environment (Rails 2.3.2)
+>> user = user[K[K[K[KUser.find(10[K)
+=> #<User id: 1, first_name: "Jeremy", middle_name: nil, last_name: "Driscoll", suffix: nil, phone: nil, birthdate: nil, gender: "Male", tshirt_size: nil, address_id: nil, church_id: nil, quizzer_id: nil, email: "jdriscoll@realnets.com", crypted_password: "57d14064cdf9cfa0009e7f7815673fc02be16185", salt: "aea1de42d3e965d0c42af57b5b200d3294803a87", remember_token: nil, activation_code: nil, state: "active", remember_token_expires_at: nil, activated_at: "2009-07-03 16:10:21", deleted_at: nil, created_at: "2009-07-03 16:10:20", updated_at: "2009-07-03 16:10:21">
+>> user.user_roles
+=> [#<UserRole id: 1, role_id: 1, user_id: 1, site_id: nil>, #<UserRole id: 2, role_id: 3, user_id: 1, site_id: 1>]
+>> user.sites
+=> [#<Site id: 1, domain: "localhost", name: "localhost", description: nil, images_id: nil, siteable_id: nil, siteable_type: nil, created_at: "2009-07-03 16:10:20", updated_at: "2009-07-03 16:10:20">]
+>> exit
+exit
+^C
+>> quit
+bash-3.2$ script/console [C[C[C[C[C[C[C[C[C[C[4htail -f log/d[4levelopment.log[C[C[C[C[C[C[C[C[C[C[Ccd Documents/workspace/qsite/[C[C[C[C[C[C[C[C[C[C[14Prake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0100s
+-- add_index(:sessions, :session_id)
+   -> 0.0526s
+-- add_index(:sessions, :updated_at)
+   -> 0.0092s
+-- create_table(:users)
+   -> 0.0040s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0058s
+-- create_table(:sites, {:force=>true})
+   -> 0.0033s
+-- create_table(:passwords)
+   -> 0.0022s
+-- create_table(:roles)
+   -> 0.0019s
+-- create_table(:user_roles)
+   -> 0.0023s
+==  BortMigration: migrated (1.1808s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0027s
+-- add_index(:sessions, :session_id)
+   -> 0.0051s
+-- add_index(:sessions, :updated_at)
+   -> 0.0058s
+-- create_table(:users)
+   -> 0.0039s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0058s
+-- create_table(:sites, {:force=>true})
+   -> 0.0031s
+-- create_table(:passwords)
+   -> 0.0025s
+-- create_table(:roles)
+   -> 0.0018s
+-- create_table(:user_roles)
+   -> 0.0032s
+==  BortMigration: migrated (0.9633s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0025s
+-- add_index(:sessions, :session_id)
+   -> 0.0053s
+-- add_index(:sessions, :updated_at)
+   -> 0.0052s
+-- create_table(:users)
+   -> 0.0038s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0055s
+-- create_table(:sites, {:force=>true})
+   -> 0.0037s
+-- create_table(:passwords)
+   -> 0.0023s
+-- create_table(:roles)
+   -> 0.0022s
+-- create_table(:user_roles)
+   -> 0.0022s
+==  BortMigration: migrated (3.6032s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0026s
+-- add_index(:sessions, :session_id)
+   -> 0.0051s
+-- add_index(:sessions, :updated_at)
+   -> 0.0057s
+-- create_table(:users)
+   -> 0.0041s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0062s
+-- create_table(:sites, {:force=>true})
+   -> 0.0029s
+-- create_table(:passwords)
+   -> 0.0023s
+-- create_table(:roles)
+   -> 0.0021s
+-- create_table(:user_roles)
+   -> 0.0024s
+==  BortMigration: migrated (1.8440s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0030s
+-- add_index(:sessions, :session_id)
+   -> 0.0053s
+-- add_index(:sessions, :updated_at)
+   -> 0.0054s
+-- create_table(:users)
+   -> 0.0042s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0058s
+-- create_table(:sites, {:force=>true})
+   -> 0.0032s
+-- create_table(:passwords)
+   -> 0.0026s
+-- create_table(:roles)
+   -> 0.0043s
+-- create_table(:user_roles)
+   -> 0.0110s
+==  BortMigration: migrated (0.9848s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0030s
+-- add_index(:sessions, :session_id)
+   -> 0.0052s
+-- add_index(:sessions, :updated_at)
+   -> 0.0057s
+-- create_table(:users)
+   -> 0.0038s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0058s
+-- create_table(:sites, {:force=>true})
+   -> 0.0030s
+-- create_table(:passwords)
+   -> 0.0029s
+-- create_table(:roles)
+   -> 0.0021s
+-- create_table(:user_roles)
+   -> 0.0025s
+==  BortMigration: migrated (1.6265s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0026s
+-- add_index(:sessions, :session_id)
+   -> 0.0054s
+-- add_index(:sessions, :updated_at)
+   -> 0.0049s
+-- create_table(:users)
+   -> 0.0041s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0059s
+-- create_table(:sites, {:force=>true})
+   -> 0.0033s
+-- create_table(:passwords)
+   -> 0.0023s
+-- create_table(:roles)
+   -> 0.0018s
+-- create_table(:user_roles)
+   -> 0.0020s
+==  BortMigration: migrated (1.5673s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0025s
+-- add_index(:sessions, :session_id)
+   -> 0.0049s
+-- add_index(:sessions, :updated_at)
+   -> 0.0053s
+-- create_table(:users)
+   -> 0.0039s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0058s
+-- create_table(:sites, {:force=>true})
+   -> 0.0033s
+-- create_table(:passwords)
+   -> 0.0024s
+-- create_table(:roles)
+   -> 0.0018s
+-- create_table(:user_roles)
+   -> 0.0022s
+==  BortMigration: migrated (1.5654s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0026s
+-- add_index(:sessions, :session_id)
+   -> 0.0061s
+-- add_index(:sessions, :updated_at)
+   -> 0.0055s
+-- create_table(:users)
+   -> 0.0045s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0057s
+-- create_table(:sites, {:force=>true})
+   -> 0.0037s
+-- create_table(:passwords)
+   -> 0.0027s
+-- create_table(:roles)
+   -> 0.0031s
+-- create_table(:user_roles)
+   -> 0.0100s
+==  BortMigration: migrated (1.8870s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0028s
+-- add_index(:sessions, :session_id)
+   -> 0.0052s
+-- add_index(:sessions, :updated_at)
+   -> 0.0059s
+-- create_table(:users)
+   -> 0.0039s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0057s
+-- create_table(:sites, {:force=>true})
+   -> 0.0030s
+-- create_table(:passwords)
+   -> 0.0022s
+-- create_table(:roles)
+   -> 0.0025s
+-- create_table(:user_roles)
+   -> 0.0028s
+==  BortMigration: migrated (1.9320s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0027s
+-- add_index(:sessions, :session_id)
+   -> 0.0053s
+-- add_index(:sessions, :updated_at)
+   -> 0.0060s
+-- create_table(:users)
+   -> 0.0041s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0059s
+-- create_table(:sites, {:force=>true})
+   -> 0.0030s
+-- create_table(:passwords)
+   -> 0.0024s
+-- create_table(:roles)
+   -> 0.0022s
+-- create_table(:user_roles)
+   -> 0.0033s
+==  BortMigration: migrated (1.5844s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0140s
+-- add_index(:sessions, :session_id)
+   -> 0.0051s
+-- add_index(:sessions, :updated_at)
+   -> 0.0065s
+-- create_table(:users)
+   -> 0.0039s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0074s
+-- create_table(:sites, {:force=>true})
+   -> 0.0034s
+-- create_table(:passwords)
+   -> 0.0026s
+-- create_table(:roles)
+   -> 0.0024s
+-- create_table(:user_roles)
+   -> 0.0024s
+==  BortMigration: migrated (1.8543s) =========================================
+
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0026s
+-- add_index(:sessions, :session_id)
+   -> 0.0059s
+-- add_index(:sessions, :updated_at)
+   -> 0.0055s
+-- create_table(:users)
+   -> 0.0042s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0051s
+-- create_table(:sites, {:force=>true})
+   -> 0.0041s
+-- create_table(:passwords)
+   -> 0.0022s
+-- create_table(:roles)
+   -> 0.0022s
+-- create_table(:user_roles)
+   -> 0.0024s
+rake aborted!
+An error has occurred, all later migrations canceled:
+
+undefined method `registered_site' for #<User:0x2397900>
+
+(See full trace by running task with --trace)
+bash-3.2$ rake db:migrate
+(in /Users/jdriscoll/Documents/workspace/qsite)
+==  BortMigration: migrating ==================================================
+-- create_table(:sessions)
+   -> 0.0027s
+-- add_index(:sessions, :session_id)
+   -> 0.0052s
+-- add_index(:sessions, :updated_at)
+   -> 0.0054s
+-- create_table(:users)
+   -> 0.0038s
+-- add_index(:users, :email, {:unique=>true})
+   -> 0.0060s
+-- create_table(:sites, {:force=>true})
+   -> 0.0029s
+-- create_table(:passwords)
+   -> 0.0024s
+-- create_table(:roles)
+   -> 0.0017s
+-- create_table(:user_roles)
+   -> 0.0031s
+==  BortMigration: migrated (1.6286s) =========================================
+
+bash-3.2$ rake routes
+(in /Users/jdriscoll/Documents/workspace/qsite)
+            logout        /logout                            {:controller=>"sessions", :action=>"destroy"}
+             login        /login                             {:controller=>"sessions", :action=>"new"}
+          register        /register                          {:controller=>"users", :action=>"create"}
+            signup        /signup                            {:controller=>"users", :action=>"new"}
+          activate        /activate/:activation_code         {:controller=>"users", :action=>"activate"}
+   forgot_password        /forgot_password                   {:controller=>"passwords", :action=>"new"}
+   change_password        /change_password/:reset_code       {:controller=>"passwords", :action=>"reset"}
+             users GET    /users(.:format)                   {:controller=>"users", :action=>"index"}
+                   POST   /users(.:format)                   {:controller=>"users", :action=>"create"}
+          new_user GET    /users/new(.:format)               {:controller=>"users", :action=>"new"}
+         edit_user GET    /users/:id/edit(.:format)          {:controller=>"users", :action=>"edit"}
+              user GET    /users/:id(.:format)               {:controller=>"users", :action=>"show"}
+                   PUT    /users/:id(.:format)               {:controller=>"users", :action=>"update"}
+                   DELETE /users/:id(.:format)               {:controller=>"users", :action=>"destroy"}
+         passwords GET    /passwords(.:format)               {:controller=>"passwords", :action=>"index"}
+                   POST   /passwords(.:format)               {:controller=>"passwords", :action=>"create"}
+      new_password GET    /passwords/new(.:format)           {:controller=>"passwords", :action=>"new"}
+     edit_password GET    /passwords/:id/edit(.:format)      {:controller=>"passwords", :action=>"edit"}
+          password GET    /passwords/:id(.:format)           {:controller=>"passwords", :action=>"show"}
+                   PUT    /passwords/:id(.:format)           {:controller=>"passwords", :action=>"update"}
+                   DELETE /passwords/:id(.:format)           {:controller=>"passwords", :action=>"destroy"}
+       new_session GET    /session/new(.:format)             {:controller=>"sessions", :action=>"new"}
+      edit_session GET    /session/edit(.:format)            {:controller=>"sessions", :action=>"edit"}
+           session GET    /session(.:format)                 {:controller=>"sessions", :action=>"show"}
+                   PUT    /session(.:format)                 {:controller=>"sessions", :action=>"update"}
+                   DELETE /session(.:format)                 {:controller=>"sessions", :action=>"destroy"}
+                   POST   /session(.:format)                 {:controller=>"sessions", :action=>"create"}
+             sites GET    /sites(.:format)                   {:controller=>"sites", :action=>"index"}
+                   POST   /sites(.:format)                   {:controller=>"sites", :action=>"create"}
+          new_site GET    /sites/new(.:format)               {:controller=>"sites", :action=>"new"}
+         edit_site GET    /sites/:id/edit(.:format)          {:controller=>"sites", :action=>"edit"}
+              site GET    /sites/:id(.:format)               {:controller=>"sites", :action=>"show"}
+                   PUT    /sites/:id(.:format)               {:controller=>"sites", :action=>"update"}
+                   DELETE /sites/:id(.:format)               {:controller=>"sites", :action=>"destroy"}
+                   GET    /users(.:format)                   {:controller=>"users", :action=>"index"}
+                   POST   /users(.:format)                   {:controller=>"users", :action=>"create"}
+                   GET    /users/new(.:format)               {:controller=>"users", :action=>"new"}
+adminform_new_user GET    /users/new/adminform(.:format)     {:controller=>"users", :action=>"adminform"}
+                   GET    /users/:id/edit(.:format)          {:controller=>"users", :action=>"edit"}
+                   GET    /users/:id(.:format)               {:controller=>"users", :action=>"show"}
+                   PUT    /users/:id(.:format)               {:controller=>"users", :action=>"update"}
+                   DELETE /users/:id(.:format)               {:controller=>"users", :action=>"destroy"}
+                   GET    /users(.:format)                   {:controller=>"users", :action=>"index"}
+                   POST   /users(.:format)                   {:controller=>"users", :action=>"create"}
+                   GET    /users/new(.:format)               {:controller=>"users", :action=>"new"}
+                   GET    /users/:id/edit(.:format)          {:controller=>"users", :action=>"edit"}
+                   GET    /users/:id(.:format)               {:controller=>"users", :action=>"show"}
+                   PUT    /users/:id(.:format)               {:controller=>"users", :action=>"update"}
+                   DELETE /users/:id(.:format)               {:controller=>"users", :action=>"destroy"}
+              root        /                                  {:controller=>"sessions", :action=>"new"}
+                          /:controller/:action/:id           
+                          /:controller/:action/:id(.:format) 
+bash-3.2$ rake routes
+(in /Users/jdriscoll/Documents/workspace/qsite)
+              logout        /logout                            {:controller=>"sessions", :action=>"destroy"}
+               login        /login                             {:controller=>"sessions", :action=>"new"}
+            register        /register                          {:controller=>"users", :action=>"create"}
+              signup        /signup                            {:controller=>"users", :action=>"new"}
+            activate        /activate/:activation_code         {:controller=>"users", :action=>"activate"}
+     forgot_password        /forgot_password                   {:controller=>"passwords", :action=>"new"}
+     change_password        /change_password/:reset_code       {:controller=>"passwords", :action=>"reset"}
+               users GET    /users(.:format)                   {:controller=>"users", :action=>"index"}
+                     POST   /users(.:format)                   {:controller=>"users", :action=>"create"}
+            new_user GET    /users/new(.:format)               {:controller=>"users", :action=>"new"}
+           edit_user GET    /users/:id/edit(.:format)          {:controller=>"users", :action=>"edit"}
+                user GET    /users/:id(.:format)               {:controller=>"users", :action=>"show"}
+                     PUT    /users/:id(.:format)               {:controller=>"users", :action=>"update"}
+                     DELETE /users/:id(.:format)               {:controller=>"users", :action=>"destroy"}
+           passwords GET    /passwords(.:format)               {:controller=>"passwords", :action=>"index"}
+                     POST   /passwords(.:format)               {:controller=>"passwords", :action=>"create"}
+        new_password GET    /passwords/new(.:format)           {:controller=>"passwords", :action=>"new"}
+       edit_password GET    /passwords/:id/edit(.:format)      {:controller=>"passwords", :action=>"edit"}
+            password GET    /passwords/:id(.:format)           {:controller=>"passwords", :action=>"show"}
+                     PUT    /passwords/:id(.:format)           {:controller=>"passwords", :action=>"update"}
+                     DELETE /passwords/:id(.:format)           {:controller=>"passwords", :action=>"destroy"}
+         new_session GET    /session/new(.:format)             {:controller=>"sessions", :action=>"new"}
+        edit_session GET    /session/edit(.:format)            {:controller=>"sessions", :action=>"edit"}
+             session GET    /session(.:format)                 {:controller=>"sessions", :action=>"show"}
+                     PUT    /session(.:format)                 {:controller=>"sessions", :action=>"update"}
+                     DELETE /session(.:format)                 {:controller=>"sessions", :action=>"destroy"}
+                     POST   /session(.:format)                 {:controller=>"sessions", :action=>"create"}
+               sites GET    /sites(.:format)                   {:controller=>"sites", :action=>"index"}
+                     POST   /sites(.:format)                   {:controller=>"sites", :action=>"create"}
+            new_site GET    /sites/new(.:format)               {:controller=>"sites", :action=>"new"}
+           edit_site GET    /sites/:id/edit(.:format)          {:controller=>"sites", :action=>"edit"}
+                site GET    /sites/:id(.:format)               {:controller=>"sites", :action=>"show"}
+                     PUT    /sites/:id(.:format)               {:controller=>"sites", :action=>"update"}
+                     DELETE /sites/:id(.:format)               {:controller=>"sites", :action=>"destroy"}
+                     GET    /users(.:format)                   {:controller=>"users", :action=>"index"}
+                     POST   /users(.:format)                   {:controller=>"users", :action=>"create"}
+admincreate_new_user POST   /users/new/admincreate(.:format)   {:controller=>"users", :action=>"admincreate"}
+                     GET    /users/new(.:format)               {:controller=>"users", :action=>"new"}
+  adminform_new_user GET    /users/new/adminform(.:format)     {:controller=>"users", :action=>"adminform"}
+                     GET    /users/:id/edit(.:format)          {:controller=>"users", :action=>"edit"}
+                     GET    /users/:id(.:format)               {:controller=>"users", :action=>"show"}
+                     PUT    /users/:id(.:format)               {:controller=>"users", :action=>"update"}
+                     DELETE /users/:id(.:format)               {:controller=>"users", :action=>"destroy"}
+                root        /                                  {:controller=>"sessions", :action=>"new"}
+                            /:controller/:action/:id           
+                            /:controller/:action/:id(.:format) 
+bash-3.2$ exit
+
+Script done on Mon Jul  6 18:48:32 2009

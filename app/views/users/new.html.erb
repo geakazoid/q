@@ -1,0 +1,8 @@
+<% @user.password = @user.password_confirmation = nil %>
+
+<div id='page_title'>
+  <%= title('User Registration', :h1) %>
+</div>
+In order to interact with certain parts of the site you need to register. If you've already registered you can <%= link_to 'login', login_path %>. Required fields are denoted by a *.
+
+<%= render :partial => 'form' %>

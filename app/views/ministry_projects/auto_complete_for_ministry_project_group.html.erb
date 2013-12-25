@@ -1,0 +1,5 @@
+<ul>
+  <% @ministry_project_groups.each do |ministry_project_group| %>
+  <li><%= ministry_project_group['ministry_project_group'] %><span class="informal"> (<%= ministry_project_group['count'] %>)</span></li>
+  <% end %>
+</ul>

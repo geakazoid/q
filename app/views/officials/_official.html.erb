@@ -1,0 +1,109 @@
+<% content_tag_for(:div, official, :class => 'registration') do %>
+  <div class='header'>
+    <%= admin_menu(official) %>
+    <span class='fullname'><%= official.full_name %></span>
+  </div>
+  <div class='left'>
+    <p>
+      Roles: <%= official.list_roles %><br/>
+      District: <%= official.district.name %><br/>
+      Phone: <%= official.phone %><br/>
+      Email: <a href='mailto: <%= official.email %>'><%= official.email %></a>
+    </p>
+  </div>
+  <div class='footer'>
+    <div class='time'>
+      <!-- Official  ID: <%= official.id.to_s %> -->
+      Owner: <%= official.user.fullname + ' (<a href="mailto:' + official.user.email + '">' + official.user.email + '</a>)' %><br/>
+      <% if official.user != official.creator %>
+        Created By: <%= official.creator.fullname + ' (<a href="mailto:' + official.creator.email + '">' + official.creator.email + '</a>)' %><br/>
+      <% end %>
+      Created: <%=h official.created_at.strftime("%m.%d.%Y %I:%M %p") %>
+      <%= '<br/>Updated: ' + official.updated_at.strftime("%m.%d.%Y %I:%M %p") unless official.created_at == official.updated_at%>
+    </div>
+  </div>
+  <div class='status' id='status_<%= official.id.to_s %>' style='display:none'></div>
+  <% if admin? or official_admin? %>
+  <div id='evaluations_<%= official.id %>' class='evaluations' style='display:none;'>
+ 	  <div><span class='fullname'>Evaluations</span></div>
+ 	  <% if !official.district.nil? and !official.district.director.empty? %>
+ 	    <% evaluation = official.evaluations.find(:first, :conditions => "sent_to_email = '#{official.district.email}'") %>
+      <div class='left'>District Director:<br/><%= official.district.director %><br/><%= official.district.email %></div>
+      <div class='right' id='evaluation_district_<%= official.id.to_s %>'>
+        <% if evaluation.nil? %>
+          <% form_remote_tag(:url => send_evaluation_official_path(official), :loading  => "$('send_evaluation_spinner_district_#{official.id.to_s}').show(); $('send_evaluation_district_#{official.id.to_s}').disabled = true; $('send_evaluation_district_#{official.id.to_s}').value = 'Sending Evaluation...';") do %>
+            <%= hidden_field_tag 'sent_to_name', official.district.director %>
+            <%= hidden_field_tag 'sent_to_email', official.district.email %>
+            <%= hidden_field_tag 'id_to_update', "evaluation_district_#{official.id.to_s}" %>
+            <%= submit_tag 'Send Evaluation', :id => "send_evaluation_district_#{official.id.to_s}", :autocomplete => 'off' %>
+            <span id='send_evaluation_spinner_district_<%= official.id.to_s %>' style='display:none;'>
+              &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
+            </span>
+          <% end %>
+        <% elsif evaluation.complete? %>
+          Status: Evaluation Completed
+        <% else %>
+          Status: Evaluation Sent
+        <% end %>
+      </div>
+      <div class='separator'></div>
+    <% end %>
+    <% if !official.district.nil? and !official.district.region.nil? and !official.district.region.director.empty? %>
+ 	    <% evaluation = official.evaluations.find(:first, :conditions => "sent_to_email = '#{official.district.region.email}'") %>
+      <div class='left'>Regional Director:<br/><%= official.district.region.director %><br/><%= official.district.region.email %></div>
+      <div class='right' id='evaluation_region_<%= official.id.to_s %>'>
+        <% if evaluation.nil? %>
+          <% form_remote_tag(:url => send_evaluation_official_path(official), :loading  => "$('send_evaluation_spinner_region_#{official.id.to_s}').show(); $('send_evaluation_region_#{official.id.to_s}').disabled = true; $('send_evaluation_region_#{official.id.to_s}').value = 'Sending Evaluation...';") do %>
+            <%= hidden_field_tag 'sent_to_name', official.district.region.director %>
+            <%= hidden_field_tag 'sent_to_email', official.district.region.email %>
+            <%= hidden_field_tag 'id_to_update', "evaluation_region_#{official.id.to_s}" %>
+            <%= submit_tag 'Send Evaluation', :id => "send_evaluation_region_#{official.id.to_s}", :autocomplete => 'off' %>
+            <span id='send_evaluation_spinner_region_<%= official.id.to_s %>' style='display:none;'>
+              &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
+            </span>
+          <% end %>
+        <% elsif evaluation.complete? %>
+          Status: Evaluation Completed
+        <% else %>
+          Status: Evaluation Sent
+        <% end %>
+      </div>
+      <div class='separator'></div>
+    <% end %>
+    <% other_evaluations = official.evaluations.find(:all, :conditions => "sent_to_email not in ('#{official.district.email}', '#{official.district.region.email}')") %>
+    <% other_evaluations.each do |evaluation| %>
+      <div class='left'>
+        Another Recipient:<br/>
+        <%= evaluation.sent_to_name %></br/>
+        <%= evaluation.sent_to_email %>
+      </div>
+      <div class='right'>
+      <% if evaluation.complete? %>
+        Status: Evaluation Completed
+      <% else %>
+        Status: Evaluation Sent
+      <% end %>
+      </div>
+      <div class='separator'></div>
+    <% end %>
+    <% form_remote_tag(:url => send_evaluation_official_path(official), :loading  => "$('send_evaluation_spinner_other_#{official.id.to_s}').show(); $('send_evaluation_other_#{official.id.to_s}').disabled = true; $('send_evaluation_other_#{official.id.to_s}').value = 'Sending Evaluation...';") do %>
+      <div class='left'>
+        Another Recipient:<br/>
+        <div style='width: 50px; float: left; padding: 0px;'>Name:</div>
+        <div style='float: left; padding: 0px;'><%= text_field_tag 'sent_to_name', '', {:style => 'width:200px;', :autocomplete => 'off'} %></div>
+        <div style='padding: 4px;'>&nbsp;</div>
+        <div style='width: 50px; float: left; padding: 0px;'>Email:</div>
+        <div style='float: left; padding: 0px;'><%= text_field_tag 'sent_to_email', '', {:id => "sent_to_email_#{official.id.to_s}", :style => 'width:200px;', :autocomplete => 'off'} %></div>
+      </div>
+      <div class='right' id='evaluation_other_<%= official.id.to_s %>'>
+        <%= hidden_field_tag 'id_to_update', "evaluation_other_#{official.id.to_s}" %>
+	      <%= submit_tag 'Send Evaluation', :id => "send_evaluation_other_#{official.id.to_s}", :autocomplete => 'off', :onclick => "javascript:validate_evaluation('sent_to_email_#{official.id.to_s}')" %>
+	      <span id='send_evaluation_spinner_other_<%= official.id.to_s %>' style='display:none;'>
+	        &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
+	      </span>
+      </div>
+    <% end %>
+    <div class='bottom'></div>
+  </div>
+  <% end %>
+<% end %>

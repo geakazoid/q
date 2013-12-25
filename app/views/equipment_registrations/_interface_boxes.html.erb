@@ -1,0 +1,12 @@
+<div class='equipment'>
+  <p>
+    <span class='removal_link'><%= remove_link( form ) %></span>
+    <span class='title'>Interface Boxes</span>
+    <%= form.hidden_field :equipment_type, :value => 'interface_boxes' %>
+    <%= form.hidden_field :first, :value => true if form.object.first? %>
+  </p>
+  <p>
+    <%= form.label :ib_type, 'Type: ' %><%= form.select :ib_type, ['Parallel','USB'], :prompt => '- Select -' %>
+    &nbsp;&nbsp;<%= form.label :number, 'Quantity: ' %><%= form.text_field :number, :size => 10 %>
+  </p>
+</div>

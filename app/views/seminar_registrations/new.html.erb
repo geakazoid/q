@@ -1,0 +1,204 @@
+<div id='page_title'>
+  <%= title('Q2012 Seminar Registration', :h1) %>
+</div>
+<%= render :partial => 'pages/page', :locals => { :page => @page } if !@page.nil? %>
+
+<% form_for @seminar_registration do |f| %>
+  <%= error_messages_for :seminar_registration, :header_message => "There were errors with your registration.", :message => "We encountered the following problems:" %>
+
+  <h3>Basics</h3>
+  <% if current_user %>
+  <p>
+    <a href='#' onClick='javascript:fill_information(); return false;'>Use My Information</a>
+  </p>
+  <% end %>
+  <p>
+    <%= f.label :first_name, 'First Name' %><br />
+    <%= f.text_field :first_name, {:id => "first_name"} %>
+  </p>
+  <p>
+    <%= f.label :last_name, 'Last Name' %><br />
+    <%= f.text_field :last_name, {:id => "last_name"} %>
+  </p>
+  <p>
+    <%= f.label :phone, 'Phone # (preferably mobile)' %><br />
+    <label>(xxx-xxx-xxxx)</label><br/>
+    <%= f.text_field :phone, {:id => "phone"} %>
+  </p>
+  <p>
+    <%= f.label :email %><br />
+    <%= f.text_field :email, {:id => "email"} %>
+  </p>
+  <div>
+      <%= f.label :district, 'District / Region' %><br/>
+      <%= f.collection_select :district_id,
+        District.all(:order => 'name asc'),
+        :id,
+        :display_with_region,
+        {:prompt => '- Select -'},
+        {:id => 'district'} %>
+    </div>
+
+  <div id='seminars'>
+    <h3>Available Seminars</h3>
+    <p>
+      Please use the checkboxes below to choose from the available seminars, along with an applicable session if needed.
+    </p>
+    <p class='seminar'>
+      <strong>District Issues: Part 1 - Getting Churches on your District involved in Bible Quizzing</strong><br/>
+      Dan Reinhart / Kale Woods<br/>
+      Tuesday, July 3 - 7:15 pm<br/><br/>
+      There are still some churches that do not have Teen Bible Quizzing. You're a District Director, or other interested adult.
+      How can you help a team get started at another church?</br/><br/>
+      <strong>Suggested Objectives:</strong> Learning to be visible, promote, make contacts, follow-up - find an adult leader.
+      Issues with resourcing new programs, or even only potential programs.<br/><br/>
+      <strong>Audience:</strong> Adults<br/><br/>
+      <%= f.check_box :seminar_1 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>District Issues: Part 2 - Scheduling - for your year, and for the quizzes</strong><br/>
+      Chad Lynn / Kim Glenn / Ken Stoll<br/>
+      Friday, July 6 - 7:15 pm<br/><br/>
+      Do you want to learn more about how to schedule quizzes? When to use round robin and when to use an elimination bracket?
+      2-team quizzes vs 3-team quizzes? Scheduling quizzes for a quiz year?</br/><br/>
+      <strong>Suggested Objectives:</strong> Scheduling quizzes through the year (pacing) - 20% / Scheduling Quizzes: Elimination
+      Brackets, Round Robin, Interactive Methods / Provide Samples<br/><br/>
+      <strong>Audience:</strong> Adults<br/><br/>
+      <%= f.check_box :seminar_2 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>Local Issues: Part 1 - Practicing when it gets tough: small teams, isolated teams and midyear</strong><br/>
+      Tine Gabbard / Tracie Moots<br/>
+      Tuesday, July 3 - 7:15 pm<br/><br/>
+      Maybe you only have 2 quizzers, or just 1. Maybe the nearest team to yours is 3 hours away - so you can't practice together.
+      Or maybe you just need some help getting through the mid-year blahs.</br/><br/>
+      <strong>Suggested Objectives:</strong> An assortment of suggestions to keep practices exciting, or at least interesting, or
+      at least bearable... at those tough times.<br/><br/>
+      <strong>Audience:</strong> Adults<br/><br/>
+      <%= f.check_box :seminar_3 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>Local Issues: Part 2 - Mega-teams - how you get there, how you adjust to keep it rolling</strong><br/>
+      Chad Lynn / James Moots<br/>
+      Thursday, July 5 - 7:15 pm<br/><br/>
+      Local church Bible Quiz programs with 15, 20 or even more quizzers. How did they get there?
+      What adjustments did they make to keep it going?</br/><br/>
+      <strong>Suggested Objectives:</strong> How to grow your team larger / How to keep the quizzers in the program - when you
+      have so many / practice formats / getting more adult help<br/><br/>
+      <strong>Audience:</strong> Adults<br/><br/>
+      <%= f.check_box :seminar_4 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>Local Issues: Part 3 - Teaching those basic skills; studying, jumping, questions and answers</strong><br/>
+      Todd Thomas / Steve Lyle / Bill Buckholt<br/>
+      Friday, July 6 - 7:15 pm<br/><br/>
+      You're a local quiz coach - but maybe you didn't quiz or didn't really learn the skills - but you want your quizzers to learn them!
+      How can you effectively teach them about studying, jumping and quizzing?
+      What adjustments did they make to keep it going?</br/><br/>
+      <strong>Suggested Objectives:</strong> Teaching quizzers how to study, how to jump, some of the basic skills they will need at a quiz;
+      how to formulate questions and answers, how to challenge, rebut and appeal, etc.<br/><br/>
+      <strong>Audience:</strong> Adults<br/><br/>
+      <%= f.check_box :seminar_5 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>General: How to become a better Official</strong><br/>
+      Paul Baker / Lori Sauter<br/>
+      Thursday, July 5 - 7:15 pm or Friday, July 6 - 7:15 pm<br/><br/>
+      You've got the basic roles and responsibilities down - you know how to keep score, how to make rulings and how to read questions.
+      Now, how can you do an even better job at it?</br/><br/>
+      <strong>Suggested Objectives:</strong> Reading, cadence and pre-reading / Keeping the quiz moving / When is a question-answer
+      combination correct enough and when should a challenge be accepted? / What is an acceptable Nazarene-style question and what
+      is a valid appeal? Etc<br/><br/>
+      <strong>Audience:</strong> Adults<br/><br/>
+      <%= f.check_box :seminar_6 %>&nbsp;I would like to attend this seminar on
+      <%= f.select :seminar_6_session, ['Thursday, July 5 - 7:15 pm','Friday, July 6 - 7:15 pm'], :prompt => '- Select -' %>
+    </p>
+    <p class='seminar'>
+      <strong>Discipling: Part 1 - Becoming a Disciple</strong><br/>
+      Robert Mansfield<br/>
+      Monday, July 2 - 4:00 pm<br/><br/>
+      <strong>Audience:</strong> Adults<br/><br/>
+      <%= f.check_box :seminar_7 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>Discipling: Part 2 - Using Matthew to Disciple Your Bible Quizzers</strong><br/>
+      Robert Mansfield<br/>
+      Thursday, July 5 - 7:15 pm<br/><br/>
+      <strong>Audience:</strong> Adults<br/><br/>
+      <%= f.check_box :seminar_8 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>QuizMachine and QMServer - Setup and best uses</strong><br/>
+      Barry Nicholson / Bill Horning / Jeremy Driscoll<br/>
+      Thursday, July 5 - 7:15 pm or Saturday, July 7 - 9:00 am<br/><br/>
+      <strong>Audience:</strong> Adults<br/><br/>
+      <%= f.check_box :seminar_9 %>&nbsp;I would like to attend this seminar on
+      <%= f.select :seminar_9_session, ['Thursday, July 5 - 7:15 pm','Saturday, July 7 - 9:00 am'], :prompt => '- Select -' %>
+    </p>
+    <p class='seminar'>
+      <strong>Admissions Group 1</strong><br/>
+      Tuesday, July 3 - 7:15 pm<br/><br/>
+      <strong>Audience: </strong>Parents and Potential College Students<br/><br/>
+      <%= f.check_box :seminar_10 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>Admissions Group 2</strong><br/>
+      Friday, July 6 - 7:15 pm<br/><br/>
+      <strong>Audience: </strong>Parents and Potential College Students<br/><br/>
+      <%= f.check_box :seminar_11 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>Admissions Group 3</strong><br/>
+      Saturday, July 7 - 9:00 am<br/><br/>
+      <strong>Audience: </strong>Parents and Potential College Students<br/><br/>
+      <%= f.check_box :seminar_12 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>Discipling: Part 1 - Developing a Lifestyle Ministry Habit</strong><br/>
+      Robert Mansfield<br/>
+      Tuesday, July 3 - 7:15 pm<br/><br/>
+      <strong>Audience: </strong>Quizzers<br/><br/>
+      <%= f.check_box :seminar_14 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>Discipling: Part 2 - Teens Discipling Teens</strong><br/>
+      Robert Mansfield<br/>
+      Friday, July 6 - 7:15 pm<br/><br/>
+      <strong>Audience: </strong>Quizzers<br/><br/>
+      <%= f.check_box :seminar_13 %>&nbsp;I would like to attend this seminar.
+    </p>
+    <p class='seminar'>
+      <strong>qUiZ SkIlz: Becoming a better quizzer (Basic)</strong><br/>
+      Todd Thomas / Bill Buckholt<br/>
+      Monday, July 2 - 4:00 pm or Thursday, July 5 - 7:15 pm<br/><br/>
+      How to study / How to jump / Finishing questions and giving answers<br/><br/>
+      <strong>Audience: </strong>Quizzers<br/><br/>
+      <%= f.check_box :seminar_15 %>&nbsp;I would like to attend this seminar on
+      <%= f.select :seminar_15_session, ['Monday, July 2 - 4:00 pm','Thursday, July 5 - 7:15 pm'], :prompt => '- Select -' %>
+    </p>
+    <p class='seminar'>
+      <strong>qUiZ SkIlz: Becoming a better quizzer (Advanced)</strong><br/>
+      Bill McCoy / Brenda Woods<br/>
+      Memorizing Scripture / Anticipation Jumping / Challenges, Rebuttals & Appeals<br/><br/>
+      Monday, July 2 - 4:00 pm or Thursday, July 5 - 7:15 pm<br/><br/>
+      <strong>Audience: </strong>Quizzers<br/><br/>
+      <%= f.check_box :seminar_16 %>&nbsp;I would like to attend this seminar on
+      <%= f.select :seminar_16_session, ['Monday, July 2 - 4:00 pm','Thursday, July 5 - 7:15 pm'], :prompt => '- Select -' %>
+    </p>
+  </div>
+  <p>
+    <%= f.submit 'Submit Registration', :id => 'submit_register', :onclick => "$('spinner').show(); $('submit_register').disabled = true; $('submit_register').value = 'Submitting Registration...'; submit(); return false;", :autocomplete => 'off' %>
+    <span id='spinner' style='display:none;'>
+      &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
+    </span>
+  </p>
+<% end %>
+<% if current_user %>
+<script>
+	var user_first_name = '<%= current_user.first_name %>';
+	var user_last_name = '<%= current_user.last_name %>';
+	var user_phone = '<%= current_user.phone %>';
+	var user_email = '<%= current_user.email %>';
+  var user_district = '<%= current_user.district_id %>';
+</script>
+<% end %>

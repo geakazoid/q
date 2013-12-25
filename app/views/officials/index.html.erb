@@ -1,0 +1,20 @@
+<div id='page_title'>
+  <%= title(@title, :h1) %>
+</div>
+<% if (@officials.empty?) %>
+  <p>No officials registrations found.</p>
+<% else %>
+  <p>
+  	<% if params[:user_id] %>
+    Below you can see all official registrations you have submitted ordered by first name.
+    Any registrations that are editable can be modified directly from this screen.
+    <% else %>
+    Below you can see all official registrations that have been submitted.
+    Any registrations that are editable can be modified directly from this screen.
+    You can also send evaluations and approve officials.
+    <% end %>
+  </p>
+  <% @officials.each do |official| %>
+    <%= render :partial => "official", :object => official %>
+  <% end %>
+<% end %>

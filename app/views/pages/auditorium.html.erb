@@ -1,0 +1,108 @@
+<table>
+  <tr>
+    <td><p>Stage Left-Side</p><div id='leftside'>Flash Player Required</div></td>
+    <td><p>Stage Left-Front</p><div id='leftfront'>Flash Player Required</div></td>
+    <td><p>Stage Rear</p><div id='rear'>Flash Player Required</div></td>
+  </tr>
+  <tr>
+    <td><p>Stage Center</p><div id='center'>Flash Player Required</div></td>
+    <td><p>Stage Front</p><div id='front'>Flash Player Required</div></td>
+    <td><p>Stage Right-Front</p><div id='rightfront'>Flash Player Required</div></td>
+  </tr>
+  <tr>
+    <td><p>Stage Right-Side</p><div id='rightside'>Flash Player Required</div></td>
+    <td><p>Main Balcony</p><div id='balcony'>Flash Player Required</div></td>
+  </tr>
+</table>
+
+<script src="/javascripts/swfobject.js" type="text/javascript"></script>
+
+<script type='text/javascript'>
+  var room = 'leftside';
+  var so = new SWFObject('/player.swf','ply','320','240','9','#ffffff');
+  so.addParam('allowfullscreen','true');
+  so.addParam('allowscriptaccess','always');
+  so.addParam('wmode','opaque');
+  so.addVariable('file',room);
+  so.addVariable('streamer','rtmp://video.q2010.org/live');
+  so.write(room);
+
+</script>
+<script type='text/javascript'>
+  var room = 'leftfront';
+  var so = new SWFObject('/player.swf','ply','320','240','9','#ffffff');
+  so.addParam('allowfullscreen','true');
+  so.addParam('allowscriptaccess','always');
+  so.addParam('wmode','opaque');
+  so.addVariable('file',room);
+  so.addVariable('streamer','rtmp://video.q2010.org/live');
+  so.write(room);
+
+</script>
+<script type='text/javascript'>
+  var room = 'rear';
+  var so = new SWFObject('/player.swf','ply','320','240','9','#ffffff');
+  so.addParam('allowfullscreen','true');
+  so.addParam('allowscriptaccess','always');
+  so.addParam('wmode','opaque');
+  so.addVariable('file',room);
+  so.addVariable('streamer','rtmp://video.q2010.org/live');
+  so.write(room);
+
+</script>
+<script type='text/javascript'>
+  var room = 'center';
+  var so = new SWFObject('/player.swf','ply','320','240','9','#ffffff');
+  so.addParam('allowfullscreen','true');
+  so.addParam('allowscriptaccess','always');
+  so.addParam('wmode','opaque');
+  so.addVariable('file',room);
+  so.addVariable('streamer','rtmp://video.q2010.org/live');
+  so.write(room);
+
+</script>
+
+<script type='text/javascript'>
+  var room = 'front';
+  var so = new SWFObject('/player.swf','ply','320','240','9','#ffffff');
+  so.addParam('allowfullscreen','true');
+  so.addParam('allowscriptaccess','always');
+  so.addParam('wmode','opaque');
+  so.addVariable('file',room);
+  so.addVariable('streamer','rtmp://video.q2010.org/live');
+  so.write(room);
+
+</script>
+<script type='text/javascript'>
+  var room = 'rightfront';
+  var so = new SWFObject('/player.swf','ply','320','240','9','#ffffff');
+  so.addParam('allowfullscreen','true');
+  so.addParam('allowscriptaccess','always');
+  so.addParam('wmode','opaque');
+  so.addVariable('file',room);
+  so.addVariable('streamer','rtmp://video.q2010.org/live');
+  so.write(room);
+
+</script>
+<script type='text/javascript'>
+  var room = 'rightside';
+  var so = new SWFObject('/player.swf','ply','320','240','9','#ffffff');
+  so.addParam('allowfullscreen','true');
+  so.addParam('allowscriptaccess','always');
+  so.addParam('wmode','opaque');
+  so.addVariable('file',room);
+  so.addVariable('streamer','rtmp://video.q2010.org/live');
+  so.write(room);
+
+</script>
+<script type='text/javascript'>
+  var room = 'balcony';
+  var so = new SWFObject('/player.swf','ply','320','240','9','#ffffff');
+  so.addParam('allowfullscreen','true');
+  so.addParam('allowscriptaccess','always');
+  so.addParam('wmode','opaque');
+  so.addVariable('file',room);
+  so.addVariable('streamer','rtmp://video.q2010.org/live');
+  so.write(room);
+
+</script>

@@ -1,0 +1,30 @@
+<% content_for :right do %>
+Divisions
+<p>
+  <a href='/statistics/dx1'>District Experienced Pool A</a><br/>
+  <a href='/statistics/dx2'>District Experienced Pool B</a><br/>
+  <a href='/statistics/dn'>District Novice</a><br/>
+  <a href='/statistics/lx1'>Local Experienced Pool A</a><br/>
+  <a href='/statistics/lx2'>Local Experienced Pool B</a><br/>
+  <a href='/statistics/ln'>Local Novice</a><br/>
+  <a href='/statistics/ra'>Regional A</a><br/>
+  <a href='/statistics/rb'>Regional B</a><br/>
+  <a href='/statistics/10s'>Decades</a><br/>
+  <a href='/statistics/koh'>King Of The Hill</a><br/>
+  <a href='/statistics/jff'>Just For Fun</a><br/>
+  <a href='/statistics/td'>Top Dog</a>
+</p>
+<% end %>
+
+<div id='page_title'>
+  <%= title(@statistic.title, :h1) %>
+</div>
+
+<% if @statistic.name != 'index' %>
+<ul>
+  <li><a href='#team'>Team Statistics</a></li>
+  <li><a href='#individual'>Individual Statistics</a></li>
+</ul>
+<% end %>
+
+<%= render :partial => @statistic %>

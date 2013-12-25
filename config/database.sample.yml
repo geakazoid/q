@@ -1,0 +1,21 @@
+development: &non_production_settings
+  adapter: mysql
+  encoding: utf8
+  database: qsite_registration
+  username: qsite
+  password: qs209242
+  pool: 5
+
+test:
+  <<: *non_production_settings
+
+staging:
+  <<: *non_production_settings
+
+production:
+  adapter: mysql
+  encoding: utf8
+  database: qsite_registration
+  username: qsite
+  password: qs209242
+  pool: 5

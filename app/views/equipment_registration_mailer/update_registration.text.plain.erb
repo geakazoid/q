@@ -1,0 +1,45 @@
+<% if AppConfig.test_mode %>
+System is in test mode. The following email would have been sent to [<%= h @original_email %>],
+but is instead being sent to the currently logged in user.
+
+<% end %>
+Dear Admin,
+The following equipment registration has been updated on http://www.q2012.org. Details are below.
+
+Updated Time: <%= Time.now.strftime("%m.%d.%Y %H:%M") %>
+Updating User: <%= @user.fullname %> (<%= @user.email %>)
+
+Old Registration Information:
+Name: <%= @equipment_registration.old('full_name') %>
+District / Region: <%= @equipment_registration.old('district') %>
+Phone: <%= @equipment_registration.old('phone') %>
+Email: <%= @equipment_registration.old('email') %>
+
+Equipment:
+<%= " Laptops (" + @equipment_registration.old('laptops').to_s + ")\n" unless @equipment_registration.old('laptops') == 0 -%>
+<%= " Pads (" + @equipment_registration.old('pads').to_s + ")\n" unless @equipment_registration.old('pads') == 0 -%>
+<%= " Interface Boxes (" + @equipment_registration.old('interface_boxes').to_s + ")\n" unless @equipment_registration.old('interface_boxes') == 0 -%>
+<%= " Monitors (" + @equipment_registration.old('monitors').to_s + ")\n" unless @equipment_registration.old('monitors') == 0 -%>
+<%= " Projectors (" + @equipment_registration.old('Projectors').to_s + ")\n" unless @equipment_registration.old('projectors') == 0 -%>
+<%= " Power Strips (" + @equipment_registration.old('power_strips').to_s + ")\n" unless @equipment_registration.old('power_strips') == 0 -%>
+<%= " Extension Cords (" + @equipment_registration.old('extension_cords').to_s + ")\n" unless @equipment_registration.old('extension_cords') == 0 -%>
+<%= " Microphones/Recorders (" + @equipment_registration.old('recorders').to_s + ")\n" unless @equipment_registration.old('recorders') == 0 -%>
+
+New Registration Information:
+Name: <%= @equipment_registration.full_name %>
+District / Region: <%= @equipment_registration.district.display_with_region %>
+Phone: <%= @equipment_registration.phone %>
+Email: <%= @equipment_registration.email %>
+
+Equipment:
+<%= " Laptops (" + @equipment_registration.laptops.count.to_s + ")\n" unless @equipment_registration.laptops.count == 0 -%>
+<%= " Pads (" + @equipment_registration.pads.count.to_s + ")\n" unless @equipment_registration.pads.count == 0 -%>
+<%= " Interface Boxes (" + @equipment_registration.interface_boxes.count.to_s + ")\n" unless @equipment_registration.interface_boxes.count == 0 -%>
+<%= " Monitors (" + @equipment_registration.monitors.count.to_s + ")\n" unless @equipment_registration.monitors.count == 0 -%>
+<%= " Projectors (" + @equipment_registration.projectors.count.to_s + ")\n" unless @equipment_registration.projectors.count == 0 -%>
+<%= " Power Strips (" + @equipment_registration.power_strips.count.to_s + ")\n" unless @equipment_registration.power_strips.count == 0 -%>
+<%= " Extension Cords (" + @equipment_registration.extension_cords.count.to_s + ")\n" unless @equipment_registration.extension_cords.count == 0 -%>
+<%= " Microphones/Recorders (" + @equipment_registration.recorders.count.to_s + ")\n" unless @equipment_registration.recorders.count == 0 -%>
+
+Sincerely,
+Q2012 Staff

@@ -1,0 +1,35 @@
+<%= render :partial => "layouts/head" %>
+
+<div id="container">
+
+  <div id="content" style='width: 100%'>
+
+    <%= content_tag 'p', flash[:notice], :class => 'notice' if flash[:notice] %>
+    <%= content_tag 'p', flash[:error], :class => 'notice error' if flash[:error] %>
+
+    <%= yield %>
+  </div>
+</div>
+
+<div id="footer">
+  <!--
+  <p class="legal">
+  <a href="/legal/" style="color:#369;">Legal</a>
+  </p>
+  -->
+  <p class="disclaim">
+    <strong></strong>
+  </p>
+  <br style="clear:both;" />
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-11747101-3");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</body>
+</html>

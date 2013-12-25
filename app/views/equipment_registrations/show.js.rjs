@@ -1,0 +1,2 @@
+page[@equipment_registration].replace :partial => 'equipment_registration'
+page[@equipment_registration].visual_effect :scroll_to, :offset => -10

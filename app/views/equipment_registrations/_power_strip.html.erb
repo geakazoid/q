@@ -1,0 +1,15 @@
+<div class='equipment'>
+  <p>
+    <span class='removal_link'><%= remove_link( form ) %></span>
+    <span class='title'>Power Strip</span>
+    <%= form.hidden_field :equipment_type, :value => 'power_strip' %>
+  </p>
+  <p>
+    <%= form.label :make, 'Make: ' %><%= form.text_field :make, :size => 15 %>
+    &nbsp;&nbsp;<%= form.label :model, 'Model: ' %><%= form.text_field :model, :size => 15 %>
+  </p>
+  <p>
+    <%= form.label :color, 'Color: ' %><%= form.text_field :color, :size => 10 %>
+    &nbsp;&nbsp;<%= form.label :number_of_plugs, 'Number Of Plugs: ' %><%= form.text_field :number_of_plugs, :size => 10 %>
+  </p>
+</div>

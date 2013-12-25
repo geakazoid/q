@@ -1,0 +1,19 @@
+<div id='page_title'>
+  <%= title('Login', :h1) %>
+</div>
+
+In order to interact with certain parts of the site you need to login. You can do that below. If you don't have a login you can <%= link_to 'register', register_path %>.
+<% form_tag session_path do -%>
+<p><label for="email">Email</label><br/>
+<%= text_field_tag 'email', @email %></p>
+
+<p><label for="password">Password</label><br/>
+<%= password_field_tag 'password' %></p>
+
+<p><label for="remember_me">Remember me:</label>
+<%= check_box_tag 'remember_me', '1', @remember_me %></p>
+
+<p><%= submit_tag 'Log in' %></p>
+
+<%= link_to 'Forget your password?', forgot_password_path %>
+<% end -%>

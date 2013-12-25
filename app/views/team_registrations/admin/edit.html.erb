@@ -1,0 +1,64 @@
+<div id='page_title'>
+  <%= title("Team Registration for #{@team_registration.full_name}", :h1) %>
+  Registration created on <%= @team_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %>
+</div>
+
+<% form_for @team_registration do |f| %>
+  <%= error_messages_for :team_registration, :header_message => "There were errors updating this registration.", :message => "We encountered the following problems:" %>
+
+  <h3>Basics</h3>
+  <p>
+  	<label>District</label><br/>
+	<%= @team_registration.district.display_with_region %>
+  </p>
+  <p>
+    <%= f.label :first_name, 'First Name' %><br/>
+    <%= f.text_field :first_name %>
+  </p>
+  <p>
+    <%= f.label :last_name, 'Last Name' %><br/>
+    <%= f.text_field :last_name %>
+  </p>
+  <p>
+    <%= f.label :phone, 'Phone # (preferably mobile)' %><br/>
+    <label>(xxx-xxx-xxxx)</label><br/>
+    <%= f.text_field :phone %>
+  </p>
+  <p>
+    <%= f.label :email %><br/>
+    <%= f.text_field :email %>
+  </p>
+  <% if @team_registration.complete? %>
+  <p>
+    <%= f.label :amount, "Total Amount" %><br/>
+    <%= f.text_field :amount %>
+  </p>
+  <% end %>
+  <% if !@team_registration.complete? %>
+  <p>
+    <%= f.label :paid, "Paid?" %><br/>
+    <%= f.select :paid, { "True"  => true, "False" => false } %>
+  </p>
+  <% end %>
+
+  <div id="teams">
+    <h3>Teams</h3>
+    <% if !@team_registration.complete? %>
+      <% f.fields_for :teams do |team_form| %>
+        <%= render :partial => 'team', :locals => { :form => team_form } %>
+      <% end %>
+    <% else %>
+      <% f.fields_for :teams do |team_form| %>
+        <%= render :partial => 'edit_team', :locals => { :form => team_form } %>
+      <% end %>
+    <% end %>
+  </div>
+  <p>
+    <%= f.submit 'Update Registration' %>
+  </p>
+<% end %>
+
+  <h3>Audit Log</h3>
+  <% @team_registration.audit.each do |entry| %>
+    <%= entry %><br/><br/>
+  <% end %>

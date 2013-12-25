@@ -1,0 +1,49 @@
+<div id='page_title'>
+  <%= title('Thank you for your submission!', :h1) %>
+</div>
+<h2>Submission Information:</h2>
+<div class='receipt_details'>
+  <div class='row'>
+    <span class='label'>Submission Time:</span>
+    <span class='details'><%= @payment.transaction_time %></span>
+  </div>
+</div>
+<div style='clear: both;'></div>
+<h2>Registration Information:</h2>
+<div class='receipt_details'>
+  <% @payment.team_registration.teams.each do |team| %>
+  <div class='row'>
+    <span class='label'>Team:</span>
+    <span class='details'><%= team.name %> (<%= team.division.name %>)</span>
+  </div>
+  <% end %>
+</div>
+<div style='clear: both;'></div>
+<h2>User Information:</h2>
+<div class='receipt_details'>
+  <div class='row'>
+    <span class='label'>First Name:</span>
+    <span class='details'><%= @payment.first_name %></span>
+  </div>
+  <div class='row'>
+    <span class='label'>Last Name:</span>
+    <span class='details'><%= @payment.last_name %></span>
+  </div>
+  <div class='row'>
+    <span class='label'>Address:</span>
+    <span class='details'>
+      <%= @payment.address %><br/>
+      <%= @payment.city %>, <%= @payment.state %> <%= @payment.zipcode %><br/>
+      <%= @payment.country %>
+    </span>
+  </div>
+  <div class='row'>
+    <span class='label'>Phone:</span>
+    <span class='details'><%= @payment.phone %></span>
+  </div>
+  <div class='row'>
+    <span class='label'>Email:</span>
+    <span class='details'><%= @payment.email %></span>
+  </div>
+</div>
+<div style='clear: both;></div>

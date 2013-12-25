@@ -1,0 +1,83 @@
+<div id='page_title'>
+  <%= title('Reports', :h1) %>
+</div>
+<h3>Standard Reports</h3>
+<% if admin? %>
+  Team Registrations :
+  <%= link_to 'All', :controller => 'reports', :action => 'team_registrations_all' %> :
+  <%= link_to 'Complete', :controller => 'reports', :action => 'team_registrations_complete' %> :
+  <%= link_to 'Incomplete', :controller => 'reports', :action => 'team_registrations_incomplete' %>
+  <br/>
+  Participant Registrations :
+  <%= link_to 'All', :controller => 'reports', :action => 'participant_registrations_all' %> :
+  <%= link_to 'Complete', :controller => 'reports', :action => 'participant_registrations_complete' %> :
+  <%= link_to 'Incomplete', :controller => 'reports', :action => 'participant_registrations_incomplete' %>
+  <br/>
+  Participants and Teams :
+  <%= link_to 'All', :controller => 'reports', :action => 'coaches_quizzers_teams' %> :
+  <%= link_to 'Coaches', :controller => 'reports', :action => 'coaches_teams' %> :
+  <%= link_to 'Quizzers', :controller => 'reports', :action => 'quizzers_teams' %>
+  <br/>
+  <%= link_to 'Equipment Registrations', :controller => 'reports', :action => 'equipment_registrations' %><br/>
+<% end %>
+<% if admin? or seminar_admin? %>
+  <%= link_to 'Seminar Registrations', :controller => 'reports', :action => 'seminar_registrations' %><br/>
+<% end %>
+<% if admin? or housing_admin? or ministry_project_admin? %>
+  <%= link_to 'Core Staff', :controller => 'reports', :action => 'core_staff' %><br/>
+  <%= link_to 'Group Leaders', :controller => 'reports', :action => 'group_leaders' %><br/>
+  <%= link_to 'No Team', :controller => 'reports', :action => 'no_team' %><br/>
+  Liability Forms :
+  <%= link_to 'All', :controller => 'reports', :action => 'participants_liability'  %> :
+  <%= link_to 'Received', :controller => 'reports', :action => 'participants_liability', :params => {:received => 'true'} %> :
+  <%= link_to 'Not Received', :controller => 'reports', :action => 'participants_liability', :params => {:not_received => 'true'} %>
+  <br/>
+  <%= link_to 'Special Needs', :controller => 'reports', :action => 'special_needs' %><br/>
+  Housing / Meals :
+  <%= link_to 'All', :controller => 'reports', :action => 'housing_meals'  %> :
+  <%= link_to 'Both', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'both'} %> :
+  <%= link_to 'Housing', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'housing'} %> :
+  <%= link_to 'Meals', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'meals'} %> :
+  <%= link_to 'Only Housing', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'only_housing'} %> :
+  <%= link_to 'Only Meals', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'only_meals'} %> :
+  <%= link_to 'No Housing', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'no_housing'} %> :
+  <%= link_to 'No Meals', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'no_meals'} %> :
+  <%= link_to 'Neither', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'neither'} %>
+  <h3>Group Leader Summary</h3>
+  <% form_tag '/reports/group_leader_summary' do %>
+    Select Group Leader:
+    <%= select_tag :group_leader, '<option>- Select -</option>' + options_for_select(@group_leaders) %>
+    <%= submit_tag 'Submit' %><br/>
+    <%= link_to 'All Group Leaders', :controller => 'reports', :action => 'group_leader_summary' %>
+  <% end %>
+<% end %>
+<% if admin? or housing_admin? %>
+  <h3>Housing</h3>
+  Housing Assignments :
+  <%= link_to 'All', :controller => 'reports', :action => 'housing_all' %> :
+  <%= link_to 'Pre / Post', :controller => 'reports', :action => 'housing_pre_post' %>
+  <h3>Housing By Building</h3>
+  <% form_tag '/reports/housing_by_building' do %>
+    Select Building:
+    <%= select_tag :building_id, '<option>- Select -</option>' + options_from_collection_for_select(@buildings, 'id', 'name') %>
+    <%= submit_tag 'Submit' %><br/>
+    <%= link_to 'All Buildings', :controller => 'reports', :action => 'housing_by_building' %>
+  <% end %>
+  <h3>Housing By Group Leader</h3>
+  <% form_tag '/reports/housing_by_group_leader' do %>
+    Select Group Leader:
+    <%= select_tag :group_leader, '<option>- Select -</option>' + options_for_select(@group_leaders) %>
+    <%= submit_tag 'Submit' %><br/>
+    <%= link_to 'All Group Leaders', :controller => 'reports', :action => 'housing_by_group_leader' %>
+  <% end %>
+<% end %>
+<% if admin? or ministry_project_admin? %>
+  <h3>Ministry Projects</h3>
+  <% form_tag '/reports/ministry_projects' do %>
+    Select Ministry Project:
+    <%= select_tag :ministry_project_id, '<option>- Select -</option>' + options_from_collection_for_select(@ministry_projects, 'id', 'name') %>
+    <%= submit_tag 'Submit' %><br/>
+    <%= link_to 'All Ministry Projects (Tabbed)', :controller => 'reports', :action => 'ministry_projects' %><br/>
+    <%= link_to 'All Ministry Projects (Full)', :controller => 'reports', :action => 'ministry_projects_full' %>
+  <% end %>
+<% end %>

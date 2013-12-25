@@ -1,0 +1,4 @@
+<% div_for page do %>
+  <%= page.body %>
+  <%= link_to 'Edit', edit_page_path(page) if admin? and !@page.new_record? %>
+<% end %>

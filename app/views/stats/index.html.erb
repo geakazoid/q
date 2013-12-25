@@ -1,0 +1,30 @@
+<h1 style='margin-top:0;'>Standings</h1>
+<p>Stats are up to date!</p>
+<%  @teams.each do |teams| %>
+  <% if teams.size > 0 %>
+  <h3><%= teams.first.quiz_division.name %> <%= ('Pool ' + teams.first.pool) if teams.size > 0 and !teams.first.pool.blank? %></h3>
+  <div style='float: left; width: 300px;'>
+    <strong>Team Standings</strong><br/>
+    <% i = 1 %>
+    <% teams.each do |team| %>
+      <%= i.to_s %> <%= team.name %> (<%= pluralize(team.wins, 'win') %>)<br/>
+      <% i += 1 %>
+    <% end %>
+    <%= link_to 'See All...', :action => 'team', :id => teams.first.quiz_division.id, :pool => teams.first.pool %><br/>
+  </div>
+  <div style='float: left; width: 300px;'>
+    <strong>Individual Standings</strong><br/>
+    <%  %>
+    <% i = 1 %>
+    <% teams.first.quiz_division.ordered_quizzers.each do |quizzer| %>
+      <% break if i == 6 %>
+      <%= i.to_s %> <%= quizzer.name %> (<%= quizzer.average %> average)<br/>
+      <% i += 1 %>
+    <% end %>
+    <% if teams.first.quiz_division.ordered_quizzers.size > 0 %>
+      <%= link_to 'See All...', :action => 'individual', :id => teams.first.quiz_division.id, :pool => teams.first.pool %><br/>
+    <% end %>
+  </div>
+  <br style='clear: both;'/><br/>
+  <% end %>
+<% end %>

@@ -1,0 +1,190 @@
+<div id='page_title'>
+  <%= title('Edit Ministry Project Assignments', :h1) %>
+</div>
+
+<% content_for :ministry_project_admin do %>
+<p>
+  Search for a participant:
+  <% form_tag request.path, :method => 'get' do %>
+    <%= text_field_tag :q, params[:q], :size => 25 %>
+  <% end %>
+</p>
+<% end %>
+
+<%- unless @ministry_projects.size > 0 %>
+<div>
+  <br/>
+  <span style='color: #ff0000; font-weight: bold;'>No Ministry Projects have been defined.</span>
+</div>
+<%- else %>
+<% form_tag '/participant_registrations/save_ministry_project' do %>
+  <table class='filters'>
+    <tr>
+      <td>
+        Filter By Status:
+      </td>
+      <td>
+        <%= select_tag :filter_status, (session[:status].blank? ? '<option>- Select -</option>' : '') + options_for_select({'Ministry Project Assigned' => 'complete','Ministry Project And Group Assigned' => 'complete_with_group','Ministry Project Not Assigned' => 'incomplete'}, session[:status]), :onchange => "document.location='/participant_registrations/filter_ministry_project/?status=' + this.value;" %>
+        <% unless session[:status].blank? %>
+          <a href='/participant_registrations/filter_ministry_project/?status=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Type:
+      </td>
+      <td>
+        <%= select_tag :filter_type,
+                       (session[:registration_type].blank? ? '<option>- Select -</option>' : '') +
+                        options_for_select({
+                          'Quizzer' => 'quizzer',
+                          'Coach' => 'coach',
+                          'Official' => 'official',
+                          'Volunteer' => 'volunteer',
+                          'Family' => 'family',
+                          'Guest' => 'guest',
+                          'Core Staff' => 'core_staff',
+                          'Exhibitor' => 'exhibitor'},
+                          session[:registration_type]),
+                        :onchange => "document.location='/participant_registrations/filter_ministry_project/?registration_type=' + this.value;" %>
+        <% unless session[:registration_type].blank? %>
+          <a href='/participant_registrations/filter_ministry_project/?registration_type=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Group Leader:
+      </td>
+      <td>
+        <%= select_tag :filter_group_leader, (session[:group_leader].blank? ? '<option>- Select -</option>' : '') + options_for_select(@group_leaders, session[:group_leader].to_i), :onchange => "document.location='/participant_registrations/filter_ministry_project/?group_leader=' + this.value;" %>
+        <% unless session[:group_leader].blank? %>
+          <a href='/participant_registrations/filter_ministry_project/?group_leader=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Age Group / Grade:
+      </td>
+      <td>
+        <%= select_tag :filter_grade, (session[:grade].blank? ? '<option>- Select -</option>' : '') + options_for_select(['Child Age 3 and Under','Child Age 4-12','6th','7th','8th','9th','10th','11th','12th','Adult'], session[:grade]), :onchange => "document.location='/participant_registrations/filter_ministry_project/?grade=' + this.value;" %>
+        <% unless session[:grade].blank? %>
+          <a href='/participant_registrations/filter_ministry_project/?grade=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Division:
+      </td>
+      <td>
+        <%= select_tag :filter_division, (session[:division_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@divisions.collect {|d| [ d[:name], d[:id] ] }, session[:division_id].to_i), :onchange => "document.location='/participant_registrations/filter_ministry_project/?division_id=' + this.value;" %>
+        <% unless session[:division_id].blank? %>
+          <a href='/participant_registrations/filter_ministry_project/?division_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By District:
+      </td>
+      <td>
+        <%= select_tag :filter_district, (session[:district_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@districts.collect {|d| [ d[:name], d[:id] ] }, session[:district_id].to_i), :onchange => "document.location='/participant_registrations/filter_ministry_project/?district_id=' + this.value;" %>
+        <% unless session[:district_id].blank? %>
+          <a href='/participant_registrations/filter_ministry_project/?district_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Region:
+      </td>
+      <td>
+        <%= select_tag :filter_region, (session[:region_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@regions.collect {|d| [ d[:name], d[:id] ] }, session[:region_id].to_i), :onchange => "document.location='/participant_registrations/filter_ministry_project/?region_id=' + this.value;" %>
+        <% unless session[:region_id].blank? %>
+          <a href='/participant_registrations/filter_ministry_project/?region_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Building:
+      </td>
+      <td>
+        <%= select_tag 'filter_district', (session[:building_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@buildings.collect {|d| [ d[:name], d[:id] ] }, session[:building_id].to_i), :onchange => "document.location='/participant_registrations/filter_ministry_project/?building_id=' + this.value;" %>
+        <% unless session[:building_id].blank? %>
+          <a href='/participant_registrations/filter_ministry_project/?building_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Ministry Project:
+      </td>
+      <td>
+        <%= select_tag 'filter_ministry_project', (session[:ministry_project_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@ministry_projects.collect {|mp| [ mp[:name], mp[:id] ] }, session[:ministry_project_id].to_i), :onchange => "document.location='/participant_registrations/filter_ministry_project/?ministry_project_id=' + this.value;" %>
+        <% unless session[:ministry_project_id].blank? %>
+          <a href='/participant_registrations/filter_ministry_project/?ministry_project_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <% if @filter_applied %>
+          <a href='/participant_registrations/filter_ministry_project/?clear=true'>Clear All Filters</a>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+  <br/>
+  <% if @participant_registrations.size > 0 %>
+    <table>
+      <tr>
+        <td style='border: 0;'><%= @participant_registrations.size %> Participants Found</td>
+        <td style='border: 0; text-align: right;' colspan='3'><%= submit_tag 'Save All Records' %></td>
+      </tr>
+      <tr>
+        <th>Participant</th>
+        <th>Ministry Project</th>
+        <th>Group</th>
+      </tr>
+      <% @participant_registrations.each do |participant_registration| %>
+        <% fields_for "participant_registration[]", participant_registration do |pr_fields| %>
+          <tr>
+            <td width='400'>
+              <strong><%= participant_registration.full_name %></strong><br/>
+              <div style='font-size: 0.8em'>
+              <%= participant_registration.formatted_registration_type %><br/>
+              <%= participant_registration.district.display_with_region %><br/>
+              Age / Grade: <%= participant_registration.most_recent_grade %><br/>
+              Group Leader: <%= participant_registration.group_leader_name %>
+              <% if participant_registration.quizzer? or participant_registration.coach? %>
+                <br/>Divisions: <%= participant_registration.division_list %>
+              <% end %>
+              <% if !participant_registration.complete? %><span style='color: #ff0000; font-weight: bold;'><br/>PAYMENT NOT RECEIVED</span><% end %>
+              </div>
+            </td>
+            <td>
+              <%= pr_fields.select :ministry_project_id, @ministry_projects.map {|mp| [mp.name,mp.id]}, {:prompt => "- Select -", :include_blank => true}, {:onchange => "$('participant_registration_#{participant_registration.id.to_s}_ministry_project_group').value = '';"} %>
+            </td>
+            <td>
+              <%= pr_fields.text_field :ministry_project_group, :size => 10 %>
+              <div class='autocomplete' id='ministry_project_group_auto_complete_<%= participant_registration.id.to_s %>'></div>
+              <script type='text/javascript'>
+                new Ajax.Autocompleter('participant_registration_<%= participant_registration.id.to_s %>_ministry_project_group', 'ministry_project_group_auto_complete_<%= participant_registration.id.to_s %>', '/ministry_projects/auto_complete_for_ministry_project_group', {callback: function (element, entry) {return entry + "&ministry_project_id=" + $F('participant_registration_<%= participant_registration.id.to_s %>_ministry_project_id')}});
+              </script>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+      <tr>
+        <td style='border: 0; text-align: right;' colspan='4'><%= submit_tag 'Save All Records' %></td>
+      </tr>
+    </table>
+  <% else %>
+    No records match the specified query.
+  <% end %>
+<% end %>
+<% end %>

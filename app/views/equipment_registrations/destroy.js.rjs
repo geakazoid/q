@@ -1,0 +1,1 @@
+page[@equipment_registration].visual_effect :fade

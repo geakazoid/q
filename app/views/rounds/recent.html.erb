@@ -1,0 +1,30 @@
+<h1 style='margin-top:0'>Quiz Rounds for 07.02.2010</h1>
+<p>
+  Recent rounds are displayed below. Rounds in pink are in progress. Winners (or teams leading) are highlighted in yellow.
+  This page will refresh every 30 seconds.
+</p>
+<table>
+  <tr>
+    <th>Division</th>
+    <th>Area</th>
+    <th>Round</th>
+    <th>Team 1</th>
+    <th>Team 2</th>
+    <th>Questions</th>
+    <th>Finished?</th>
+    <th>&nbsp;</th>
+  </tr>
+<% @rounds.each do |round| %>
+  <tr <%= "class='incomplete'" if !round.complete? %>>
+    <td><%= round.quiz_division.name %></td>
+    <td><%= round.room.name unless round.room.nil? %> </td>
+    <td><%= round.number %></td>
+    <% round.round_teams.each do |round_team| %>
+    <td <%= 'style="background: yellow"' if round_team.place == 1 %>><%= round_team.quiz_team.name %></td>
+    <% end %>
+    <td><%= round.questions %></td>
+    <td><%= round.complete? ? "Yes" : "No" %></td>
+    <td><%= link_to "Scoresheet", round_path(round) %></td>
+  </tr>
+<% end %>
+</table>

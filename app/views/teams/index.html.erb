@@ -1,0 +1,130 @@
+<div id='page_title'>
+  <%= title('Teams', :h1) %>
+</div>
+
+<h1>Local Novice</h1>
+<% @ln.teams.each do |team| %>
+  <% quizzers = (team.quizzers1 + team.quizzers2 + team.quizzers3).sort_by{|quizzer| quizzer.full_name} %>
+  <h3><%= team.name %></h3>
+  <div style='float: left;'>
+    <% team_name = fix_name(team.name) %>
+    <% if FileTest.exists?(RAILS_ROOT + '/public/images/teams/small/LN ' + team_name + '.jpg')  %>
+      <a href='/images/teams/medium/LN <%= team_name %>.jpg' target='_blank'><img src='/images/teams/small/LN <%= team_name %>.jpg' width='400' height='264' border='0'/></a>
+    <% else %>
+      <img src='/images/teams/pic_comingsoon.gif' width='400' height='264'/>
+    <% end %>
+  </div>
+  <div style='float: left; margin-left: 10px;'>
+    <strong>Quizzers</strong><br/>
+    <% quizzers.each do |quizzer| %>
+      <%= quizzer.full_name %><br/>
+    <% end %>
+  </div>
+  <br style='clear: both;'/>
+<% end %>
+<br style='margin-top: 40px;'/>
+<h1>Local Experienced</h1>
+<% @le.teams.each do |team| %>
+  <% quizzers = (team.quizzers1 + team.quizzers2 + team.quizzers3).sort_by{|quizzer| quizzer.full_name}
+ %>
+    <h3><%= team.name %></h3>
+    <div style='float: left;'>
+      <% team_name = fix_name(team.name) %>
+      <% if FileTest.exists?(RAILS_ROOT + '/public/images/teams/small/LE ' + team_name + '.jpg')  %>
+        <a href='/images/teams/medium/LE <%= team_name %>.jpg' target='_blank'><img src='/images/teams/small/LE <%= team_name %>.jpg' width='400' height='264' border='0'/></a>
+      <% else %>
+        <img src='/images/teams/pic_comingsoon.gif' width='400' height='264'/>
+      <% end %>
+    </div>
+    <div style='float: left; margin-left: 10px;'>
+      <strong>Quizzers</strong><br/>
+      <% quizzers.each do |quizzer| %>
+        <%= quizzer.full_name %><br/>
+      <% end %>
+    </div>
+    <br style='clear: both;'/>
+<% end %>
+<br style='margin-top: 40px;'/>
+<h1>District Novice</h1>
+<% @dn.teams.each do |team| %>
+  <% quizzers = (team.quizzers1 + team.quizzers2 + team.quizzers3).sort_by{|quizzer| quizzer.full_name} %>
+  <h3><%= team.name %></h3>
+  <div style='float: left;'>
+    <% team_name = fix_name(team.name) %>
+    <% if FileTest.exists?(RAILS_ROOT + '/public/images/teams/small/DN ' + team_name + '.jpg')  %>
+      <a href='/images/teams/medium/DN <%= team_name %>.jpg' target='_blank'><img src='/images/teams/small/DN <%= team_name %>.jpg' width='400' height='264' border='0'/></a>
+    <% else %>
+      <img src='/images/teams/pic_comingsoon.gif' width='400' height='264'/>
+    <% end %>
+  </div>
+  <div style='float: left; margin-left: 10px;'>
+    <strong>Quizzers</strong><br/>
+    <% quizzers.each do |quizzer| %>
+      <%= quizzer.full_name %><br/>
+    <% end %>
+  </div>
+  <br style='clear: both;'/>
+<% end %>
+<br style='margin-top: 40px;'/>
+<h1>District Experienced</h1>
+<% @de.teams.each do |team| %>
+  <% quizzers = (team.quizzers1 + team.quizzers2 + team.quizzers3).sort_by{|quizzer| quizzer.full_name} %>
+  <h3><%= team.name %></h3>
+  <div style='float: left;'>
+    <% team_name = fix_name(team.name) %>
+    <% if FileTest.exists?(RAILS_ROOT + '/public/images/teams/small/DE ' + team_name + '.jpg')  %>
+      <a href='/images/teams/medium/DE <%= team_name %>.jpg' target='_blank'><img src='/images/teams/small/DE <%= team_name %>.jpg' width='400' height='264' border='0'/></a>
+    <% else %>
+      <img src='/images/teams/pic_comingsoon.gif' width='400' height='264'/>
+    <% end %>
+  </div>
+  <div style='float: left; margin-left: 10px;'>
+    <strong>Quizzers</strong><br/>
+    <% quizzers.each do |quizzer| %>
+      <%= quizzer.full_name %><br/>
+    <% end %>
+  </div>
+  <br style='clear: both;'/>
+<% end %>
+<br style='margin-top: 40px;'/>
+<h1>Regional A</h1>
+<% @ra.teams.each do |team| %>
+  <% quizzers = (team.quizzers1 + team.quizzers2 + team.quizzers3).sort_by{|quizzer| quizzer.full_name} %>
+  <h3><%= team.name %></h3>
+  <div style='float: left;'>
+    <% team_name = fix_name(team.name) %>
+    <% if FileTest.exists?(RAILS_ROOT + '/public/images/teams/small/RA ' + team_name + '.jpg')  %>
+      <a href='/images/teams/medium/RA <%= team_name %>.jpg' target='_blank'><img src='/images/teams/small/RA <%= team_name %>.jpg' width='400' height='264' border='0'/></a>
+    <% else %>
+      <img src='/images/teams/pic_comingsoon.gif' width='400' height='264'/>
+    <% end %>
+  </div>
+  <div style='float: left; margin-left: 10px;'>
+    <strong>Quizzers</strong><br/>
+    <% quizzers.each do |quizzer| %>
+      <%= quizzer.full_name %><br/>
+    <% end %>
+  </div>
+  <br style='clear: both;'/>
+<% end %>
+<br style='margin-top: 40px;'/>
+<h1>Regional B</h1>
+<% @rb.teams.each do |team| %>
+  <% quizzers = (team.quizzers1 + team.quizzers2 + team.quizzers3).sort_by{|quizzer| quizzer.full_name} %>
+  <h3><%= team.name %></h3>
+  <div style='float: left;'>
+    <% team_name = fix_name(team.name) %>
+    <% if FileTest.exists?(RAILS_ROOT + '/public/images/teams/small/RB ' + team_name + '.jpg')  %>
+      <a href='/images/teams/medium/RB <%= team_name %>.jpg' target='_blank'><img src='/images/teams/small/RB <%= team_name %>.jpg' width='400' height='264' border='0'/></a>
+    <% else %>
+      <img src='/images/teams/pic_comingsoon.gif' width='400' height='264'/>
+    <% end %>
+  </div>
+  <div style='float: left; margin-left: 10px;'>
+    <strong>Quizzers</strong><br/>
+    <% quizzers.each do |quizzer| %>
+      <%= quizzer.full_name %><br/>
+    <% end %>
+  </div>
+  <br style='clear: both;'/>
+<% end %>

@@ -1,0 +1,41 @@
+<% content_for :admin do %>
+<p>
+  <%= link_to 'Create new page', new_page_path %>
+</p>
+<% end %>
+
+<div id='page_title'>
+  <%= title('Pages', :h1) %>
+</div>
+
+<% if !@pages.empty? %>
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Label</th>
+	<th>Link</th>
+	<th>Published</th>
+	<th>Show On Menu</th>
+	<th colspan='3'>Actions</th>
+  </tr>
+
+<% @pages.each do |page| %>
+  <tr>
+    <td><%=h page.title %></td>
+    <td><%=h page.label %></td>
+	<td><%=h page.link %></td>
+	<td><%=h page.published? %></td>
+	<td><%=h page.show_on_menu? %></td>
+    <td><%= link_to 'Show', page %></td>
+    <td><%= link_to 'Edit', edit_page_path(page) %></td>
+    <td><%= link_to 'Delete', page, :confirm => 'Are you sure you want to delete this page?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+<% else %>
+<% if current_user && admin? %>
+<p>
+  You don't have any pages. Would you like to <%= link_to 'create one', new_page_path %>?
+</p>
+<% end %>
+<% end %>

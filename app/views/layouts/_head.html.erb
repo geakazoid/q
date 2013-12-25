@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Q2012<%= " | #{h @page_title}" if @page_title %></title>
+    <%= stylesheet_link_tag 'display' %>
+    <%= javascript_include_tag "prototype" %>
+    <%= yield :tinymce %>
+    <%= javascript_include_tag "effects" %>
+    <%= javascript_include_tag "controls" %>
+    <%= javascript_include_tag "lowpro" %>
+    <%= javascript_include_tag "application" %>
+    <%= javascript_include_tag "util" %>
+    <%= javascript_include_tag "flowplayer-3.2.11.min" %>
+    
+    <%= yield :tinymce_init %>
+
+    <% if @refresh  %>
+      <META HTTP-EQUIV=REFRESH CONTENT=30>
+      <% end %>
+  </head>
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11747101-7']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  </script>
+  <body>
+
+    <div id="header">
+      <% if admin? %><div id='revision_info'><%= render :file => RAILS_ROOT + "/public/revision" %> (<a href='/history.txt'>history</a>)</div><% end %>
+      <h1><%= link_to(image_tag('q2012_header.jpg', :height => 200), root_path) %></h1>
+      <ul id="nav">
+        <li><%= link_to 'Home', root_path %></li>
+        <%= extra_pages %>
+        <li><%= link_to 'Teams', teams_path %></li>
+        <li><%= link_to 'Statistics', '/statistics/index' %></li>
+        <li><%= link_to 'Seminar Information', schedule_seminar_registrations_path %></li>
+        <li><%= link_to 'Live Video', video_pages_path %></li>
+	<li><%= link_to 'Register As An Official', new_official_path %></li>
+        <li><%= link_to 'Register A Team', new_team_registration_path %></li>
+        <li><%= link_to 'Register A Participant', new_participant_registration_path %></li>
+        <li><%= link_to 'Q2010 Teams', 'http://www.q2010.org/teams', :popup => true %></li>
+        <li><%= link_to 'Q2010 Statistics', 'http://www.q2010.org/stats', :popup => true %></li>
+        <li><%= link_to 'Q2010 Gallery', 'http://www.q2010.org/gallery', :popup => true %></li>
+        <% if logged_in? %>
+          <li><%= link_to 'Update Account', account_path %></li>
+          <li class="login"><%= link_to current_user.fullname, account_path %></li>
+          <li class="logout"><%= link_to 'Logout', logout_path %></li>
+        <% else %>
+          <li><%= link_to 'Register', register_path %></li>
+          <li><%= link_to 'Login', login_path %></li>
+        <% end %>
+      </ul>
+    </div>

@@ -1,0 +1,23 @@
+Dear <%= @payment.first_name %>,
+
+Thank you for your submission.
+
+Submission Information:
+
+Submission Time: <%= @payment.transaction_time %>
+
+Registration Information:
+
+<% @payment.team_registration.teams.each do |team| -%>
+  Team:<%= team.name %> (<%= team.division.name %>)
+<% end -%>
+
+User Information:
+
+First Name: <%= @payment.first_name %>
+Last Name: <%= @payment.last_name %>
+Address: <%= @payment.address %>
+         <%= @payment.city %>, <%= @payment.state %> <%= @payment.zipcode %>
+         <%= @payment.country %>
+Phone: <%= @payment.phone %>
+Email: <%= @payment.email %>

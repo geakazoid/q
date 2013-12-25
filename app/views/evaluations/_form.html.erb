@@ -1,0 +1,217 @@
+<div id='evaluation' class='registration new_registration'>
+  <% form_for(@evaluation) do |f| %>
+    <% if @errors %>
+      <div class="errorExplanation" id="errorExplanation">
+        <h2>Errors prevented you from submitting this evaluation.</h2>
+        <p>Please verify all fields are filled out. Fields labeled in red are missing information.</p>
+      </div>
+    <% end %>
+    <p>
+      Please take a moment to evaluate the person listed below in regards to his or her involvement in officiating at Q2012.
+      Your response is greatly appreciated!
+    </p>
+    <p>Required fields are marked with a *.</p>
+    <h3 style='margin-bottom: 0px;'>Basics</h3>
+    <div>
+      <label>Person Being Recommended</label><br/>
+      <%= @evaluation.official.full_name %>
+    </div>
+    <div>
+      <%= f.label :name, 'Your Name *' %><br/>
+      <% if @evaluation.sent_to_name.blank? %>
+        <%= f.text_field :name %>
+      <% else %>
+        <%= @evaluation.sent_to_name %>
+        <%= f.hidden_field :name, :value => @evaluation.sent_to_name %>
+      <% end %>
+    </div>
+    <div>
+      <%= f.label :district, 'Your Home District / Region *' %><br/>
+      <%= f.collection_select :district_id,
+        District.all(:order => 'name asc'),
+        :id,
+        :display_with_region,
+        {:prompt => '- Select -'} %>
+    </div>
+    <div>
+      <%= f.label :position, 'Your position in Nazarene Youth Bible Quizzing Ministry (the one which best describes you in quizzing). *' %><br/>
+      <%= f.select :position,
+      [['District Director', 'District Director'],
+       ['Regional Director', 'Regional Director'],
+       ['Tournament Director', 'Tournament Director'],
+       ['Coach', 'Coach'],
+       ['Other', 'Other']
+      ],
+      {:prompt => '- Select Position -'} %>
+    </div>
+    <div>
+      <%= f.label :levels, 'At what levels have you observed this person officiate? (Check all that apply.) *' %><br/>
+      <div style='float: left; padding-right: 20px;'>
+        <% count = 0 %>
+        <% ['2008 - Central USA Regional Event',
+            '2008 - East Central USA Regional Event', 
+            '2008 - Eastern USA Regional Event',
+            '2008 - North Central USA Regional Event',
+            '2008 - Northwest USA Regional Event',
+            '2008 - South Central USA Regional Event',
+            '2008 - Southeast USA Regional Event',
+            '2008 - Southwest USA Regional Event',
+            '2008 - Q2008 - NNU',
+            '2008 - St. Louis Top Ten All-Star Quiz',
+            '2009 - Central USA Regional Event',
+            '2009 - East Central USA Regional Event',
+            '2009 - Eastern USA Regional Event',
+            '2009 - North Central USA Regional Event',
+            '2009 - Northwest USA Regional Event',
+            '2009 - South Central USA Regional Event',
+            '2009 - Southeast USA Regional Event',
+            '2009 - Southwest USA Regional Event',
+            '2009 - General Assembly',
+            '2009 - St. Louis Top Ten All-Star Quiz',
+            '2010 - Central USA Regional Event',
+            '2010 - East Central USA Regional Event',
+            '2010 - Eastern USA Regional Event',
+            '2010 - North Central USA Regional Event',
+            '2010 - Northwest USA Regional Event',
+            '2010 - South Central USA Regional Event',
+            '2010 - Southeast USA Regional Event',
+            '2010 - Southwest USA Regional Event',
+            '2010 - Q2010 - MVNU',
+            '2010 - St. Louis Top Ten All-Star Quiz',
+            '2011 - Central USA Regional Event',
+            '2011 - East Central USA Regional Event',
+            '2011 - Eastern USA Regional Event',
+            '2011 - North Central USA Regional Event',
+            '2011 - Northwest USA Regional Event',
+            '2011 - South Central USA Regional Event',
+            '2011 - Southeast USA Regional Event',
+            '2011 - Southwest USA Regional Event',
+            '2011 - NYC - Louisville',
+            '2011 - St. Louis Top Ten All-Star Quiz',
+            'District Invitational (Novice)',
+            'District Invitational (Experienced)',
+            'Regional Invitational (Novice)',
+            'Regional Invitational (Experienced)'].each do |level| %>
+          <%= check_box_tag "evaluation[levels][]", level, @evaluation.levels.include?(level) %>
+          <label><%= level %></label><br/>
+          <% if count == 21 %>
+            </div><div style='float: left;'>
+          <% end %>
+        <% count += 1 %>
+      <% end %>
+      </div>
+    </div>
+    <div style='clear: left;'>
+      <%= f.label :where_observed, 'Please indicate where and when you observed this official?' %><br/>
+      <%= f.text_area :where_observed, :style => 'width:600px;height:200px;' %>
+    </div>
+    <div>
+      <%= f.label :best_suited, 'In your opinion, for which position / level is this person best suited? *' %><br/>
+      <%= f.select :best_suited,
+      [['Quizmaster', 'Quizmaster'],
+       ['Content Judge', 'Content Judge']
+      ],
+      {:prompt => '- Select Position -'} %>
+      &nbsp;
+      <%= f.select :best_suited_level,
+      [['Regional', 'Regional'],
+       ['District Experienced', 'District Experienced'],
+       ['District Novice','District Novice'],
+       ['Local Experienced', 'Local Experienced'],
+       ['Local Novice','Local Novice']
+      ],
+      {:prompt => '- Select Level -'} %>
+    </div>
+    <h3 style='margin-bottom: 0px;'>
+      In the following questions please rate the candidate in the following categories. Please explain your rating below the question.
+      It should be noted that a rating of five is reserved for exceptional upper level officials.
+    </h3>
+    <div>
+      <%= f.label :reading, 'Consistency in reading and stopping: Consider cadence, hesitation, stopping when tone sounds, voice inflection, clarity. *' %><br/>
+      <%= f.select :reading,
+      [['5 - Exceeds expectations', '5 - Exceeds expectations'],
+       ['4 - Meets or exceeds most expectations', '4 - Meets or exceeds most expectations'],
+       ['3 - Meets average expectations', '3 - Meets average expectations'],
+       ['2 - Does not meet some expectations', '2 - Does not meet some expectations'],
+       ['1 - Would not recommend', '1 - Would not recommend'],
+       ['0 - Do not know person or choose not to recommend', '0 - Do not know person or choose not to recommend']
+      ],
+      {:prompt => '- Select -'} %>
+    </div>
+    <div>
+      <%= f.label :reading_explanation, 'Please explain your response. *' %><br/>
+      <%= f.text_area :reading_explanation, :style => 'width:600px;height:200px;' %>
+    </div>
+    <div>
+      <%= f.label :ruling, 'Consistency in ruling: Consider any biases for or against, whether the round is preliminary or tournament, whether they are pushed for time, etc. *' %><br/>
+      <%= f.select :ruling,
+      [['5 - Exceeds expectations', '5 - Exceeds expectations'],
+       ['4 - Meets or exceeds most expectations', '4 - Meets or exceeds most expectations'],
+       ['3 - Meets average expectations', '3 - Meets average expectations'],
+       ['2 - Does not meet some expectations', '2 - Does not meet some expectations'],
+       ['1 - Would not recommend', '1 - Would not recommend'],
+       ['0 - Do not know person or choose not to recommend', '0 - Do not know person or choose not to recommend']
+      ],
+      {:prompt => '- Select -'} %>
+    </div>
+        <div>
+      <%= f.label :ruling_explanation, 'Please explain your response. *' %><br/>
+      <%= f.text_area :ruling_explanation, :style => 'width:600px;height:200px;' %>
+    </div>
+    <div>
+      <%= f.label :knowledge_material, 'Knowledge of material: Consider how they utilize their content judge, the ratio of challenges to challenges that are accepted, etc. *' %><br/>
+      <%= f.select :knowledge_material,
+      [['5 - Exceeds expectations', '5 - Exceeds expectations'],
+       ['4 - Meets or exceeds most expectations', '4 - Meets or exceeds most expectations'],
+       ['3 - Meets average expectations', '3 - Meets average expectations'],
+       ['2 - Does not meet some expectations', '2 - Does not meet some expectations'],
+       ['1 - Would not recommend', '1 - Would not recommend'],
+       ['0 - Do not know person or choose not to recommend', '0 - Do not know person or choose not to recommend']
+      ],
+      {:prompt => '- Select -'} %>
+    </div>
+    <div>
+      <%= f.label :knowledge_material_explanation, 'Please explain your response. *' %><br/>
+      <%= f.text_area :knowledge_material_explanation, :style => 'width:600px;height:200px;' %>
+    </div>
+    <div>
+      <%= f.label :knowledge_ruling, 'Knowledge and application of rules: Consider how they handle difficult questions/answers, such as multiple questions/answers, appeals, ties, etc. *' %><br/>
+      <%= f.select :knowledge_ruling,
+      [['5 - Exceeds expectations', '5 - Exceeds expectations'],
+       ['4 - Meets or exceeds most expectations', '4 - Meets or exceeds most expectations'],
+       ['3 - Meets average expectations', '3 - Meets average expectations'],
+       ['2 - Does not meet some expectations', '2 - Does not meet some expectations'],
+       ['1 - Would not recommend', '1 - Would not recommend'],
+       ['0 - Do not know person or choose not to recommend', '0 - Do not know person or choose not to recommend']
+      ],
+      {:prompt => '- Select -'} %>
+    </div>
+    <div>
+      <%= f.label :knowledge_ruling_explanation, 'Please explain your response. *' %><br/>
+      <%= f.text_area :knowledge_ruling_explanation, :style => 'width:600px;height:200px;' %>
+    </div>
+    <div>
+      <%= f.label :interpersonal_skills, 'Interpersonal Skills: How would you describe how this person interacts with others (consider quizzers, coaches, those in charge of the event, etc). *' %><br/>
+      <%= f.text_area :interpersonal_skills, :style => 'width:600px;height:200px;' %>
+    </div>
+    <div>
+      <%= f.label :handles_conflict, 'Describe how this person handles conflicts or changes in circumstances as they arise. *' %><br/>
+      <%= f.text_area :handles_conflict, :style => 'width:600px;height:200px;' %>
+    </div>
+    <div>
+      <%= f.label :content_judge_utilization, 'Describe how this person utilizes their content judge. *' %><br/>
+      <%= f.text_area :content_judge_utilization, :style => 'width:600px;height:200px;' %>
+    </div>
+    <div>
+      <%= f.label :additional_comments, 'Please list any additional comments/concerns regarding this person.' %><br/>
+      <%= f.text_area :additional_comments, :style => 'width:600px;height:200px;' %>
+    </div>
+    <p style='line-height: 5px;'>
+      <%= f.hidden_field :key %>
+      <%= f.submit 'Submit Evaluation', :id => 'submit_evaluation', :onclick => "$('evaluation_spinner').show(); $('submit_evaluation').disabled = true; $('submit_evaluation').value = 'Submitting Evaluation...'; submit(); return false;", :autocomplete => 'off' %>
+      <span id='evaluation_spinner' style='display:none;'>
+        &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
+      </span>
+    </p>
+  <% end %>
+</div>

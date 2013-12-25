@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title><%= "#{h @page_title}" if @page_title %></title>
+    <style type="text/css" media="screen">
+      @import "/stylesheets/site_jui.ccss";
+      @import "/stylesheets/table_jui.css";
+      @import "/stylesheets/smoothness/jquery-ui-1.8.2.custom.css";
+
+      /*
+       * Override styles needed due to the mix of three different CSS sources! For proper examples
+       * please see the themes example in the 'Examples' section of this site
+      */
+      body
+      {
+        font-family: 'Lucida Grande', 'Trebuchet MS', Arial, Helvetica, sans-serif;
+        font-size: 90%;
+        margin: 10px;
+        padding: 10px;
+      }
+      .dataTables_info { padding-top: 0; }
+      .dataTables_paginate { padding-top: 0; }
+      .css_right { float: right; }
+      #example_wrapper .fg-toolbar { font-size: 0.8em }
+      #theme_links span { float: left; padding: 2px 10px; }
+    </style>
+    <%= javascript_include_tag 'jquery' %>
+    <%= javascript_include_tag 'jquery-ui-1.8.2.custom.min' %>
+    <%= javascript_include_tag 'jquery.dataTables' %>
+    <script type='text/javascript'>
+      $.fn.dataTableExt.afnSortData['dom-select'] = function  ( oSettings, iColumn )
+      {
+        var aData = [];
+        $( 'td:eq('+iColumn+') select', oSettings.oApi._fnGetTrNodes(oSettings) ).each( function () {
+          aData.push( $(this).val() );
+        } );
+        return aData;
+      }
+
+      $(document).ready(function() {
+        $('#equipment_list').dataTable( {
+          "bJQueryUI": true,
+          "bAutoWidth": false,
+          "sPaginationType": "full_numbers",
+          "iDisplayLength": 20,
+          "aoColumns": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            { "sSortDataType": "dom-select" },
+            { "sSortDataType": "dom-select" },
+          ],
+          'oLanguage': {
+            'sLengthMenu': 'Show <select>' +
+              '<option value="10">10</option>' +
+              '<option value="20">20</option>' +
+              '<option value="50">50</option>' +
+              '<option value="100">100</option>' +
+              '<option value="-1">All</option>' +
+              '</select> entries'
+          }
+        });
+      } );
+
+      document.onkeydown = my_onkeydown_handler;
+      function my_onkeydown_handler()
+      {
+        switch (event.keyCode)
+        {
+
+          case 116 : // 'F5'
+            event.returnValue = false;
+            event.keyCode = 0;
+            window.status = "We have disabled F5";
+            break;
+        }
+      }
+    </script>
+
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

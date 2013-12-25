@@ -1,0 +1,35 @@
+<div id='page_title'>
+  <%= title('New Page', :h1) %>
+</div>
+
+<% form_for(@page) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :title %><br/>
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :label %><br/>
+    <%= f.text_field :label %>
+  </p>
+  <p>
+    <%= f.label :link %><br/>
+    <%= f.text_field :link %>
+	(If link is filled in body will not be displayed.)
+  </p>
+  <p>
+  	<%= f.check_box :published %>
+    <%= f.label :published %>
+	<%= f.check_box :show_on_menu %>
+	<%= f.label :show_on_menu %><br/>
+  </p>
+  <p>
+    <%= f.label :body %><br/>
+	<% use_tinymce -%>
+  	<%= f.text_area :body, :class => "mce-editor" %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %> or <%= link_to 'Cancel', pages_path %>
+  </p>
+<% end %>

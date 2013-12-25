@@ -1,0 +1,11 @@
+<div class='equipment'>
+  <p>
+    <span class='removal_link'><%= remove_link( form ) %></span>
+    <span class='title'>Monitor</span>
+    <%= form.hidden_field :equipment_type, :value => 'monitor' %>
+  </p>
+  <p>
+    <%= form.label :monitor_size, 'Size: ' %><%= form.select :ib_type, ['15 inch','17 inch','19 inch','> 19 inch'], :prompt => '- Select -' %>
+    &nbsp;&nbsp;<%= form.label :brand, 'Brand: ' %><%= form.text_field :brand, :size => 20 %>
+  </p>
+</div>

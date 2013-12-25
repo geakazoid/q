@@ -1,0 +1,48 @@
+<div id='page_title'>
+  <%= title('Live Video', :h1) %>
+</div>
+<% if !params[:source] %>
+  <p>
+    You can watch live video from any of the following feeds!
+  </p>
+  <p>
+    <strong>Chapel Services</strong><br/>
+    <%= link_to "Centennial Chapel", video_pages_path({:source => "centennial"}) %><br/>
+  </p>
+  <p>
+    <strong>Quizzing Rooms</strong><br/>
+    <%= link_to "Burke 001", video_pages_path({:source => "camera1"}) %><br/>
+    <%= link_to "Burke 007", video_pages_path({:source => "camera2"}) %><br/>
+    <%= link_to "Larsen 140", video_pages_path({:source => "camera3"}) %><br/>
+    <%= link_to "Larsen Auditorium", video_pages_path({:source => "camera4"}) %><br/>
+    <%= link_to "Burke 306", video_pages_path({:source => "camera5"}) %><br/>
+    <%= link_to "Burke 307", video_pages_path({:source => "camera6"}) %><br/>
+    <%= link_to "Wisner 137", video_pages_path({:source => "camera7"}) %><br/>
+    <%= link_to "Wisner 154", video_pages_path({:source => "camera8"}) %><br/>
+    <%= link_to "Wisner 137B", video_pages_path({:source => "camera9"}) %><br/>
+    <%= link_to "Wisner 137C", video_pages_path({:source => "camera10"}) %><br/>
+  </p>
+  <p>
+    <a href='https://www.q2012.org/files/Q2012%20Video%20Room%20Schedule.pdf'>Video Room Schedule</a>
+  </p>
+<% else %>
+  <h2><%= @rooms[params[:source]] %></h2>
+  <p>
+    <script type='text/javascript' src='/javascripts/jwplayer.js'></script>
+  </p>
+  <div id="mediaspace">Flash Player must be installed! Videos will not work on Apple ipads, ipods, or iphones. Some android devices might work.</div>
+  <p>
+<script type='text/javascript'>
+  jwplayer('mediaspace').setup({
+    'flashplayer': '/player.swf',
+    'type': 'rtmp',
+    'streamer': 'rtmp://video.q2012.org/SOSample',
+    'autostart': 'true',
+    'bufferlength': '10',
+    'file': '<%= params[:source] %>',
+    'width': '320',
+    'height': '240'
+  });
+</script>
+  </p>
+<% end %>

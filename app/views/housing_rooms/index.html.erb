@@ -1,0 +1,71 @@
+<div id='page_title'>
+  <%= title('Edit Room Key Codes', :h1) %>
+</div>
+<% form_tag '/housing_rooms/save' do %>
+  <table class='filters'>
+    <tr>
+      <td>
+        Filter By Status:
+      </td>
+      <td>
+        <%= select_tag :filter_status, (session[:status].blank? ? '<option>- Select -</option>' : '') + options_for_select({'Keycode Entered' => 'complete','Keycode Not Entered' => 'incomplete'}, session[:status]), :onchange => "document.location='/housing_rooms/filter/?status=' + this.value;" %>
+        <% unless session[:status].blank? %>
+          <a href='/housing_rooms/filter/?status=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Building:
+      </td>
+      <td>
+        <%= select_tag :filter_building, (session[:building_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@buildings.collect {|d| [ d[:name], d[:id] ] }, session[:building_id].to_i), :onchange => "document.location='/housing_rooms/filter/?building_id=' + this.value;" %>
+        <% unless session[:building_id].blank? %>
+          <a href='/housing_rooms/filter/?building_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan='2'>
+        <% if @filter_applied %>
+          <a href='/housing_rooms/filter/?clear=true'>Clear All Filters</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan='2'>
+        <a href='/housing_rooms/regenerate'>Regenerate From Assigned Rooms</a>
+      </td>
+    </tr>
+  </table>
+  <br/>
+  <% if @housing_rooms.size > 0 %>
+    <table>
+      <tr>
+        <td style='border: 0;'><%= @housing_rooms.size %> Rooms Found</td>
+        <td style='border: 0; text-align: right;' colspan='3'><%= submit_tag 'Save All Records' %></td>
+      </tr>
+      <tr>
+        <th>Building</th>
+        <th>Number</th>
+        <th>Key Code</th>
+      </tr>
+      <% @housing_rooms.each do |housing_room| %>
+        <% fields_for "housing_room[]", housing_room do |hr_fields| %>
+          <tr>
+            <td><%= housing_room.building.name %></td>
+            <td><%= housing_room.number %></td>
+            <td>
+              <%= hr_fields.text_field :keycode, :size => 15 %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+      <tr>
+        <td style='border: 0; text-align: right;' colspan='4'><%= submit_tag 'Save All Records' %></td>
+      </tr>
+    </table>
+  <% else %>
+    No records match the specified query.
+  <% end %>
+<% end %>

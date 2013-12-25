@@ -1,0 +1,9 @@
+<div class="team">
+  <p>
+    <%= form.label :name, "Team Name:" %>
+    <%= form.text_field :name, :size => 30 %>
+	&nbsp;
+	<%= form.label :division, "Division:" %>
+	<%= form.object.division.name %> (<%= form.object.amount %>)
+  </p>
+</div>

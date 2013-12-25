@@ -1,0 +1,12 @@
+<div id='page_title'>
+  <%= title(@title, :h1) %>
+</div>
+<% if (@equipment_registrations.empty?) %>
+<p>No equipment registrations found.</p>
+<% else %>
+<p>
+  Below you can see all the equipment registrations you have submitted ordered by creation date.
+  Any registrations that are editable can be modified directly from this screen.
+</p>
+<%= render :partial => "equipment_registration", :collection => @equipment_registrations %>
+<% end %>

@@ -1,0 +1,35 @@
+<% content_for :admin do %>
+  <p>
+    <%= link_to 'Download Participant Registrations', reports_path %>
+  </p>
+<% end %>
+
+<div id='page_title'>
+  <%= title('Participant Registrations', :h1) %>
+</div>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Created On</th>
+    <th>Status</th>
+    <th>Registration Amount Due</th>
+    <th>Extras Amount Due</th>
+    <th>Total Amount Due</th>
+    <th>Total Paid Amount</th>
+    <th colspan='2'>Actions</th>
+  </tr>
+  <% @participant_registrations.each do |participant_registration| %>
+    <tr>
+      <td><%= participant_registration.full_name %></td>
+      <td><%= participant_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
+      <td><%= participant_registration.complete? ? "Complete" : "Incomplete" %></td>
+      <td>$<%= participant_registration.registration_amount_due %>.00</td>
+      <td>$<%= participant_registration.extras_amount_due %>.00</td>
+      <td>$<%= participant_registration.total_amount_due %>.00</td>
+      <td>$<%= participant_registration.total_paid_amount %>.00</td>
+      <td><%= link_to 'Make Changes', edit_participant_registration_path(participant_registration) %></td>
+      <td><%= link_to 'Delete', participant_registration_path(participant_registration), :confirm => 'Are you sure you want to delete this participant registration?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>

@@ -1,0 +1,23 @@
+<div class='equipment'>
+  <p>
+    <span class='removal_link'><%= remove_link( form ) %></span>
+    <span class='title'>Laptop</span>
+    <%= form.hidden_field :type, :value => 'laptop' %>
+  </p>
+  <p>
+    In order for us to be able to use your computer at Q2010 it will need to meet certain requirements. It must be running at least Microsoft Windows 2000, have a processor type
+    of a Pentium IV or greater, have a processor speed of 900Mhz or greater, have at least 512 megabytes of memory, and have at least 20 Gigabytes of space available on the internal hard drive.
+  </p>
+  <p>
+    <%= form.label :meets_requirements, 'Does your computer meet the above requirements?: ' %><%= form.select :meets_requirements, ['Yes','No'], :prompt => '- Select -' %>
+  </p>
+  <p>
+    <%= form.label :operating_system, 'Operating System: ' %><%= form.select :operating_system, ['Windows 2000','Windows XP','Windows Vista','Windows 7'], :prompt => '- Select -' %>
+  </p>
+  <p>
+    <%= form.label :parallel_port, 'Parallel Port Type: ' %><%= form.select :parallel_port, ['Built In','PCMCIA Card','Express Card','None'], :prompt => '- Select -' %>
+  </p>
+  <p>
+    <%= form.label :quizmachine_version, 'Quizmachine Version: ' %><%= form.text_field :quizmachine_version, :size => 30 %>
+  </p>
+</div>

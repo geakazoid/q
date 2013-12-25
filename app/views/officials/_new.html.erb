@@ -1,0 +1,58 @@
+<div id='new_official' class='registration new_registration'>
+  <% remote_form_for(@official, :loading  => "$('new_registration_spinner').show(); $('submit_registration').disabled = true; $('submit_registration').value = 'Submitting Registration...';") do |f| %>
+    <%= render :partial => 'pages/insert', :locals => { :insert => @page } if !@page.nil? %>
+    <%= f.error_messages :header_message => 'Errors prevented you from registering.', :message => 'We encountered the following problems:' %>
+    <p>All fields are required.</p>
+    <% if admin? %>
+      <p>
+        <%= f.label :user, 'User' %><br/>
+        <%= f.collection_select :user_id,
+          User.all(:order => :first_name),
+          :id,
+          :fullname_with_email,
+          {:prompt => false} %>
+      </p>
+    <% end %>
+    <p>
+      <a href='#' onClick='javascript:fill_information(); return false;'>Use My Information</a>
+    </p>
+    <div>
+      <%= f.label :first_name, 'First Name' %><br/>
+      <%= f.text_field :first_name, {:id => 'first_name'} %>
+    </div>
+    <div>
+      <%= f.label :last_name, 'Last Name' %><br/>
+      <%= f.text_field :last_name, {:id => 'last_name'} %>
+    </div>
+    <div>
+      <%= f.label :phone, 'Contact Phone' %><br/>
+      <%= f.text_field :phone, {:id => 'phone'} %>
+    </div>
+    <div>
+      <%= f.label :email, 'Contact Email' %><br/>
+      <%= f.text_field :email, {:id => 'email'} %>
+    </div>
+    <div>
+      <%= f.label :district, 'District / Region' %><br/>
+      <%= f.collection_select :district_id,
+        District.all(:order => 'name asc'),
+        :id,
+        :display_with_region,
+        {:prompt => '- Select -'},
+        {:id => 'district'} %>
+    </div>
+    <div>
+      <%= f.label :roles, 'Roles (Check all that apply)' %><br/>
+      <% ['Quizmaster','Content Judge'].each do |role| %>
+        <%= check_box_tag "official[roles][]", role, @official.roles.include?(role) %>
+        <label><%= role %></label><br/>
+      <% end %>
+    </div>
+    <p style='line-height: 5px;'>
+      <%= f.submit 'Submit Registration', :id => 'submit_registration', :autocomplete => 'off' %>
+      <span id='new_registration_spinner' style='display:none;'>
+        &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
+      </span>
+    </p>
+  <% end %>
+</div>

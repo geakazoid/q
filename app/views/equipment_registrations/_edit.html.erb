@@ -1,0 +1,67 @@
+<% remote_form_for(@equipment_registration, :html => { :method => :put }, :loading  => "$('spinner_" + @equipment_registration.id.to_s + "').show(); $('update_" + @equipment_registration.id.to_s + "').disabled = true; $('update_" + @equipment_registration.id.to_s + "').value = 'Updating Registration...'; $('cancel_" + @equipment_registration.id.to_s + "').hide();") do |f| %>
+  <%= error_messages_for :equipment_registration, :header_message => "Errors prevented you from updating your equipment registration.", :message => "We encountered the following problems:" %>
+
+  <h3>Basics</h3>
+  <p>
+  	<%= f.label :district, 'District' %><br/>
+	<%= f.collection_select :district_id,
+                                District.all(:order => 'name asc'),
+                                :id,
+                                :name,
+                                {:prompt => '- Select -'} %>
+  </p>
+  <p>
+    <a href='#' onClick='javascript:fill_information(); return false;'>Use My Information</a>
+  </p>
+  <p>
+    <%= f.label :first_name, 'First Name*' %><br />
+    <%= f.text_field :first_name, {:id => "first_name"} %>
+  </p>
+  <p>
+    <%= f.label :last_name, 'Last Name*' %><br />
+    <%= f.text_field :last_name, {:id => "last_name"} %>
+  </p>
+  <p>
+    <%= f.label :phone, 'Phone # (preferably mobile)*' %><br />
+    <label>(xxx-xxx-xxxx)</label><br/>
+    <%= f.text_field :phone, {:id => "phone"} %>
+  </p>
+  <p>
+    <%= f.label :email, 'Email*' %><br />
+    <%= f.text_field :email, {:id => "email"} %>
+  </p>
+
+  <div id='equipment_list'>
+    <h3>Equipment</h3>
+    <p>
+      Register equipment by clicking the links below. Then answer any questions
+      for each piece of equipment. Click again to add multiple items of the same kind.
+    </p>
+    <p>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'laptop','Laptop') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'interface_boxes','Interface Boxes') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'pads','Pads') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'monitor','Monitor') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'projector','Projector') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'power_strip','Power Strip') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'extension_cord','Extension Cord') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'recorder','Microphone/Recorder') %>
+    </p>
+    <% @equipment_registration.equipment.each do |item| %>
+      <% if !item.first? %>
+        <% f.fields_for :equipment, item do |equipment_form| %>
+          <% unless item.hide? %>
+            <%= render(:partial => item.equipment_type, :locals => { :form => equipment_form }) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+  <div>
+    <%= f.submit 'Update Registration', :id => 'update_' + @equipment_registration.id.to_s, :autocomplete => 'off' %>
+    <span id='cancel_<%= @equipment_registration.id.to_s %>'> or <%= link_to_remote 'Cancel', :url => @equipment_registration, :method => :get, :loading  => "$('spinner_" + @equipment_registration.id.to_s + "').show(); $('update_" + @equipment_registration.id.to_s + "').hide(); $('cancel_" + @equipment_registration.id.to_s + "').innerHTML = 'Canceling...';" %></span>
+    <span id='spinner_<%= @equipment_registration.id.to_s %>' style='display:none;'>
+      &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
+    </span>
+  </div>
+<% end %>

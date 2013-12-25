@@ -1,0 +1,31 @@
+<% content_tag_for(:div, equipment_registration, :class => 'registration') do %>
+  <div class='header'>
+    <%= equipment_admin_menu(equipment_registration) %>
+    <span class='fullname'><%= equipment_registration.full_name %></span>
+  </div>
+  <div class='left'>
+    <p style='font-weight: bold'>Equipment List</p>
+    <p><%= equipment_registration.full_list %></p>
+  </div>
+  <div class='right'>
+    <p style='font-weight: bold'>Additional Information</p>
+    <p>
+      District: <%= equipment_registration.district.name %><br/>
+      Phone: <%= equipment_registration.phone %><br/>
+      Email: <a href='mailto: <%= equipment_registration.email %>'><%= equipment_registration.email %></a>
+    </p>
+  </div>
+  <div class='footer'>
+    <div class='time'>
+      <!-- Equipment Registration ID: <%= equipment_registration.id.to_s %> -->
+      Owner: <%= equipment_registration.user.fullname + ' (<a href="mailto:' + equipment_registration.user.email + '">' + equipment_registration.user.email + '</a>)' %><br/>
+      <% if equipment_registration.user != equipment_registration.creator %>
+        Created By: <%= equipment_registration.creator.fullname + ' (<a href="mailto:' + equipment_registration.creator.email + '">' + equipment_registration.creator.email + '</a>)' %><br/>
+      <% end %>
+      Created: <%=h equipment_registration.created_at.strftime("%m.%d.%Y %I:%M %p") %>
+      <%= '<br/>Updated: ' + equipment_registration.updated_at.strftime("%m.%d.%Y %I:%M %p") unless equipment_registration.created_at == equipment_registration.updated_at%>
+    </div>
+    <div class='status' id='status_<%= equipment_registration.id.to_s %>' style='display:none'></div>
+    <div style='clear: both; padding:0px; margin:0px;'></div>
+  </div>
+<% end %>

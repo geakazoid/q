@@ -1,0 +1,40 @@
+<div id='page_title'>
+  <%= title('Q2010 Equipment Registration', :h1) %>
+</div>
+
+<% form_for @equipment_registration do |f| %>
+  <%= error_messages_for :equipment_registration, :header_message => "There were errors with your registration.", :message => "We encountered the following problems:" %>
+
+  <h3>Basics</h3>
+  <p>
+    <%= f.label :first_name, 'First Name' %><br />
+    <%= f.text_field :first_name, {:id => "first_name"} %>
+  </p>
+  <p>
+    <%= f.label :last_name, 'Last Name' %><br />
+    <%= f.text_field :last_name, {:id => "last_name"} %>
+  </p>
+
+  <div id='equipment_list'>
+    <h3>Equipment</h3>
+    <p>
+      <%= add_full_set_link(f) %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'laptop','Laptop') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'interface_box','Interface Box') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'pads','Pads') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'monitor','Flat Screen Monitor') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'projector','Projector') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'power_strip','Power Strip') %>
+      &nbsp;&nbsp;&nbsp;<%= add_link(f,'extension_cord','Extension Cord') %>
+    </p>
+    <% @equipment_registration.equipment.each do |item| %>
+      <% f.fields_for :equipment, item do |equipment_form| %>
+        <%= render(:partial => item.equipment_type, :locals => { :form => equipment_form }) %>
+      <% end %>
+    <% end %>
+  </div>
+  <p>
+    <%= hidden_field_tag 'admin', :value => 'true'  %>
+    <%= f.submit 'Submit' %>
+  </p>
+<% end %>

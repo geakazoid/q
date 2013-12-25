@@ -1,0 +1,70 @@
+<div id='page_title'>
+  <%= title('Participant Registrations', :h1) %>
+</div>
+
+<% if @user.participant_registrations.size > 0 %>
+  From here you can view and make changes to your participant registrations.<br/><br/>
+<% else %>
+  You do not have any participant registrations. Would you like to <%= link_to 'create one', new_participant_registration_path %>?
+<% end  %>
+
+<% if @user.owned_participant_registrations.size > 0 %>
+  <h2>My Registrations</h2>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Created On</th>
+      <th>Status</th>
+      <th>Registration Amount Due</th>
+      <th>Extras Amount Due</th>
+      <th>Total Amount Due</th>
+      <th>Total Paid Amount</th>
+      <th colspan='2'>Actions</th>
+    </tr>
+    <% @user.owned_participant_registrations.each do |participant_registration| %>
+      <tr>
+        <td><%= participant_registration.full_name %></td>
+        <td><%= participant_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
+        <td><%= participant_registration.complete? ? "Complete" : "Incomplete" %></td>
+        <td>$<%= participant_registration.registration_amount_due %>.00</td>
+        <td>$<%= participant_registration.extras_amount_due %>.00</td>
+        <td>$<%= participant_registration.total_amount_due %>.00</td>
+        <td>$<%= participant_registration.total_paid_amount %>.00</td>
+        <td><%= link_to 'Make Changes', edit_user_participant_registration_path(@user, participant_registration) %></td>
+        <td><%= link_to 'Delete', user_participant_registration_path(@user, participant_registration), :confirm => 'Are you sure you want to delete this participant registration?', :method => :delete if @user.owns?(participant_registration) and !participant_registration.paid_any_registration_fee? %></td>
+      </tr>
+    <% end %>
+  </table>
+  <br/>
+<% end  %>
+
+<% if @user.shared_participant_registrations.size > 0 %>
+  <h2>Shared Registrations</h2>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Created On</th>
+      <th>Status</th>
+      <th>Registration Amount Due</th>
+      <th>Extras Amount Due</th>
+      <th>Total Amount Due</th>
+      <th>Total Paid Amount</th>
+      <th>Shared By</th>
+      <th>Actions</th>
+    </tr>
+    <% @user.shared_participant_registrations.each do |participant_registration| %>
+      <tr>
+        <td><%= participant_registration.full_name %></td>
+        <td><%= participant_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
+        <td><%= participant_registration.complete? ? "Complete" : "Incomplete" %></td>
+        <td>$<%= participant_registration.registration_amount_due %>.00</td>
+        <td>$<%= participant_registration.extras_amount_due %>.00</td>
+        <td>$<%= participant_registration.total_amount_due %>.00</td>
+        <td>$<%= participant_registration.total_paid_amount %>.00</td>
+        <td><%= participant_registration.owner.fullname %></td>
+        <td><%= link_to 'Make Changes', edit_user_participant_registration_path(@user, participant_registration) %></td>
+      </tr>
+    <% end %>
+  </table>
+  <br/>
+<% end  %>

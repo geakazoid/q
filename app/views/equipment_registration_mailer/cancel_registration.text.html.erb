@@ -1,0 +1,41 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <% if AppConfig.test_mode %>
+      <p style='background: none repeat scroll 0 0 #DDFF99; border: 1px solid #BBDD77; font-size: 0.9em; margin-top: 0; padding: 7px 15px;'>
+        System is in test mode. The following email would have been sent to <b>[<%= h @original_email %>]</b>,
+        but is instead being sent to the currently logged in user.
+      </p>
+    <% end %>
+    <p>Dear Admin,</p>
+    <p>The following equipment registration has been canceled on <a href='http://www.q2012.org'>Q2012.org</a>. Details are below.</p>
+    <div style='border: 1px solid #999; background: #ddd; padding: 0px 10px;'>
+      <p>
+        Owner: <%= @equipment_registration.user.fullname %> (<%= @equipment_registration.user.email %>)<br/>
+        Canceling User: <%= @user.fullname %> (<%= @user.email %>)<br/>
+        Cancelation Time: <%= Time.now.strftime("%m.%d.%Y %H:%M") %>
+      </p>
+      <p>
+        Name: <%= h @equipment_registration.full_name %><br/>
+        District / Region: <%= @equipment_registration.district.display_with_region %><br/>
+        Phone: <%= h @equipment_registration.phone %><br/>
+        Email: <%= h @equipment_registration.email %>
+      </p>
+      <p>
+        <%= " Laptops (" + @equipment_registration.laptops.size.to_s + ")<br/>\n" unless @equipment_registration.laptops.empty? -%>
+        <%= " Pads (" + @equipment_registration.pads.size.to_s + ")<br/>\n" unless @equipment_registration.pads.empty? -%>
+        <%= " Interface Boxes (" + @equipment_registration.interface_boxes.size.to_s + ")<br/>\n" unless @equipment_registration.interface_boxes.empty? -%>
+        <%= " Monitors (" + @equipment_registration.monitors.size.to_s + ")<br/>\n" unless @equipment_registration.monitors.empty? -%>
+        <%= " Projectors (" + @equipment_registration.projectors.size.to_s + ")<br/>\n" unless @equipment_registration.projectors.empty? -%>
+        <%= " Power Strips (" + @equipment_registration.power_strips.size.to_s + ")<br/>\n" unless @equipment_registration.power_strips.empty? -%>
+        <%= " Extension Cords (" + @equipment_registration.extension_cords.size.to_s + ")<br/>\n" unless @equipment_registration.extension_cords.empty? -%>
+        <%= " Microphones/Recorders (" + @equipment_registration.recorders.size.to_s + ")\n" unless @equipment_registration.recorders.empty? -%>
+      </p>
+    </div>
+    <p>
+      Sincerely,<br/>
+      Q2012 Staff
+    </p>
+  </body>
+</html>

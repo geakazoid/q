@@ -1,0 +1,119 @@
+<a name='head'></a>
+<table>
+  <tr>
+    <td>Division:</td>
+    <td colspan='3'><%= @division.name %></td>
+  </tr>
+  <tr>
+    <td>Area:</td>
+    <td><%= @room.name unless @room.nil? %></td>
+    <td>Round:</td>
+    <td><%= @round.number %></td>
+  </tr>
+</table>
+<br/>
+<% if !@round.complete? %>
+  <center><span style='font-weight: bold;'>This round is currently <span style='color: #ff0000;'>in progress</span>. This page will automatically refresh every 30 seconds.</span></center>
+  <br/>
+<% end %>
+<% @teams.each do |team| %>
+<table class='round'>
+  <tr>
+    <td rowspan='2' colspan='2' class='score'><%= team['name'] %></td>
+    <td colspan='10'>Quizzers with Correct Toss-ups: <%= team['correct_quizzers'].size %></td>
+    <td colspan='5'>Errors: <%= team['errors'] %></td>
+    <td colspan='5'>Fouls: <%= team['fouls'] %></td>
+    <td rowspan='2' colspan='4' class='score'>Place: <%= team['place'] %></td>
+  </tr>
+  <tr>
+    <td colspan='10'>Over Ruled Challenges: <%= team['overruled_challenges'] %></td>
+    <td colspan='5'>Time Outs: <%= team['timeouts'] %></td>
+    <td colspan='5'>&nbsp;</td>
+  </tr>
+  <tr>
+    <td rowspan='2' class='score' style='width: 20px;'>&nbsp;</td>
+    <td rowspan='2' style='width: 120px;'>Quizzer Names</td>
+    <td rowspan='2' class='score' style='width: 25px;'>1</td>
+    <td rowspan='2' class='score' style='width: 25px;'>2</td>
+    <td rowspan='2' class='score' style='width: 25px;'>3</td>
+    <td rowspan='2' class='score' style='width: 25px;'>4</td>
+    <td rowspan='2' class='score' style='width: 25px;'>5</td>
+    <td rowspan='2' class='score' style='width: 25px;'>6</td>
+    <td rowspan='2' class='score' style='width: 25px;'>7</td>
+    <td rowspan='2' class='score' style='width: 25px;'>8</td>
+    <td rowspan='2' class='score' style='width: 25px;'>9</td>
+    <td rowspan='2' class='score' style='width: 25px;'>10</td>
+    <td rowspan='2' class='score' style='width: 25px;'>11</td>
+    <td rowspan='2' class='score' style='width: 25px;'>12</td>
+    <td rowspan='2' class='score' style='width: 25px;'>13</td>
+    <td rowspan='2' class='score' style='width: 25px;'>14</td>
+    <td rowspan='2' class='score' style='width: 25px;'>15</td>
+    <td rowspan='2' class='score' style='width: 25px;'>16</td>
+    <td rowspan='2' class='score' style='width: 25px;'>17</td>
+    <td rowspan='2' class='score' style='width: 25px;'>18</td>
+    <td rowspan='2' class='score' style='width: 25px;'>19</td>
+    <td rowspan='2' class='score' style='width: 25px;'>20</td>
+    <td rowspan='2' class='score' style='width: 25px;'>OT</td>
+    <td colspan='3' class='score'>Totals</td>
+  </tr>
+  <tr>
+    <td>Points</td>
+    <td class='score' style='width: 20px;'>C</td>
+    <td class='score' style='width: 20px;'>E</td>
+  </tr>
+<% j = 0 %>
+<% while j < 5 %>
+  <tr>
+    <td class='score'><%= j+1 %></td>
+    <% if (!team['quizzers'][j].nil?) %>
+    <td><%= team['quizzers'][j] %></td>
+    <% i = 1 %>
+    <% while i <= 21 %>
+      <td class='score'><%= team['questions'][team['quizzers'][j]][i] %></td>
+      <% i = i + 1 %>
+    <% end %>
+    <td class='score' style='width: 20px;'><%= team['scoring'][team['quizzers'][j]]['points'] %></td>
+    <td class='score' style='width: 20px;'><%= team['scoring'][team['quizzers'][j]]['correct'] %></td>
+    <td class='score' style='width: 20px;'><%= team['scoring'][team['quizzers'][j]]['errors'] %></td>
+    <% else %>
+      <% 25.times do %>
+        <td>&nbsp;</td>
+      <% end %>
+    <% end %>
+  </tr>
+<% j = j + 1 %>
+<% end %>
+  <tr>
+  <% if (team['fouls'] >= 2) %>
+    <td colspan='2'>Bonus/Penalty Points (Fouls: <%= team['fouls'] %>)</td>
+  <% elsif (team['overruled_challenges'] >= 2) %>
+    <td colspan='2'>Bonus/Penalty Points (Overruled Challenges: <%= team['overruled_challenges'] %>)</td>
+  <% else %>
+    <td colspan='2'>Bonus/Penalty Points</td>
+  <% end %>
+    <% i = 1 %>
+    <% while i <= 20 %>
+      <td class='score'><%= team['bonus_penalty'][i] %></td>
+      <% i = i + 1 %>
+    <% end %>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan='2'>Running Score</td>
+    <% i = 1 %>
+    <% while i <= 20 %>
+      <td class='score'><%= team['running_score'][i] %></td>
+      <% i = i + 1 %>
+    <% end %>
+    <td>&nbsp;</td>
+    <td class='score'><%= team['score'] %></td>
+    <td class='score'><%= team['correct'] %></td>
+    <td class='score'><%= team['errors'] %></td>
+  </tr>
+</table>
+
+  <br/>
+<% end %>

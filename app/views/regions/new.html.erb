@@ -1,0 +1,20 @@
+<div id='page_title'>
+  <%= title('Add New Regions', :h1) %>
+</div>
+
+<p>
+  Add new regions below. Please follow the following format: region,director,phone,mobile_phone,email. Example:
+  <pre>
+  	ONU,Crispus,312-123-4567,312-123-4567,crispus@corinthians.org
+	MVNU,Gaius,123-456-1234,123-456-1234,gaius@corinthians.org
+  </pre>
+  Note: Regions that already exist will have their information updated.
+</p>
+<%= form_tag(regions_path) %>
+<p>
+  <label>Regions</label><br />
+  <%= text_area_tag :region_info, nil, :size => "100x15" %>
+</p>
+<p>
+  <%= submit_tag 'Add Regions' %> or <%= link_to 'Cancel', regions_path %>
+</p>

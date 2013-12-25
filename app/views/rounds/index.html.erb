@@ -1,0 +1,30 @@
+<h1 style='margin-top:0'>Rounds</h1>
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Division</th>
+    <th>Area</th>
+    <th>Round</th>
+    <th>Team 1</th>
+    <th>Team 2</th>
+    <th>Questions</th>
+    <th>Complete?</th>
+    <th>Visible?</th>
+    <th>&nbsp;</th>
+  </tr>
+<% @rounds.each do |round| %>
+  <tr <%= "class='incomplete'" if !round.complete? %>>
+    <td><%= round.id.to_s %></td>
+    <td><%= round.quiz_division.name %></td>
+    <td><%= round.room.name %> </td>
+    <td><%= round.number %></td>
+    <% round.round_teams.each do |round_team| %>
+    <td <%= 'style="background: yellow"' if round_team.place == 1 %>><%= round_team.quiz_team.name %></td>
+    <% end %>
+    <td><%= round.questions %></td>
+    <td><%= round.complete? ? "Yes" : "No" %></td>
+    <td><%= round.visible? ? "Yes" : "No" %></td>
+    <td><%= link_to "Scoresheet", round_path(round) %> : <%= link_to "Actions", actions_round_path(round) %></td>
+  </tr>
+<% end %>
+</table>

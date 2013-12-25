@@ -1,0 +1,2 @@
+page['new_official'].replace :partial => 'new'
+page['new_official'].visual_effect :scroll_to

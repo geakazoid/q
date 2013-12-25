@@ -1,0 +1,44 @@
+<div id='page_title'>
+  <%= title("Team Registration for #{@team_registration.full_name}", :h1) %>
+  Registration created on <%= @team_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %>
+</div>
+
+  <h3>Basics</h3>
+  <p>
+  	<label>District</label><br/>
+	<%= @team_registration.district.display_with_region %>
+  </p>
+  <p>
+  	<label>Name</label><br/>
+	<%= @team_registration.full_name %>
+  </p>
+  <p>
+  	<label>Phone #</label><br/>
+	<%= @team_registration.phone %>
+  </p>
+  <p>
+  	<label>Email</label><br/>
+	<%= @team_registration.email %>
+  </p>
+  <p>
+  	<label>Total Amount</label><br/>
+	<%= @team_registration.amount %>
+  </p>
+  <p>
+  	<label>Paid?</label><br/>
+	<%= @team_registration.paid? %>
+  </p>
+
+  <h3>Teams</h3>
+  <table>
+  	<tr>
+  		<th>Team Name</th>
+		<th>Division</th>
+  	</tr>
+	<%= render :partial => 'show_team', :collection => @team_registration.teams %>
+  </table>
+
+  <h3>Audit Log</h3>
+  <% @team_registration.audit.each do |entry| %>
+    <%= entry %><br/><br/>
+  <% end %>

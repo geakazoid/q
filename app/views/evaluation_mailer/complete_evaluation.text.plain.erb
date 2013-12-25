@@ -1,0 +1,61 @@
+<% if AppConfig.test_mode %>
+  System is in test mode. The following email would have been sent to <b>[<%= @original_email %>]</b>,
+  but is instead being sent to the currently logged in user.
+<% end %>
+
+Person Being Recommended
+<%= @evaluation.official.full_name %>
+
+Your name
+<%= @evaluation.name %>
+
+Home District / Region
+<%= @evaluation.district.display_with_region %>
+
+Your position in Nazarene Youth Bible Quizzing Ministry (the one which best describes you in quizzing).
+<%= @evaluation.position %>
+
+At what levels have you observed this person officiate? (Check all that apply.)
+<%= @evaluation.levels.join(', ') %>
+
+Please indicate where and when you observed this official?
+<%= @evaluation.where_observed %>
+
+In your opinion, for which position is this person best suited?
+<%= @evaluation.best_suited %>, <%= @evaluation.best_suited_level %>
+
+Consistency in reading and stopping: Consider cadence, hesitation, stopping when tone sounds, voice inflection, clarity.
+<%= @evaluation.reading %>
+
+Please explain your response.
+<%= @evaluation.reading_explanation %>
+
+Consistency in ruling: Consider any biases for or against, whether the round is preliminary or tournament, whether they are pushed for time, etc.
+<%= @evaluation.ruling %>
+
+Please explain your response.
+<%= @evaluation.ruling_explanation %>
+
+Knowledge of material: Consider how they utilize their content judge, the ratio of challenges to challenges that are accepted, etc.
+<%= @evaluation.knowledge_material %>
+
+Please explain your response.
+<%= @evaluation.knowledge_material_explanation %>
+
+Knowledge and application of rules: Consider how they handle difficult questions/answers, such as multiple questions/answers, appeals, ties, etc.
+<%= @evaluation.knowledge_ruling %>
+
+Please explain your response.
+<%= @evaluation.knowledge_ruling_explanation %>
+
+Interpersonal Skills: How would you describe how this person interacts with others (consider quizzers, coaches, those in charge of the event, etc).
+<%= @evaluation.interpersonal_skills %>
+
+Describe how this person handles conflicts or changes in circumstances as they arise.
+<%= @evaluation.handles_conflict %>
+
+Describe how this person utilizes their content judge.
+<%= @evaluation.content_judge_utilization %>
+
+Please list any additional comments/concerns regarding this person.
+<%= @evaluation.additional_comments %>

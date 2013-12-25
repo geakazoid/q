@@ -1,0 +1,15 @@
+development: &non_production_settings
+  :address: mail.realnets.com
+  :port: 25
+  :authentication: plain
+  :user_name: website@nazquizzing.org
+  :password: qu1029iz
+
+test:
+  <<: *non_production_settings
+
+staging:
+  <<: *non_production_settings
+
+production:
+  <<: *non_production_settings

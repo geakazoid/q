@@ -1,0 +1,32 @@
+<div id='page_title'>
+  <%= title("Editing #{@region.name}", :h1) %>
+</div>
+
+<% form_for(@region) do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :name %><br/>
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :director %><br/>
+    <%= f.text_field :director %>
+  </p>
+  <p>
+    <%= f.label :phone, 'Phone' %><br/>
+	<label>(xxx-xxx-xxxx)</label>
+    <%= f.text_field :phone %>
+  </p>
+  <p>
+    <%= f.label :mobile_phone, 'Mobile Phone' %><br/>
+	<label>(xxx-xxx-xxxx)</label>
+    <%= f.text_field :mobile_phone %>
+  </p>
+  <p>
+    <%= f.label :email, 'Email' %><br />
+    <%= f.text_field :email %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %> or <%= link_to 'Cancel', regions_path %>
+  </p>
+<% end %>

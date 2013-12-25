@@ -1,0 +1,18 @@
+<div id='page_title'>
+  <%= title("Editing #{@division.name}", :h1) %>
+</div>
+
+<% form_for(@division) do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :price %><br />
+    <%= f.text_field :price %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %> or <%= link_to 'Cancel', divisions_path %>
+  </p>
+<% end %>

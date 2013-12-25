@@ -1,0 +1,47 @@
+<% content_for :admin do %>
+<p>
+  Search for a user:
+  <% form_tag request.path, :method => 'get' do %>
+    <%= text_field_tag :q, params[:q], :size => 15 %>
+  <% end %>
+</p>
+<% end %>
+
+<% if params[:q] %>
+<%= title("Users containing '#{params[:q]}'", :h1) %>
+<% else %>
+<%= title('Users', :h1) %>
+<% end %>
+<p class="subtitle">
+  <%= "#{@users.total_entries} user(s) found" %>
+</p>
+<%= pagination @users %>
+<table id='user_nav'>
+  <tr>
+  	<td></td>
+  	<td class='search_box'>
+    
+	</td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <th>Name / Email</th>
+	<th>State</th>
+	<th colspan='4'>Actions</th>
+  </tr>
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%=h user.fullname %><br/><%=h user.email %></td>
+	<td><%= user.state %></td>
+    <td><%= link_to 'Edit', edit_user_path(user) %></td>
+	<% if user.active? %>
+    <td><%= link_to 'Delete', user, :confirm => 'Are you sure?', :method => :delete %></td>
+	<% else %>
+	<td><%= link_to 'Activate', activate_user_user_path(user) %></td>
+	<% end %>
+  </tr>
+<% end %>
+</table>

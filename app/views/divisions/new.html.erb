@@ -1,0 +1,21 @@
+<div id='page_title'>
+  <%= title('Add New Divisions', :h1) %>
+</div>
+
+<p>
+  Add new divisions below. Please follow the following format: name,price. Example:
+  <pre>
+  	District Experienced,100
+	Local Experienced,125
+  </pre>
+  Note: Divisions with the same name will have their information updated.
+</p>
+<%= form_tag(divisions_path) %>
+  <p>
+    <label>Divisions</label><br />
+    <%= text_area_tag :division_info, nil, :size => "60x15" %>
+  </p>
+  <p>
+    <%= submit_tag 'Add Divisions' %> or <%= link_to 'Cancel', divisions_path %>
+  </p>
+</p>

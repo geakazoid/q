@@ -1,0 +1,131 @@
+<div id='page_title'>
+  <%= title("Team Registration for #{@team_registration.full_name}", :h1) %>
+  Registration created on <%= @team_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %>
+</div>
+
+<% form_for [@user, @team_registration] do |f| %>
+  <%= error_messages_for :team_registration, :header_message => "There were errors updating this registration.", :message => "We encountered the following problems:" %>
+
+  <h3>Basics</h3>
+  <% if @team_registration.complete? %>
+  <p>
+    <label>District</label><br/>
+    <%= @team_registration.district.display_with_region %>
+  </p>
+  <% else %>
+  <p>
+  	<%= f.label :district, 'District' %><br/>
+	<%= f.collection_select :district_id,
+                                @districts,
+                                :id,
+                                :display_with_region,
+                                {:prompt => '- Select -'},
+                                {:id => 'district',
+                                 :onchange => remote_function(:update => 'num_registrations',
+                                                              :url => num_teams_districts_url,
+                                                              :with => "'id='+value",
+                                                              :complete => 'update_team_total()')} %>
+  </p>
+  <% end %>
+  <p>
+    <%= f.label :first_name, 'First Name' %><br/>
+    <%= f.text_field :first_name %>
+  </p>
+  <p>
+    <%= f.label :last_name, 'Last Name' %><br/>
+    <%= f.text_field :last_name %>
+  </p>
+  <p>
+    <%= f.label :phone, 'Phone # (preferably mobile)' %><br/>
+    <label>(xxx-xxx-xxxx)</label><br/>
+    <%= f.text_field :phone %>
+  </p>
+  <p>
+    <%= f.label :email %><br/>
+    <%= f.text_field :email %>
+  </p>
+  <% if @team_registration.complete? %>
+  <p>
+    <label>Paid Amount</label><br/>
+    <%= @team_registration.amount %>
+  </p>
+  <% end %>
+
+  <div id="teams">
+    <h3>Teams</h3>
+    <% if !@team_registration.complete? %>
+      <% f.fields_for :teams do |team_form| %>
+        <%= render :partial => 'team', :locals => { :form => team_form } %>
+      <% end %>
+    <% else %>
+      <% f.fields_for :teams do |team_form| %>
+        <%= render :partial => 'edit_team', :locals => { :form => team_form } %>
+      <% end %>
+    <% end %>
+  </div>
+  <% if !@team_registration.complete? %>
+    <%= add_team_link(f) %>
+    <p id='regional_code' style='display:none'>
+      <%= f.label :regional_code, 'Regional Code' %><%= "<label> (#{AppConfig.regional_code})</label>" if AppConfig.test_mode %><br />
+      <%= f.text_field :regional_code, {:id => "regional_code"} %>
+    </p>
+  <% end %>
+  <% if !@team_registration.complete? %>
+  <p>
+    <%= hidden_field_tag :commit_action, 'payment_action' %>
+    <%= f.submit 'Submit And Pay', :id => 'submit_register', :onclick => "$('spinner').show(); $('submit_register').disabled = true; $('submit_save').disabled = true; $('submit_register').value = 'Submitting Team Registration...'; submit(); return false;", :autocomplete => 'off' %>
+    <%= f.submit 'Save For Later', :id => 'submit_save', :onclick => "$('spinner').show(); $('submit_register').disabled = true; $('submit_save').disabled = true; $('submit_save').value = 'Saving Team Registration...'; $('commit_action').value = 'save_action'; submit(); return false;", :autocomplete => 'off' %>
+    <span id='spinner' style='display:none;'>
+      &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
+    </span>
+  </p>
+  <% else %>
+  <p>
+    <%= hidden_field_tag :commit_action, 'update_action' %>
+    <%= f.submit 'Update Registration', :id => 'submit_update', :onclick => "$('spinner').show(); $('submit_update').disabled = true; $('submit_update').value = 'Updating Team Registration...'; submit(); return false;", :autocomplete => 'off' %>
+    <span id='spinner' style='display:none;'>
+      &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
+    </span>
+  </p>
+  <% end %>
+<% end %>
+<% if !@team_registration.complete? %>
+<div id='discount'></div>
+<br/>
+<br/>
+<div id='num_registrations' style='display:none'><%= @team_registration.district.num_district_teams if !@team_registration.district.nil? %></div>
+<div id="total_footer">
+<div class="container">
+  Total Registration Fee: <span id='total_amount'>$0.00</span><br/>
+  <span class='small'>This total will automatically update as you add teams.</span>
+</div>
+</div>
+<script>
+  var division_array = [];
+<% @divisions.each do |division| %>
+  division_array[<%= division.id %>] = [];
+  division_array[<%= division.id %>]['price'] = <%= division.price.dollars %>;
+  division_array[<%= division.id %>]['type'] = '<%= division.type %>';
+<% end %>
+</script>
+<script>
+	var user_first_name = '<%= current_user.first_name %>';
+	var user_last_name = '<%= current_user.last_name %>';
+	var user_phone = '<%= current_user.phone %>';
+	var user_email = '<%= current_user.email %>';
+</script>
+<script>
+  skip_discount = <%= current_user.id == 20 ? "true" : "false" %>;
+</script>
+<script>
+  function update_district_teams() {
+    selected = $$('#district option').find(function(ele){return !!ele.selected})
+    <%= remote_function(:update => 'num_registrations',
+                        :url => num_teams_districts_url,
+                        :with => "'id='+selected.value",
+                        :complete => 'update_team_total()') %>
+  }
+  update_district_teams();
+  check_regional_selection();
+</script>
+<% end %>

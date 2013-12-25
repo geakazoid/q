@@ -1,0 +1,20 @@
+<div id='page_title'>
+  <%= title('Add New Districts', :h1) %>
+</div>
+
+<p>
+  Add new districts below. Please follow the following format: district,region,director,phone,mobile_phone,contact_email. Example:
+  <pre>
+  	Chicago Central,ONU,Crispus,312-375-8675,123-223-4454,crispus@corinthians.org
+	Illinois,ONU,Gaius,123-456-1220,123-456-3343,gaius@corinthians.org
+  </pre>
+  Note: Districts that already exist will have their information updated.
+</p>
+<%= form_tag(districts_path) %>
+<p>
+  <label>Districts</label><br />
+  <%= text_area_tag :district_info, nil, :size => "100x15" %>
+</p>
+<p>
+  <%= submit_tag 'Add Districts' %> or <%= link_to 'Cancel', districts_path %>
+</p>

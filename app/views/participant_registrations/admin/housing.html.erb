@@ -1,0 +1,145 @@
+<% content_for :housing_admin do %>
+<p>
+  Search for a participant:
+  <% form_tag request.path, :method => 'get' do %>
+    <%= text_field_tag :q, params[:q], :size => 25 %>
+  <% end %>
+</p>
+<% end %>
+
+<div id='page_title'>
+  <%= title('Edit Participant Housing', :h1) %>
+</div>
+<% form_tag '/participant_registrations/save_housing' do %>
+  <table class='filters'>
+    <tr>
+      <td>
+        Filter By Status:
+      </td>
+      <td>
+        <%= select_tag :filter_status, (session[:status].blank? ? '<option>- Select -</option>' : '') + options_for_select({'Housing Defined' => 'complete','Housing Not Defined' => 'incomplete'}, session[:status]), :onchange => "document.location='/participant_registrations/filter_housing/?status=' + this.value;" %>
+        <% unless session[:status].blank? %>
+          <a href='/participant_registrations/filter_housing/?status=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Type:
+      </td>
+      <td>
+        <%= select_tag :filter_type,
+                       (session[:registration_type].blank? ? '<option>- Select -</option>' : '') +
+                        options_for_select({
+                          'Quizzer' => 'quizzer',
+                          'Coach' => 'coach',
+                          'Official' => 'official',
+                          'Volunteer' => 'volunteer',
+                          'Family' => 'family',
+                          'Guest' => 'guest',
+                          'Core Staff' => 'core_staff',
+                          'Exhibitor' => 'exhibitor'},
+                          session[:registration_type]),
+                        :onchange => "document.location='/participant_registrations/filter_housing/?registration_type=' + this.value;" %>
+        <% unless session[:registration_type].blank? %>
+          <a href='/participant_registrations/filter_housing/?registration_type=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Group Leader:
+      </td>
+      <td>
+        <%= select_tag :filter_group_leader, (session[:group_leader].blank? ? '<option>- Select -</option>' : '') + options_for_select(@group_leaders, session[:group_leader].to_i), :onchange => "document.location='/participant_registrations/filter_housing/?group_leader=' + this.value;" %>
+        <% unless session[:group_leader].blank? %>
+          <a href='/participant_registrations/filter_housing/?group_leader=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By District:
+      </td>
+      <td>
+        <%= select_tag :filter_district, (session[:district_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@districts.collect {|d| [ d[:name], d[:id] ] }, session[:district_id].to_i), :onchange => "document.location='/participant_registrations/filter_housing/?district_id=' + this.value;" %>
+        <% unless session[:district_id].blank? %>
+          <a href='/participant_registrations/filter_housing/?district_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Region:
+      </td>
+      <td>
+        <%= select_tag :filter_region, (session[:region_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@regions.collect {|d| [ d[:name], d[:id] ] }, session[:region_id].to_i), :onchange => "document.location='/participant_registrations/filter_housing/?region_id=' + this.value;" %>
+        <% unless session[:region_id].blank? %>
+          <a href='/participant_registrations/filter_housing/?region_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Building:
+      </td>
+      <td>
+        <%= select_tag :filter_building, (session[:building_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@buildings.collect {|d| [ d[:name], d[:id] ] }, session[:building_id].to_i), :onchange => "document.location='/participant_registrations/filter_housing/?building_id=' + this.value;" %>
+        <% unless session[:building_id].blank? %>
+          <a href='/participant_registrations/filter_housing/?building_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <% if @filter_applied %>
+          <a href='/participant_registrations/filter_housing/?clear=true'>Clear All Filters</a>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+  <br/>
+  <% if @participant_registrations.size > 0 %>
+    <table>
+      <tr>
+        <td style='border: 0;'><%= @participant_registrations.size %> Participants Found</td>
+        <td style='border: 0; text-align: right;' colspan='3'><%= submit_tag 'Save All Records' %></td>
+      </tr>
+      <tr>
+        <th>Name</th>
+        <th>Building</th>
+        <th>Room</th>
+      </tr>
+      <% @participant_registrations.each do |participant_registration| %>
+        <% fields_for "participant_registration[]", participant_registration do |pr_fields| %>
+          <tr>
+            <td width='400'>
+              <strong><%= participant_registration.full_name %></strong><br/>
+              <div style='font-size: 0.8em'>
+              <%= participant_registration.formatted_registration_type %><br/>
+              <%= participant_registration.district.display_with_region %><br/>
+              Group Leader: <%= participant_registration.group_leader_name %>
+              <%= '<br/>Preference 1: ' + participant_registration.roommate_preference_1 unless participant_registration.roommate_preference_1.blank? %>
+              <%= '<br/>Preference 2: ' + participant_registration.roommate_preference_2 unless participant_registration.roommate_preference_2.blank? %>
+              <% if !participant_registration.complete? %><span style='color: #ff0000; font-weight: bold;'><br/>PAYMENT NOT RECEIVED</span><% end %>
+              </div>
+            </td>
+            <td><%= pr_fields.select :building_id, @buildings.map {|b| [b.name,b.id]}, {:prompt => "- Select -"}, {:onchange => "$('participant_registration_#{participant_registration.id.to_s}_room').value = '';"} %></td>
+            <td>
+              <%= pr_fields.text_field :room, :size => 10 %>
+              <div class='autocomplete' id='room_auto_complete_<%= participant_registration.id.to_s %>'></div>
+              <script type='text/javascript'>
+                new Ajax.Autocompleter('participant_registration_<%= participant_registration.id.to_s %>_room', 'room_auto_complete_<%= participant_registration.id.to_s %>', '/rooms/auto_complete_for_room', {callback: function (element, entry) {return entry + "&building_id=" + $F('participant_registration_<%= participant_registration.id.to_s %>_building_id')}});
+              </script>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+      <tr>
+        <td style='border: 0; text-align: right;' colspan='4'><%= submit_tag 'Save All Records' %></td>
+      </tr>
+    </table>
+  <% else %>
+    No records match the specified query.
+  <% end %>
+<% end %>

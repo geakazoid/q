@@ -1,0 +1,6 @@
+regional:
+  name: Regional Teams
+  price_in_cents: 150000
+district:
+  name: District Experienced
+  price_in_cents: 100000

@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <style>
+      label {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <% if AppConfig.test_mode %>
+      <p style='background: none repeat scroll 0 0 #DDFF99; border: 1px solid #BBDD77; font-size: 0.9em; margin-top: 0; padding: 7px 15px;'>
+        System is in test mode. The following email would have been sent to <b>[<%= h @original_email %>]</b>,
+        but is instead being sent to the currently logged in user.
+      </p>
+    <% end %>
+    <p>
+      <label>Person Being Recommended</label><br/>
+      <%= h @evaluation.official.full_name %>
+    </p>
+    <p>
+      <label>Your name</label><br/>
+      <%= h @evaluation.name %>
+    </p>
+    <p>
+      <label>Home District / Region</label><br/>
+      <%= h @evaluation.district.display_with_region %>
+    </p>
+    <p>
+      <label>Your position in Nazarene Youth Bible Quizzing Ministry (the one which best describes you in quizzing).</label><br/>
+      <%= h @evaluation.position %>
+    </p>
+    <p>
+      <label>At what levels have you observed this person officiate? (Check all that apply.)</label><br/>
+      <%= h @evaluation.levels.join(', ') %>
+    </p>
+    <p>
+      <label>Please indicate where and when you observed this official?</label><br/>
+      <%= h @evaluation.where_observed %>
+    </p>
+    <p>
+      <label>In your opinion, for which position is this person best suited?</label><br/>
+      <%= h @evaluation.best_suited %>, <%= h @evaluation.best_suited_level %>
+    </p>
+    <p>
+      <label>Consistency in reading and stopping: Consider cadence, hesitation, stopping when tone sounds, voice inflection, clarity.</label><br/>
+      <%= h @evaluation.reading %>
+    </p>
+    <p>
+      <label>Please explain your response.</label><br/>
+      <%= h @evaluation.reading_explanation %>
+    </p>
+    <p>
+      <label>Consistency in ruling: Consider any biases for or against, whether the round is preliminary or tournament, whether they are pushed for time, etc.</label><br/>
+      <%= h @evaluation.ruling %>
+    </p>
+    <p>
+      <label>Please explain your response.</label><br/>
+      <%= h @evaluation.ruling_explanation %>
+    </p>
+    <p>
+      <label>Knowledge of material: Consider how they utilize their content judge, the ratio of challenges to challenges that are accepted, etc.</label><br/>
+      <%= h @evaluation.knowledge_material %>
+    </p>
+    <p>
+      <label>Please explain your response.</label><br/>
+      <%= h @evaluation.knowledge_material_explanation %>
+    </p>
+    <p>
+      <label>Knowledge and application of rules: Consider how they handle difficult questions/answers, such as multiple questions/answers, appeals, ties, etc.</label><br/>
+      <%= h @evaluation.knowledge_ruling %>
+    </p>
+    <p>
+      <label>Please explain your response.</label><br/>
+      <%= h @evaluation.knowledge_ruling_explanation %>
+    </p>
+    <p>
+      <label>Interpersonal Skills: How would you describe how this person interacts with others (consider quizzers, coaches, those in charge of the event, etc).</label><br/>
+      <%= h @evaluation.interpersonal_skills %>
+    </p>
+    <p>
+      <label>Describe how this person handles conflicts or changes in circumstances as they arise.</label><br/>
+      <%= h @evaluation.handles_conflict %>
+    </p>
+    <p>
+      <label>Describe how this person utilizes their content judge.</label><br/>
+      <%= h @evaluation.content_judge_utilization %>
+    </p>
+    <p>
+      <label>Please list any additional comments/concerns regarding this person.</label><br/>
+      <%= h @evaluation.additional_comments %>
+    </p>
+  </body>
+</html>

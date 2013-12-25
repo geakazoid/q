@@ -1,0 +1,19 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+     <title>File And Image Uploader</title>
+     <script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
+     <script language="javascript" type="text/javascript" src="../../utils/mctabs.js"></script>
+     <script language="javascript" type="text/javascript" src="../../utils/form_utils.js"></script>
+     <script language="javascript" type="text/javascript" src="../../utils/validate.js"></script>
+     <script language="javascript" type="text/javascript" src="/javascripts/tiny_mce/tiny_mce_popup.js"></script>
+	
+   </head>
+   <body>
+   
+    <form action="/tinymce/upload" enctype="multipart/form-data" id="image-upload-form" method="post">
+        <p><label for="binary">Upload a file or image:</label><br/>
+          <input id="image"  name="image" size="30" type="file" /></p>  
+        <input type="submit" value="Upload!" />
+    </form>
+  </body>
+  </html>

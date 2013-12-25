@@ -1,0 +1,30 @@
+<% if AppConfig.test_mode %>
+System is in test mode. The following email would have been sent to <b>[<%= h @original_email %>]</b>,
+but is instead being sent to the currently logged in user.
+
+<% end %>
+Dear <%= @user.first_name %>,
+
+This email is to confirm cancelation of the following equipment registration. You can submit a new equipment registration by visiting <a href='http://www.q2012.org'>Q2012.org</a>.
+Details are below.
+
+Owner: <%= @equipment_registration.user.fullname %> (<%= @equipment_registration.user.email %>)
+Canceling User: <%= @user.fullname %> (<%= @user.email %>)
+Cancelation Time: <%= Time.now.strftime("%m.%d.%Y %H:%M") %>
+
+Name: <%= h @equipment_registration.full_name %>
+District / Region: <%= @equipment_registration.district.display_with_region %>
+Phone: <%= h @equipment_registration.phone %>
+Email: <%= h @equipment_registration.email %>
+
+<%= " Laptops (" + @equipment_registration.laptops.size.to_s + ")\n" unless @equipment_registration.laptops.empty? -%>
+<%= " Pads (" + @equipment_registration.pads.size.to_s + ")\n" unless @equipment_registration.pads.empty? -%>
+<%= " Interface Boxes (" + @equipment_registration.interface_boxes.size.to_s + ")\n" unless @equipment_registration.interface_boxes.empty? -%>
+<%= " Monitors (" + @equipment_registration.monitors.size.to_s + ")\n" unless @equipment_registration.monitors.empty? -%>
+<%= " Projectors (" + @equipment_registration.projectors.size.to_s + ")\n" unless @equipment_registration.projectors.empty? -%>
+<%= " Power Strips (" + @equipment_registration.power_strips.size.to_s + ")\n" unless @equipment_registration.power_strips.empty? -%>
+<%= " Extension Cords (" + @equipment_registration.extension_cords.size.to_s + ")\n" unless @equipment_registration.extension_cords.empty? -%>
+<%= " Microphones/Recorders (" + @equipment_registration.recorders.size.to_s + ")\n" unless @equipment_registration.recorders.empty? -%>
+
+Sincerely,
+Q2012 Staff

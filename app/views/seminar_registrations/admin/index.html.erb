@@ -1,0 +1,30 @@
+<div id='page_title'>
+  <%= title('Seminar Registrations', :h1) %>
+</div>
+
+<%= pluralize(@seminar_registrations.size, 'Total Seminar Registration') + '<br/>' if @seminar_registrations.size > 0 %>
+<br/>
+<table>
+  <tr>
+    <th>Name</th>
+        <th>District / Region</th>
+        <th>Seminars</th>
+  </tr>
+
+<% @seminar_registrations.each do |seminar_registration| %>
+  <tr>
+    <td><%= seminar_registration.full_name %></td>
+        <td>
+          <%= seminar_registration.district.name %><br/>
+          <%= seminar_registration.district.region.name %>
+        </td>
+        <td>
+          <%= 'Sharing And Expanding The Bible Quiz Ministry In Your Community And Beyond: ' + seminar_registration.seminar_1_session + '<br/>' if seminar_registration.seminar_1? %>
+          <%= 'Fulfilling The Mission: Using Bible Quizzing As A Discipling Tool: ' + seminar_registration.seminar_2_session + '<br/>' if seminar_registration.seminar_2? %>
+          <%= 'Everything You Need To Know About Being An Official: ' + seminar_registration.seminar_3_session + '<br/>' if seminar_registration.seminar_3? %>
+          <%= 'I Am A District Quiz Director...Now What Do I Do?: Wednesday June 30th (5:30-6:30 PM)<br/>' if seminar_registration.seminar_4? %>
+          <%= 'Practice Ideas and Activities for the Local Program: ' + seminar_registration.seminar_5_session + '<br/>' if seminar_registration.seminar_5? %>
+        </td>
+  </tr>
+<% end %>
+</table>

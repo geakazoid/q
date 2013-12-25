@@ -1,0 +1,19 @@
+<div id='page_title'>
+  <%= title('Participant Registration Audit Log: ' + @participant_registration.full_name, :h1) %>
+</div>
+<%= link_to 'Go Back', edit_participant_registration_path(@participant_registration) %><br/><br/>
+
+<% @participant_registration.audits.reverse.each do |audit| %>
+  <% if audit.action == 'create' %>
+    <strong>Version <%= audit.version %> / <%= audit.created_at %> / <%= audit.user.fullname %> (Initial)</strong><br/>
+    <% audit.changes.each_key do |key| %>
+      <%= key %>: <%= audit.changes[key] %><br/>
+    <% end %>
+  <% else %>
+    <strong>Version <%= audit.version %> / <%= audit.created_at %> / <%= audit.user.fullname %> (Update)</strong><br/>
+    <% audit.changes.each_key do |key| %>
+      <%= key %>: <%= audit.changes[key][0] %> -> <%= audit.changes[key][1] %><br/>
+    <% end %>
+  <% end %>
+  <br/>
+<% end %>

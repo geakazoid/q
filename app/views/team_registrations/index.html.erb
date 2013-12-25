@@ -1,0 +1,52 @@
+<div id='page_title'>
+  <%= title('My Team Registrations', :h1) %>
+</div>
+
+<% if @user.team_registrations.size > 0 %>
+  From here you can view and make changes to your team registrations.<br/><br/>
+<% else %>
+  You do not have any team registrations. Would you like to <%= link_to 'create one', new_team_registration_path %>?
+<% end  %>
+
+<% if @user.incomplete_team_registrations.size > 0 %>
+  <b>Incomplete Registrations</b>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Teams</th>
+      <th>Created On</th>
+      <th colspan='2'>Actions</th>
+    </tr>
+  <% @user.incomplete_team_registrations.each do |team_registration| %>
+    <tr>
+      <td><%= team_registration.full_name %></td>
+      <td><%= team_registration.teams.size %></td>
+      <td><%= team_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
+      <td><%= link_to 'Make Changes', edit_user_team_registration_path(@user, team_registration) %></td>
+      <td><%= link_to 'Delete', user_team_registration_path(@user, team_registration), :confirm => 'Are you sure you want to delete this team registration?', :method => :delete %></td>
+    </tr>
+  <% end %>
+  </table>
+  <br/>
+<% end  %>
+<% if @user.complete_team_registrations.size > 0 %>
+  <b>Complete Registrations</b>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Registered Teams</th>
+      <th>Paid Amount</th>
+      <th>Created On</th>
+      <th>Actions</th>
+    </tr>
+  <% @user.complete_team_registrations.each do |team_registration| %>
+    <tr>
+      <td><%= team_registration.full_name %></td>
+      <td><%= team_registration.teams.size %></td>
+      <td><%= team_registration.amount %></td>
+      <td><%= team_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
+      <td><%= link_to 'Make Changes', edit_user_team_registration_path(@user, team_registration) %></td>
+    </tr>
+  <% end %>
+  </table>
+<% end  %>

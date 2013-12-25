@@ -1,0 +1,138 @@
+<h1 style='margin-top:0;'>Q2010</h1>
+<h2><%= @teams.first.quiz_division.name %> <%= ('Pool ' + @teams.first.pool) if @teams.size > 0 and !@teams.first.pool.blank? %></h2>
+Team Standings<% if @teams.first.quiz_division.ordered_quizzers.size > 0 %> | <%= link_to 'Individual Standings', :action => 'individual', :id => @teams.first.quiz_division, :pool => params[:pool] %><% end %>
+<br/><br/>
+<table>
+  <tr>
+    <th>Rank</th>
+    <th>Team Name</th>
+    <th>Rounds</th>
+    <th>Wins</th>
+    <th>Losses</th>
+    <th>&nbsp;</th>
+  </tr>
+  <% i = 1 %>
+  <% @teams.each do |team| %>
+    <tr>
+      <td><%= i %></td>
+      <td><%= team.name %></td>
+      <td><%= team.rounds %></td>
+      <td><%= team.wins %></td>
+      <td><%= team.losses %></td>
+      <td>
+        <% if team.name == 'Kansas City' %>
+          * Tie broken by total points
+        <% end %>
+        <% if team.name == 'Kankakee 1st Killer Tofu' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Spring Hill Grace Community' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Piedmont C' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Lloyd I' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Canton First 2' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Blanchester A' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Pickerington' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'GPQ (Grace Point FW IN)' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Indy WS' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Kalamazoo 1st' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Lighthouse' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Bethel Church of the Nazarene' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Decatur West Side' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Southwest Ambassadors' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Petersburg COTN' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Central Ohio C' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Kansas City T-Bones' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'NEI C' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Georgia B' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Dallas Blue' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'East Ohio #3' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Upstate NY' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Kansas City Chiefs' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'SWO Nerdy' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Northwest Ohio A' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'MAD' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Michigan A' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Missouri' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Kansas City Royals' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Northwest A' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Central Ohio B' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'SNU A' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'MNU A' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'TNU B' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'SNU B' %>
+          * Tie broken by head to head
+        <% end %>
+        <% if team.name == 'Arizona District All Stars' %>
+          * Tie broken by head to head
+        <% end %>
+      </td>
+    </tr>
+    <% i += 1 %>
+  <% end %>
+</table>

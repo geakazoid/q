@@ -1,0 +1,9 @@
+<% if @participant_registration.owner != current_user %>
+<p class='notice'>This is a shared registration with <%= @participant_registration.owner.fullname %> (<%= @participant_registration.owner.email %>).</p>
+<% end %>
+
+<div id='page_title'>
+  <%= title('Edit Participant Registration', :h1) %>
+</div>
+
+<%= render :partial => 'form' %>

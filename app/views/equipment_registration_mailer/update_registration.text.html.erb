@@ -1,0 +1,60 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <% if AppConfig.test_mode %>
+      <p style='background: none repeat scroll 0 0 #DDFF99; border: 1px solid #BBDD77; font-size: 0.9em; margin-top: 0; padding: 7px 15px;'>
+        System is in test mode. The following email would have been sent to <b>[<%= h @original_email %>]</b>,
+        but is instead being sent to the currently logged in user.
+      </p>
+    <% end %>
+    <p>Dear Admin,</p>
+    <p>The following equipment registration has been updated on <a href='http://www.q2012.org'>Q2012.org</a>. Details are below.</p>
+    <div style='border: 1px solid #999; background: #ddd; padding: 0px 10px;'>
+      <p>
+        Updated Time: <%= Time.now.strftime("%m.%d.%Y %H:%M") %><br/>
+        Updating User: <%= @user.fullname %> (<%= @user.email %>)
+      </p>
+      <p>
+        Old Registration Information:<br/>
+        Name: <%= @equipment_registration.old('full_name') %><br/>
+        District / Region: <%= @equipment_registration.old('district') %><br/>
+        Phone: <%= @equipment_registration.old('phone') %><br/>
+        Email: <%= @equipment_registration.old('email') %>
+      </p>
+      <p>
+        Equipment:<br/>
+        <%= " Laptops (" + @equipment_registration.old('laptops').to_s + ")<br/>\n" unless @equipment_registration.old('laptops') == 0 -%>
+        <%= " Pads (" + @equipment_registration.old('pads').to_s + ")<br/>\n" unless @equipment_registration.old('pads') == 0 -%>
+        <%= " Interface Boxes (" + @equipment_registration.old('interface_boxes').to_s + ")<br/>\n" unless @equipment_registration.old('interface_boxes') == 0 -%>
+        <%= " Monitors (" + @equipment_registration.old('monitors').to_s + ")<br/>\n" unless @equipment_registration.old('monitors') == 0 -%>
+        <%= " Projectors (" + @equipment_registration.old('Projectors').to_s + ")<br/>\n" unless @equipment_registration.old('projectors') == 0 -%>
+        <%= " Power Strips (" + @equipment_registration.old('power_strips').to_s + ")<br/>\n" unless @equipment_registration.old('power_strips') == 0 -%>
+        <%= " Extension Cords (" + @equipment_registration.old('extension_cords').to_s + ")<br/>\n" unless @equipment_registration.old('extension_cords') == 0 -%>
+        <%= " Microphones/Recorders (" + @equipment_registration.old('recorders').to_s + ")\n" unless @equipment_registration.old('recorders') == 0 -%>
+      </p>
+      <p>
+        New Registration Information:<br/>
+        Name: <%= @equipment_registration.full_name %><br/>
+        District / Region: <%= @equipment_registration.district.display_with_region %><br/>
+        Phone: <%= @equipment_registration.phone %><br/>
+        Email: <%= @equipment_registration.email %>
+      </p>
+      <p>
+        Equipment:<br/>
+        <%= " Laptops (" + @equipment_registration.laptops.count.to_s + ")<br/>\n" unless @equipment_registration.laptops.count == 0 -%>
+        <%= " Pads (" + @equipment_registration.pads.count.to_s + ")<br/>\n" unless @equipment_registration.pads.count == 0 -%>
+        <%= " Interface Boxes (" + @equipment_registration.interface_boxes.count.to_s + ")<br/>\n" unless @equipment_registration.interface_boxes.count == 0 -%>
+        <%= " Monitors (" + @equipment_registration.monitors.count.to_s + ")<br/>\n" unless @equipment_registration.monitors.count == 0 -%>
+        <%= " Projectors (" + @equipment_registration.projectors.count.to_s + ")<br/>\n" unless @equipment_registration.projectors.count == 0 -%>
+        <%= " Power Strips (" + @equipment_registration.power_strips.count.to_s + ")<br/>\n" unless @equipment_registration.power_strips.count == 0 -%>
+        <%= " Extension Cords (" + @equipment_registration.extension_cords.count.to_s + ")<br/>\n" unless @equipment_registration.extension_cords.count == 0 -%>
+        <%= " Microphones/Recorders (" + @equipment_registration.recorders.count.to_s + ")\n" unless @equipment_registration.recorders.count == 0 -%>
+      </p>
+    </div>
+    <p>
+      Sincerely,<br/>
+      Q2012 Staff
+    </p>
+  </body>
+</html>

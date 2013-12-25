@@ -1,0 +1,22 @@
+<% content_for :admin do %>
+<p>
+  <%= link_to 'Add new registerable item', new_registerable_item_path %>
+</p>
+<% end %>
+
+<%= title('Registerable Items', :h1) %>
+
+<table>
+  <tr>
+    <th>Name</th>
+	<th colspan='3'>Actions</th>
+  </tr>
+
+<% @registerable_items.each do |registerable_item| %>
+  <tr>
+    <td><%=h registerable_item.name %></td>
+    <td><%= link_to 'Edit', edit_registerable_item_path(registerable_item) %></td>
+    <td><%= link_to 'Delete', registerable_item, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>

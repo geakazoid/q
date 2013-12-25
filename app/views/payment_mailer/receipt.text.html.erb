@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <style>  
+      /* receipt */
+      div.receipt_details {
+        width: 485px;
+        padding: 0px 0px 20px 0px;
+      }
+      
+      div.receipt_details div.row {
+          clear: both;
+          padding-top: 5px;
+      }
+      
+      div.receipt_details div.row span.label {
+          float: left;
+          width: 140px;
+          text-align: right;
+      }
+      
+      div.receipt_details div.row span.details {
+          float: right;
+          width: 335px;
+          text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <% if AppConfig.test_mode %>
+      <p style='background: none repeat scroll 0 0 #DDFF99; border: 1px solid #BBDD77; font-size: 0.9em; margin-top: 0; padding: 7px 15px;'>
+        System is in test mode. No credit card was actually charged.
+      </p>
+    <% end %>
+    <p>Dear <%= @payment.first_name %>,</p>
+    <p>Thank you for your payment. Please print this receipt for your records.</p>
+    <h2>Transaction Information:</h2>
+    <div class='receipt_details'>
+      <div class='row'>
+        <span class='label'>Transaction Time:</span>
+        <span class='details'><%= @payment.transaction_time %></span>
+      </div>
+      <div class='row'>
+        <span class='label'>Transaction Id:</span>
+        <span class='details'><%= @payment.transaction_id %></span>
+      </div>
+    </div>
+    <div style='clear: both;'></div>
+    <h2>Registration Information:</h2>
+    <div class='receipt_details'>
+      <% if (!@payment.team_registration.nil?)%>
+        <% @payment.team_registration.teams.each do |team| %>
+          <div class='row'>
+            <span class='label'>Team:</span>
+            <span class='details'><%= team.name %> (<%= team.division.name %>) - $<%= team.amount_in_cents / 100 %></span>
+          </div>
+          <% if team.discounted? %>
+            <div class='row'>
+              <span class='label'></span>
+              <span class='details'>($15 discount applied)</span>
+            </div>
+          <% end %>
+        <% end %>
+        <div class='row' style='margin-top: 30px;'>
+          <span class='label'>Payment Amount:</span>
+          <span class='details'>$<%= @payment.team_registration.total_amount %></span>
+        </div>
+      <% end %>
+      <% if (!@payment.participant_registration.nil?)%>
+        <div class='row'>
+          <span class='label'>Participant:</span>
+          <span class='details'><%= @payment.participant_registration.full_name %></span>
+        </div>
+        <div class='row'>
+          <% if (@session[:participant_registration][:partial_payment]) %>
+          <span class='label'>Partial Payment:</span>
+          <% else %>
+          <span class='label'>Full Payment:</span>
+          <% end %>
+          <span class='details'>$<%= @session[:participant_registration][:registration_amount] / 100 %>.00</span>
+        </div>
+        <% if !@session[:participant_registration][:skip_extras] and @session[:participant_registration][:extras_amount] > 0 %>
+        <div class='row'>
+          <span class='label'>Extras:</span>
+          <span class='details'>$<%= @session[:participant_registration][:extras_amount] / 100 %>.00</span>
+        </div>          
+        <% end %>
+        <div class='row' style='margin-top: 30px;'>
+          <span class='label'>Payment Amount:</span>
+          <span class='details'>$<%= @payment.amount_in_cents / 100 %>.00</span>
+        </div>
+      <% end %>
+    </div>
+    <div style='clear: both;'></div>
+    <h2>Billing Information:</h2>
+    
+    <div class='receipt_details'>
+      <div class='row'>
+        <span class='label'>First Name:</span>
+        <span class='details'><%= @payment.first_name %></span>
+      </div>
+      <div class='row'>
+        <span class='label'>Last Name:</span>
+        <span class='details'><%= @payment.last_name %></span>
+      </div>
+      <div class='row'>
+        <span class='label'>Address:</span>
+        <span class='details'>
+          <%= @payment.address %><br/>
+          <%= @payment.city %>, <%= @payment.state %> <%= @payment.zipcode %><br/>
+          <%= @payment.country %>
+        </span>
+      </div>
+      <div class='row'>
+        <span class='label'>Phone:</span>
+        <span class='details'><%= @payment.phone %></span>
+      </div>
+      <div class='row'>
+        <span class='label'>Email:</span>
+        <span class='details'><%= @payment.email %></span>
+      </div>
+    </div>
+    <div style='clear: both; padding-bottom: 100px;'></div>
+  </body>
+</html>
