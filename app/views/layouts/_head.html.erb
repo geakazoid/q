@@ -39,16 +39,6 @@
       <ul id="nav">
         <li><%= link_to 'Home', root_path %></li>
         <%= extra_pages %>
-        <li><%= link_to 'Teams', teams_path %></li>
-        <li><%= link_to 'Statistics', '/statistics/index' %></li>
-        <li><%= link_to 'Seminar Information', schedule_seminar_registrations_path %></li>
-        <li><%= link_to 'Live Video', video_pages_path %></li>
-	<li><%= link_to 'Register As An Official', new_official_path %></li>
-        <li><%= link_to 'Register A Team', new_team_registration_path %></li>
-        <li><%= link_to 'Register A Participant', new_participant_registration_path %></li>
-        <li><%= link_to 'Q2010 Teams', 'http://www.q2010.org/teams', :popup => true %></li>
-        <li><%= link_to 'Q2010 Statistics', 'http://www.q2010.org/stats', :popup => true %></li>
-        <li><%= link_to 'Q2010 Gallery', 'http://www.q2010.org/gallery', :popup => true %></li>
         <% if logged_in? %>
           <li><%= link_to 'Update Account', account_path %></li>
           <li class="login"><%= link_to current_user.fullname, account_path %></li>
