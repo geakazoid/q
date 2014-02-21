@@ -1,23 +1,23 @@
 development: &non_production_settings
   site_url: http://localhost:3000
-  site_name: Q2012 DEV
-  admin_email: Q2012 <q2012@nazquizzing.org>
+  site_name: Q2014 DEV
+  admin_email: Q2014 <q2012@nazquizzing.org>
   test_mode: true
-  regional_code: regionals2012
+  regional_code: regionals2014
   
 test:
   <<: *non_production_settings
 
 staging:
-  site_url: http://q2012dev.nazquizzing.org
-  site_name: Q2012 DEV
-  admin_email: Q2012 <q2012@nazquizzing.org>
+  site_url: http://q2014dev.nazquizzing.org
+  site_name: Q2014 DEV
+  admin_email: Q2014 <q2012@nazquizzing.org>
   test_mode: true
-  regional_code: regionals2012
+  regional_code: regionals2014
   
 production:
-  site_url: https://www.q2012.org
-  site_name: Q2012
-  admin_email: Q2012 <q2012@nazquizzing.org>
+  site_url: http://www.q2014.org
+  site_name: Q2014
+  admin_email: Q2014 <q2014@nazquizzing.org>
   test_mode: false
   regional_code: regionals2012

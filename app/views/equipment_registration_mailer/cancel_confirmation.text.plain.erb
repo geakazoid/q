@@ -5,7 +5,7 @@ but is instead being sent to the currently logged in user.
 <% end %>
 Dear <%= @user.first_name %>,
 
-This email is to confirm cancelation of the following equipment registration. You can submit a new equipment registration by visiting <a href='http://www.q2012.org'>Q2012.org</a>.
+This email is to confirm cancelation of the following equipment registration. You can submit a new equipment registration by visiting <a href='http://www.q2012.org'>Q2014.org</a>.
 Details are below.
 
 Owner: <%= @equipment_registration.user.fullname %> (<%= @equipment_registration.user.email %>)
@@ -27,4 +27,4 @@ Email: <%= h @equipment_registration.email %>
 <%= " Microphones/Recorders (" + @equipment_registration.recorders.size.to_s + ")\n" unless @equipment_registration.recorders.empty? -%>
 
 Sincerely,
-Q2012 Staff
+Q2014 Staff

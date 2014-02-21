@@ -10,7 +10,7 @@ class EvaluationMailer < ActionMailer::Base
       @recipients << "#{evaluation.sent_to_name} <#{evaluation.sent_to_email}>"
     end
     @from = 'Todd Olson <tolson27@gmail.com>'
-    @subject = "[Q2012] Official Evaluation Request"
+    @subject = "[Q2014] Official Evaluation Request"
     @sent_on = Time.now
     @body[:evaluation] = evaluation
   end
@@ -29,7 +29,7 @@ class EvaluationMailer < ActionMailer::Base
       @recipients = recipients
     end
     @from = AppConfig.admin_email
-    @subject = "[Q2012] Completed Official Evaluation"
+    @subject = "[Q2014] Completed Official Evaluation"
     @sent_on = Time.now
     @body[:evaluation] = evaluation
   end
@@ -48,7 +48,7 @@ class EvaluationMailer < ActionMailer::Base
     @recipients << 'Jeremy Driscoll <jdriscoll@realnets.com>'
     do_not_deliver! if @recipients.empty?
     @from = AppConfig.admin_email
-    @subject = "[Q2012] "
+    @subject = "[Q2014] "
     @sent_on = Time.now
     @body[:official] = official
   end

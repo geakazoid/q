@@ -15,7 +15,7 @@ h1
 
 a
 {
-    color:#24b;
+    color:#3cada9;
 }
 
 #content
@@ -468,12 +468,12 @@ div.upload input
 {
     display:block;
     float:left;
-    color:#CF010B;
+    color:#ee5e61;
 }
 
 #header ul#nav li.login a
 {
-    color:#D8CA31;
+    color:#3cada9;
     text-decoration:none;
 }
 
@@ -1109,7 +1109,7 @@ div.editbox,div#total_footer
 
 #revision_info a
 {
-    color:#CF010B;
+    color:#ee5e61;
 }
 
 table.extras, table.breakdown
