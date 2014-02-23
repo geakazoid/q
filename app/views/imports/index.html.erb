@@ -1,0 +1,12 @@
+<div id='page_title'>
+  <%= title('Imports', :h1) %>
+</div>
+<h3>Imports</h3>
+
+Import user data by uploading a csv pulled from CVent.
+
+<% form_tag({:action => 'upload_file'}, :multipart => true) do %>
+<p><label for="upload_file">Select File</label> : 
+<%= file_field 'upload', 'datafile' %></p>
+<%= submit_tag "Upload" %>
+<% end %>
