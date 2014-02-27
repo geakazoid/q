@@ -52,11 +52,12 @@ class ImportsController < ApplicationController
       round_trip_airport_transportation = row[27]
       local_team = row[28]
       district_team = row[29]
-      district = row[30]
+      district_name = row[30]
       shirt_size2 = row[31]
       amount_ordered = row[32]
       amount_paid = row[33]
       amount_due = row[34]
+      gender = row[35]
       
       pr = ParticipantRegistration.find_by_confirmation_code(confirmation_code)
       pr = ParticipantRegistration.new if pr.nil?
@@ -93,7 +94,12 @@ class ImportsController < ApplicationController
       pr.local_church = local_church
       #local_team
       #district_team
-      #district
+      district = District.find_by_name(district_name)
+      pr.district = district unless district.nil?
+      #amount_order
+      #amount_paid
+      pr.registration_fee = amount_due
+      pr.gender = gender
       logger.debug(pr.inspect)
       logger.debug("VALID:" + pr.valid?.to_s)
       logger.debug(pr.errors.inspect)
