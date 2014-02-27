@@ -98,7 +98,7 @@ class ImportsController < ApplicationController
       pr.district = district unless district.nil?
       #amount_order
       #amount_paid
-      pr.registration_fee = amount_due
+      pr.registration_fee = amount_due *100
       pr.gender = gender
       logger.debug(pr.inspect)
       logger.debug("VALID:" + pr.valid?.to_s)
