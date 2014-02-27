@@ -83,7 +83,7 @@ class ImportsController < ApplicationController
       pr.airline_arrival_date = flight_arrival_date_and_time
       pr.arrival_flight_number = flight_number
       pr.most_recent_grade = grade_completed
-      pr.group_leader = group_leader
+      pr.group_leader_import = group_leader
       pr.travel_type = travel_plan
       pr.understand_form_completion = understand_form_completion
       pr.over_18
