@@ -918,4 +918,25 @@ class ParticipantRegistrationsController < ApplicationController
       @participant_registration.school.save
     end
   end
+  
+  # claim a participant registration using a confirmation code
+  def claim
+    if request.post?
+      participant_registration = ParticipantRegistration.find_by_confirmation_number(params[:confirmation_number])
+      unless participant_registration.nil?
+        participant_registration_user = ParticipantRegistrationUser.find(:first, :conditions => "user_id = #{current_user.id} and participant_registration_id = #{participant_registration.id}")
+        if participant_registration_user.nil?
+          participant_registration_user = ParticipantRegistrationUser.new
+          participant_registration_user.user = current_user
+          participant_registration_user.participant_registration = participant_registration
+          participant_registration_user.owner = true
+          participant_registration_user.save
+          claim_message = "Registration #{params[:confirmation_number]} (#{participant_registration.full_name}) claimed successfully!"
+        else
+          claim_message = "Registration #{params[:confirmation_number]} (#{participant_registration.full_name}) has already been claimed."
+        end
+      end
+      flash.now[:notice] = claim_message
+    end
+  end
 end
