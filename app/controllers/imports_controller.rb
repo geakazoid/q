@@ -31,7 +31,7 @@ class ImportsController < ApplicationController
       home_city = row[6]
       home_state_prov = row[7]
       home_country_code = row[8]
-      confirmation_code = row[9]
+      confirmation_number = row[9]
       age = row[10]
       airline_name = row[11]
       arrival_date_and_time = row[12]
@@ -50,8 +50,8 @@ class ImportsController < ApplicationController
       shirt_size = row[25]
       local_church = row[26]
       round_trip_airport_transportation = row[27]
-      local_team = row[28]
-      district_team = row[29]
+      num_local_teams = row[28]
+      num_district_teams = row[29]
       district_name = row[30]
       shirt_size2 = row[31]
       amount_ordered = row[32]
@@ -59,7 +59,7 @@ class ImportsController < ApplicationController
       amount_due = row[34]
       gender = row[35]
       
-      pr = ParticipantRegistration.find_by_confirmation_code(confirmation_code)
+      pr = ParticipantRegistration.find_by_confirmation_number(confirmation_number)
       pr = ParticipantRegistration.new if pr.nil?
       name = full_name.split(/, /)
       pr.first_name = name[1]
@@ -75,7 +75,7 @@ class ImportsController < ApplicationController
       pr.state = home_state_prov
       #pr.zipcode = home_zipcode
       pr.country = home_country_code
-      pr.confirmation_code = confirmation_code
+      pr.confirmation_number = confirmation_number
       pr.age = age
       pr.arrival_airline = airline_name
       pr.driving_arrival_date = arrival_date_and_time
@@ -92,13 +92,13 @@ class ImportsController < ApplicationController
       pr.roommate_preference_2 = roommate_preference_2
       pr.shirt_size = shirt_size
       pr.local_church = local_church
-      #local_team
-      #district_team
+      pr.num_local_teams = num_local_teams
+      pr.num_district_teams = num_district_teams
       district = District.find_by_name(district_name)
       pr.district = district unless district.nil?
       #amount_order
       #amount_paid
-      pr.registration_fee = amount_due *100
+      pr.registration_fee = amount_due * 100
       pr.gender = gender
       logger.debug(pr.inspect)
       logger.debug("VALID:" + pr.valid?.to_s)
