@@ -1,8 +1,8 @@
 class AddQ2014InformationFour < ActiveRecord::Migration
   def self.up
     # add additional participant_registration fields for Q2014
-    add_column :participant_registrations, :num_district_teams, :string
-    add_column :participant_registrations, :num_local_teams, :string
+    add_column :participant_registrations, :num_district_teams, :int
+    add_column :participant_registrations, :num_local_teams, :int
 
   end
 

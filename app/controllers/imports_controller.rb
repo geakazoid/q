@@ -32,7 +32,7 @@ class ImportsController < ApplicationController
       home_state_prov = row[7]
       home_country_code = row[8]
       confirmation_number = row[9]
-      age = row[10]
+      age = row[10].to_i
       airline_name = row[11]
       arrival_date_and_time = row[12]
       special_needs = row[13]
@@ -50,13 +50,13 @@ class ImportsController < ApplicationController
       shirt_size = row[25]
       local_church = row[26]
       round_trip_airport_transportation = row[27]
-      num_local_teams = row[28]
-      num_district_teams = row[29]
+      num_local_teams = row[28].to_i
+      num_district_teams = row[29].to_i
       district_name = row[30]
       shirt_size2 = row[31]
-      amount_ordered = row[32]
-      amount_paid = row[33]
-      amount_due = row[34]
+      amount_ordered = row[32].to_i
+      amount_paid = row[33].to_i
+      amount_due = row[34].to_i
       gender = row[35]
       
       pr = ParticipantRegistration.find_by_confirmation_number(confirmation_number)
@@ -96,9 +96,9 @@ class ImportsController < ApplicationController
       pr.num_district_teams = num_district_teams
       district = District.find_by_name(district_name)
       pr.district = district unless district.nil?
-      #amount_order
-      #amount_paid
-      pr.registration_fee = amount_due * 100
+      pr.amount_ordered = amount_ordered * 100
+      pr.amount_paid = amount_paid * 100
+      pr.amount_due = amount_due * 100
       pr.gender = gender
       logger.debug(pr.inspect)
       logger.debug("VALID:" + pr.valid?.to_s)
