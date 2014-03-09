@@ -96,9 +96,9 @@ class ImportsController < ApplicationController
       pr.num_district_teams = num_district_teams
       district = District.find_by_name(district_name)
       pr.district = district unless district.nil?
-      pr.amount_ordered = amount_ordered * 100
-      pr.amount_paid = amount_paid * 100
-      pr.amount_due = amount_due * 100
+      pr.amount_ordered = amount_ordered
+      pr.amount_paid = amount_paid
+      pr.amount_due = amount_due
       pr.gender = gender
       logger.debug(pr.inspect)
       logger.debug("VALID:" + pr.valid?.to_s)

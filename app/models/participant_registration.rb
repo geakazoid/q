@@ -348,7 +348,7 @@ class ParticipantRegistration < ActiveRecord::Base
 
   # return whether this participant registration is complete or not
   def complete?
-    self.paid?
+    self.amount_due == 0
   end
 
   # return total paid amount
