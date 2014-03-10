@@ -90,17 +90,13 @@ class TeamRegistrationsController < ApplicationController
     respond_to do |format|
       if @team_registration.save
         case params[:commit_action]
-        when 'payment_action'
-          # add team_registration to the session
-          session[:team_registration] = Hash.new
-          session[:team_registration][:id] = @team_registration.id
-          format.html { redirect_to(new_payment_url) }
         when 'registration_action'
           # mark the team_registration as paid
           @team_registration.paid = true
           @team_registration.audit_user = current_user
           @team_registration.save
-          format.html { redirect_to(confirm_team_registrations_url) }
+          flash[:notice] = 'Team Registration submitted succesfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
+          format.html { redirect_to(team_registrations_url) }
         when 'save_action'
           flash[:notice] = 'Team Registration saved successfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
           format.html { redirect_to(root_url) }

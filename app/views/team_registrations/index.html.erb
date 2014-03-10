@@ -35,7 +35,6 @@
     <tr>
       <th>Name</th>
       <th>Registered Teams</th>
-      <th>Paid Amount</th>
       <th>Created On</th>
       <th>Actions</th>
     </tr>
@@ -43,10 +42,13 @@
     <tr>
       <td><%= team_registration.full_name %></td>
       <td><%= team_registration.teams.size %></td>
-      <td><%= team_registration.amount %></td>
       <td><%= team_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
       <td><%= link_to 'Make Changes', edit_user_team_registration_path(@user, team_registration) %></td>
     </tr>
   <% end %>
   </table>
 <% end  %>
+
+<p>
+  <%= link_to('Create a new Team Registration', new_team_registration_url) %>
+</p>

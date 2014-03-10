@@ -28,18 +28,6 @@
     <%= f.label :email %><br/>
     <%= f.text_field :email %>
   </p>
-  <% if @team_registration.complete? %>
-  <p>
-    <%= f.label :amount, "Total Amount" %><br/>
-    <%= f.text_field :amount %>
-  </p>
-  <% end %>
-  <% if !@team_registration.complete? %>
-  <p>
-    <%= f.label :paid, "Paid?" %><br/>
-    <%= f.select :paid, { "True"  => true, "False" => false } %>
-  </p>
-  <% end %>
 
   <div id="teams">
     <h3>Teams</h3>

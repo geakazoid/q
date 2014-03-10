@@ -29,6 +29,7 @@ class TeamRegistration < ActiveRecord::Base
   # custom validations
   validate_on_create :only_two_regional_teams
   validate_on_create :has_regional_code
+  validate_on_create :current_user_has_registrations
 
   # before save to store out audit information
   before_save :prepare_audit
@@ -95,6 +96,18 @@ class TeamRegistration < ActiveRecord::Base
     # add an error for display if needed
     if registering_regional_team and num_regional_teams > 2
       errors.add_to_base('Each region may only register 2 regional teams. ' + self.district.region.num_regional_teams.to_s + ' team(s) have already been registered.')
+    end
+  end
+  
+  # validate that the current user had available team registrations
+  # this validation adds an error if a user attempts to register a
+  # team(s) and doesn't have the enough registrations to do so.
+  def current_user_has_registrations
+    if (district_count > @audit_user.num_district_teams_available)
+      errors.add_to_base('You do not have enough district team registrations.')
+    end
+    if (local_count > @audit_user.num_local_teams_available)
+      errors.add_to_base('You do not have enough local team registrations.')
     end
   end
 
@@ -166,6 +179,11 @@ class TeamRegistration < ActiveRecord::Base
   # count of district teams being registered
   def district_count
     district_novice_count + district_experienced_count + district_novice_discounted_count + district_experienced_discounted_count
+  end
+  
+  # count of local teams being registered
+  def local_count
+    local_novice_count + local_experienced_count
   end
 
   # allow setting of a current user for audit log purposes

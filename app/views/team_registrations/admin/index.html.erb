@@ -12,9 +12,7 @@
   <tr>
     <th>Name</th>
 	<th>Registered Teams</th>
-	<th>Amount</th>
-	<th>Paid?</th>
-        <th>District / Region</th>
+    <th>District / Region</th>
 	<th colspan='3'>Actions</th>
   </tr>
 
@@ -22,12 +20,10 @@
   <tr>
     <td><%= team_registration.full_name %></td>
 	<td><%= team_registration.teams.size %></td>
-	<td><%= team_registration.amount %></td>
-	<td><%= team_registration.paid? %></td>
-        <td><%= team_registration.district.display_with_region %></td>
+    <td><%= team_registration.district.display_with_region %></td>
 	<td><%= link_to 'Show', team_registration_path(team_registration) %></td>
 	<td><%= link_to 'Edit', edit_team_registration_path(team_registration) %></td>
-        <td><%= link_to 'Delete', team_registration, :confirm => 'Are you sure you want to delete this team registration?', :method => :delete %></td>
+    <td><%= link_to 'Delete', team_registration, :confirm => 'Are you sure you want to delete this team registration?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>

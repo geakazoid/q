@@ -7,10 +7,10 @@
     <%= form.collection_select :division_id,
                                @divisions,
                                :id,
-                               :name_price,
+                               :name,
                                {:prompt => '- Select -' },
                                {:class => 'division',
-                                :onchange => 'javascript: update_team_total(); check_regional_selection()'} %>
+                                :onchange => 'javascript: check_regional_selection()'} %>
     &nbsp;
 	  <%= remove_team_link( form ) %>
   </p>
