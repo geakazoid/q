@@ -11,7 +11,7 @@
 <table>
   <tr>
     <th>Name</th>
-    <th>Imported On</th>
+    <th>Confirmation Number</th>
     <th>Status</th>
     <th>Amount Ordered</th>
     <th>Amount Paid</th>
@@ -21,7 +21,7 @@
   <% @participant_registrations.each do |participant_registration| %>
     <tr>
       <td><%= participant_registration.full_name %></td>
-      <td><%= participant_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
+      <td><%= participant_registration.confirmation_number %></td>
       <td><%= participant_registration.complete? ? "Complete" : "Incomplete" %></td>
       <td>$<%= participant_registration.amount_ordered %>.00</td>
       <td>$<%= participant_registration.amount_paid %>.00</td>
