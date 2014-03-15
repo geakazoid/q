@@ -2,7 +2,10 @@
   <%= title('Team Registration', :h1) %>
 </div>
 <%= render :partial => 'pages/page', :locals => { :page => @page } if !@page.nil? %>
-
+<p>
+    Please use the form below to register a new team or teams. You may only register a team if you have purchased teams
+    through a <%= link_to 'Cvent', AppConfig.cvent_url, :target => '_blank' %> registration. 
+</p>
 <p>
   You have <%= current_user.num_district_teams_available %> district team registrations available.<br/>
   You have <%= current_user.num_local_teams_available %> local team registrations available.

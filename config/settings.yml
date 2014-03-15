@@ -4,6 +4,7 @@ development: &non_production_settings
   admin_email: Q2014 <q2012@nazquizzing.org>
   test_mode: true
   regional_code: regionals2014
+  cvent_url: http://www.cvent.com/d/m4qkwx
   
 test:
   <<: *non_production_settings
@@ -14,6 +15,7 @@ staging:
   admin_email: Q2014 <q2012@nazquizzing.org>
   test_mode: true
   regional_code: regionals2014
+  cvent_url: http://www.cvent.com/d/m4qkwx
   
 production:
   site_url: http://www.q2014.org
@@ -21,3 +23,4 @@ production:
   admin_email: Q2014 <q2014@nazquizzing.org>
   test_mode: false
   regional_code: regionals2012
+  cvent_url: http://www.cvent.com/d/m4qkwx

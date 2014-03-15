@@ -39,6 +39,7 @@
       <ul id="nav">
         <li><%= link_to 'Home', root_path %></li>
         <li><%= link_to 'Register A Team', new_team_registration_path %></li>
+        <li><%= link_to 'Register A Participant', AppConfig.cvent_url, :target => '_blank' %></li>
         <li><%= link_to 'Claim CVent Registration', claim_participant_registrations_path %></li>
         <%= extra_pages %>
         <% if logged_in? %>

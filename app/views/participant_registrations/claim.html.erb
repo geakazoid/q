@@ -4,7 +4,8 @@
 
 <p>
   To claim a registration which you've purchased through CVent, please provide the confirmation
-  number you were provided when the user was registered.
+  number you were provided when the user was registered. If you do not yet have a confirmation number
+  you will receive one as soon as you register through <%= link_to 'Cvent', AppConfig.cvent_url, :target => '_blank' %>.
 </p>
 <% form_tag request.path, :method => 'post' do %>
   <%= text_field_tag :confirmation_number, nil, :size => 25 %><br/>
