@@ -1,0 +1,35 @@
+<div id='page_title'>
+  <%= title('Edit A Team', :h1) %>
+</div>
+
+<%= @output %>
+<% form_for(@team) do |f| %>
+<%= f.error_messages :header_message => 'Errors prevented you from saving your selections.', :message => 'We encountered the following problems:' %>
+
+<p>
+  From here you can select the quizzers which will be on your team (<%= @team.name %>). Check all that apply. The
+  following rules apply to quizzer selections.
+  <ul>
+    <li>You may only select six quizzers per team.</li>
+    <li>Quizzers may not be on more than one district team.</li>
+    <li>Quizzers may not be on more than one local team.</li>
+    <li>Quizzers may not be on both a regional team and a novice team.</li>
+  </uL>
+</p>
+<p>
+  Available quizzers from your district:
+</p>
+<div>
+  <% i = 0 %>
+  <% @quizzers.each do |quizzer| %>
+    <% i = i + 1 %>
+    <%= check_box_tag("team[participant_registration_ids][]", quizzer.id, @team.participant_registrations.include?(quizzer)) %>
+    <span id='participant_registration_<%= quizzer.id %>'><%= quizzer.full_name %></span><br/>
+    <%= '</div><div>' if i % 10 == 0 %>
+  <% end %>
+</div>
+</br/>
+<div>
+    <%= f.submit 'Save Selections' %>
+</div>
+<% end %>

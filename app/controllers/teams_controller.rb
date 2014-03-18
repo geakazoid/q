@@ -14,4 +14,29 @@ class TeamsController < ApplicationController
       format.html # index.html.erb
     end
   end
+  
+  def edit
+    @team = Team.find(params[:id])
+    if @team.nil? or (@team.team_registration.user != current_user)
+      @output = "Something went horribly wrong."
+    end
+    
+    @quizzers = ParticipantRegistration.find(:all,
+                                             :conditions => 'district_id = ' + current_user.district_id.to_s + ' and registration_type = "quizzer"',
+                                             :order => 'first_name asc, last_name asc')
+    
+    respond_to do |format|
+      format.html # edit.html.erb
+    end
+  end
+  
+  def update
+    @team = Team.find(params[:id])
+    @team.update_attributes(params[:team])
+    
+    respond_to do |format|
+      flash[:notice] = 'Team updated successfully.'
+      format.html { redirect_to(user_team_registrations_url(current_user)) }
+    end
+  end
 end

@@ -10,6 +10,7 @@ class ParticipantRegistration < ActiveRecord::Base
   has_many :users, :through => :participant_registration_users
   has_many :shared_participant_registration_users, :class_name => 'ParticipantRegistrationUser', :conditions => 'owner = false'
   has_many :shared_users, :through => :shared_participant_registration_users, :class_name => 'User', :source => :user
+  has_and_belongs_to_many :teams
   belongs_to :team1, :class_name => 'Team', :foreign_key => 'team1_id'
   belongs_to :team2, :class_name => 'Team', :foreign_key => 'team2_id'
   belongs_to :team3, :class_name => 'Team', :foreign_key => 'team3_id'
