@@ -47,7 +47,6 @@
           <li class="login"><%= link_to current_user.fullname, account_path %></li>
           <li class="logout"><%= link_to 'Logout', logout_path %></li>
         <% else %>
-          <li><%= link_to 'Register', register_path %></li>
           <li><%= link_to 'Login', login_path %></li>
         <% end %>
       </ul>

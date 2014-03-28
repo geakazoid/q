@@ -2,7 +2,13 @@
   <%= title('Login', :h1) %>
 </div>
 
-In order to interact with certain parts of the site you need to login. You can do that below. If you don't have a login you can <%= link_to 'register', register_path %>. Please note that this site only allows editing of information before the event. Registration and payment to attend Q2014 must be done through CVent.
+<p>
+In order to interact with certain parts of the site you need to login. You can do that below.
+If you don't have a login you can <%= link_to 'register', register_path %>. Please note that
+this site only allows editing of information before the event. Registration and payment to
+attend Q2014 must be done through <%= link_to 'CVent', AppConfig.cvent_url, :target => '_blank' %>.
+</p>
+
 <% form_tag session_path do -%>
 <p><label for="email">Email</label><br/>
 <%= text_field_tag 'email', @email %></p>
