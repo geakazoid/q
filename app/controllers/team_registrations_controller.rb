@@ -28,15 +28,15 @@ class TeamRegistrationsController < ApplicationController
 
   # GET /team_registrations/new
   def new
-    if params[:key] != '549e474379a414690497b030be880080' and !admin?
-      @page = Page.find_by_label('Closed Team Registration Text')
-      respond_to do |format|
-        format.html {
-          render "team_registrations/closed"
-        }
-      end
-      return
-    end
+    # if params[:key] != '549e474379a414690497b030be880080' and !admin?
+      # @page = Page.find_by_label('Closed Team Registration Text')
+      # respond_to do |format|
+        # format.html {
+          # render "team_registrations/closed"
+        # }
+      # end
+      # return
+    # end
 
     @team_registration = TeamRegistration.new
     @districts = District.find(:all, :order => "name")
