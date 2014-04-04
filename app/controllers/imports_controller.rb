@@ -21,43 +21,47 @@ class ImportsController < ApplicationController
         first_row = false
         next
       end
-
-      full_name = row[0]
-      email_address = row[1]
-      contact_type = row[2]
-      home_phone = row[3]
-      mobile_phone = row[4]
-      home_address = row[5]
-      home_city = row[6]
-      home_state_prov = row[7]
-      home_country_code = row[8]
-      confirmation_number = row[9]
-      age = row[10].to_i
-      airline_name = row[11]
-      arrival_date_and_time = row[12]
-      special_needs = row[13]
-      flight_arrival_date_and_time = row[14]
-      flight_number = row[15]
-      grade_completed = row[16]
-      grade_completed2 = row[17]
+      
+      full_name = row[3]
+      email_address = row[6]
+      contact_type = row[8]
+      home_phone = ''
+      mobile_phone = row[16]
+      home_address = row[12]
+      home_city = row[13]
+      home_state_prov = row[14]
+      home_country_code = row[11]
+      home_zipcode = row[15]
+      confirmation_number = row[5]
+      airline_name = row[27]
+      arrival_date_and_time = row[26]
+      special_needs = row[21]
+      flight_arrival_date_and_time = row[28]
+      arrival_flight_number = row[29]
+      departure_flight_number = row[30]
+      flight_departure_date_and_time = row[31]
+      grade_completed = row[23]
       group_leader = row[18]
-      travel_plan = row[19]
-      understand_form_completion = row[20]
-      over_18 = row[21]
+      travel_plan = row[25]
+      understand_form_completion = row[19]
       special_needs_details = row[22]
-      roommate_preference_1 = row[23]
-      roommate_preference_2 = row[24]
-      shirt_size = row[25]
-      local_church = row[26]
-      round_trip_airport_transportation = row[27]
-      num_local_teams = row[28].to_i
-      num_district_teams = row[29].to_i
-      district_name = row[30]
-      shirt_size2 = row[31]
-      amount_ordered = row[32].to_i
-      amount_paid = row[33].to_i
-      amount_due = row[34].to_i
-      gender = row[35]
+      roommate_preference_1 = row[32]
+      roommate_preference_2 = row[33]
+      shirt_size = row[24]
+      local_church = row[17]
+      round_trip_airport_transportation = row[40]
+      num_local_teams = row[38].to_i
+      num_district_teams = row[39].to_i
+      district_name = row[10]
+      amount_ordered = row[44].to_i
+      amount_paid = row[46].to_i
+      amount_due = row[47].to_i
+      gender = row[9]
+      emergency_contact_name = row[34]
+      emergency_contact_number = row[35]
+      emergency_contact_relationship = row[36]
+      saturday_early_housing = row[40]
+      sunday_early_housing = row[41]
       
       pr = ParticipantRegistration.find_by_confirmation_number(confirmation_number)
       pr = ParticipantRegistration.new if pr.nil?
@@ -73,15 +77,17 @@ class ImportsController < ApplicationController
       pr.street = home_address
       pr.city = home_city
       pr.state = home_state_prov
-      #pr.zipcode = home_zipcode
+      pr.zipcode = home_zipcode
       pr.country = home_country_code
       pr.confirmation_number = confirmation_number
-      pr.age = age
+      #pr.age = age
       pr.arrival_airline = airline_name
       pr.driving_arrival_date = arrival_date_and_time
       pr.special_needs = special_needs
       pr.airline_arrival_date = flight_arrival_date_and_time
-      pr.arrival_flight_number = flight_number
+      pr.arrival_flight_number = arrival_flight_number
+      pr.airline_departure_date = flight_departure_date_and_time
+      pr.departure_flight_number = departure_flight_number
       pr.most_recent_grade = grade_completed
       pr.group_leader_import = group_leader
       pr.travel_type = travel_plan
@@ -100,6 +106,8 @@ class ImportsController < ApplicationController
       pr.amount_paid = amount_paid
       pr.amount_due = amount_due
       pr.gender = gender
+      pr.housing_saturday = saturday_early_housing
+      pr.housing_sunday = sunday_early_housing
       logger.debug(pr.inspect)
       logger.debug("VALID:" + pr.valid?.to_s)
       logger.debug(pr.errors.inspect)
