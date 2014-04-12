@@ -63,6 +63,11 @@ class ImportsController < ApplicationController
       saturday_early_housing = row[47]
       sunday_early_housing = row[48]
       
+      # skip empty rows
+      if full_name.nil?
+        next
+      end
+      
       pr = ParticipantRegistration.find_by_confirmation_number(confirmation_number)
       pr = ParticipantRegistration.new if pr.nil?
       name = full_name.split(/, /)
