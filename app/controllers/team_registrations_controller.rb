@@ -96,7 +96,7 @@ class TeamRegistrationsController < ApplicationController
           @team_registration.audit_user = current_user
           @team_registration.save
           flash[:notice] = 'Team Registration submitted succesfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
-          format.html { redirect_to(team_registrations_url) }
+          format.html { redirect_to(user_team_registrations_url(current_user)) }
         when 'save_action'
           flash[:notice] = 'Team Registration saved successfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
           format.html { redirect_to(root_url) }
