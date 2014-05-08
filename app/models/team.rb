@@ -8,6 +8,11 @@ class Team < ActiveRecord::Base
   
   validates_presence_of :name
   validates_presence_of :division
+  
+  # custom validations
+  validate do |team|
+    team.errors.add_to_base("You cannot select more than seven quizzers per team.") if team.participant_registrations.size > 7
+  end
 
   after_initialize :merge_teams
 

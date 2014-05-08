@@ -32,11 +32,17 @@ class TeamsController < ApplicationController
   
   def update
     @team = Team.find(params[:id])
-    @team.update_attributes(params[:team])
     
     respond_to do |format|
-      flash[:notice] = 'Team updated successfully.'
-      format.html { redirect_to(user_team_registrations_url(current_user)) }
+      if @team.update_attributes(params[:team])
+        flash[:notice] = 'Team updated successfully.'
+        format.html { redirect_to(user_team_registrations_url(current_user)) }
+      else
+        @quizzers = ParticipantRegistration.find(:all,
+                                             :conditions => 'district_id = ' + current_user.district_id.to_s + ' and registration_type = "quizzer"',
+                                             :order => 'first_name asc, last_name asc')
+        format.html { render :action => "edit" }
+      end
     end
   end
 end
