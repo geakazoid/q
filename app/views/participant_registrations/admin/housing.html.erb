@@ -117,11 +117,10 @@
               <strong><%= participant_registration.full_name %></strong><br/>
               <div style='font-size: 0.8em'>
               <%= participant_registration.formatted_registration_type %><br/>
-              <%= participant_registration.district.display_with_region %><br/>
+              <%= participant_registration.district.display_with_region unless participant_registration.district.nil? %><br/>
               Group Leader: <%= participant_registration.group_leader_name %>
               <%= '<br/>Preference 1: ' + participant_registration.roommate_preference_1 unless participant_registration.roommate_preference_1.blank? %>
               <%= '<br/>Preference 2: ' + participant_registration.roommate_preference_2 unless participant_registration.roommate_preference_2.blank? %>
-              <% if !participant_registration.complete? %><span style='color: #ff0000; font-weight: bold;'><br/>PAYMENT NOT RECEIVED</span><% end %>
               </div>
             </td>
             <td><%= pr_fields.select :building_id, @buildings.map {|b| [b.name,b.id]}, {:prompt => "- Select -"}, {:onchange => "$('participant_registration_#{participant_registration.id.to_s}_room').value = '';"} %></td>

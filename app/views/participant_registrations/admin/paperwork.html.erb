@@ -115,19 +115,18 @@
               <strong><%= participant_registration.full_name %></strong><br/>
               <div style='font-size: 0.8em'>
               <%= participant_registration.formatted_registration_type %><br/>
-              <%= participant_registration.district.display_with_region %>
-              <% if !participant_registration.complete? %><span style='color: #ff0000; font-weight: bold;'><br/>PAYMENT NOT RECEIVED</span><% end %>
+              <%= participant_registration.district.display_with_region unless participant_registration.district.nil? %>
               </div>
             </td>
-            <td style='text-align: center'><%= pr_fields.check_box :medical_liability %></td>
+            <td style='text-align: center'><%= pr_fields.check_box :medical_liability, {:disabled => 'disabled'} %></td>
             <td style='text-align: center'>
               <% if participant_registration.needs_background_check? %>
-                <%= pr_fields.check_box :background_check %>
+                <%= pr_fields.check_box :background_check, {:disabled => 'disabled'} %>
               <% end %>
             </td>
             <td style='text-align: center'>
               <% if participant_registration.needs_background_check? %>
-                <%= pr_fields.check_box :nazsafe %>
+                <%= pr_fields.check_box :nazsafe, {:disabled => 'disabled'} %> %>
               <% end %>
             </td>
           </tr>

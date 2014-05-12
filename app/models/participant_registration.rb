@@ -568,7 +568,7 @@ class ParticipantRegistration < ActiveRecord::Base
   # Return the registration type as a formatted value
   def formatted_registration_type
     return 'Core Staff' if registration_type == 'core_staff'
-    return registration_type.capitalize
+    return !registration_type.nil? ? registration_type.capitalize : ''
   end
 
   # returns the name of this participant's group leader

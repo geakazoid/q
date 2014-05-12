@@ -157,13 +157,12 @@
               <strong><%= participant_registration.full_name %></strong><br/>
               <div style='font-size: 0.8em'>
               <%= participant_registration.formatted_registration_type %><br/>
-              <%= participant_registration.district.display_with_region %><br/>
+              <%= participant_registration.district.display_with_region unless participant_registration.district.nil? %><br/>
               Age / Grade: <%= participant_registration.most_recent_grade %><br/>
               Group Leader: <%= participant_registration.group_leader_name %>
               <% if participant_registration.quizzer? or participant_registration.coach? %>
                 <br/>Divisions: <%= participant_registration.division_list %>
               <% end %>
-              <% if !participant_registration.complete? %><span style='color: #ff0000; font-weight: bold;'><br/>PAYMENT NOT RECEIVED</span><% end %>
               </div>
             </td>
             <td>
