@@ -153,8 +153,8 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant_registration.mobile_phone
       sheet1[pos,column+=1] = participant_registration.group_leader_name
       sheet1[pos,column+=1] = participant_registration.local_church
-      sheet1[pos,column+=1] = participant_registration.district.name
-      sheet1[pos,column+=1] = participant_registration.district.region.name
+      sheet1[pos,column+=1] = participant_registration.district.name unless participant_registration.district.nil?
+      sheet1[pos,column+=1] = participant_registration.district.region.name unless participant_registration.district.nil? or participant_registration.district.region.nil?
       sheet1[pos,column+=1] = participant_registration.shirt_size
       sheet1[pos,column+=1] = participant_registration.roommate_preference_1
       sheet1[pos,column+=1] = participant_registration.roommate_preference_2
