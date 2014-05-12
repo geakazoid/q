@@ -28,20 +28,6 @@ class ReportsController < ApplicationController
     team_registrations
   end
 
-  # generate a report of complete team registrations
-  def team_registrations_complete
-    @team_registrations = TeamRegistration.all(:conditions => 'paid = 1')
-    @report_type = 'complete'
-    team_registrations
-  end
-
-  # generate a report of incomplete team registrations
-  def team_registrations_incomplete
-    @team_registrations = TeamRegistration.all(:conditions => 'paid = 0')
-    @report_type = 'incomplete'
-    team_registrations
-  end
-
   # create a downloadable excel file of team registrations
   # this method should not be accessed directly
   def team_registrations
@@ -82,20 +68,6 @@ class ReportsController < ApplicationController
   def participant_registrations_all
     @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc')
     @report_type = 'all'
-    participant_registrations
-  end
-
-  # generate a report of complete participant registrations
-  def participant_registrations_complete
-    @participant_registrations = ParticipantRegistration.all(:conditions => 'paid = 1', :order => 'last_name asc, first_name asc')
-    @report_type = 'complete'
-    participant_registrations
-  end
-
-  # generate a report of incomplete participant registrations
-  def participant_registrations_incomplete
-    @participant_registrations = ParticipantRegistration.all(:conditions => 'paid = 0', :order => 'last_name asc, first_name asc')
-    @report_type = 'incomplete'
     participant_registrations
   end
 

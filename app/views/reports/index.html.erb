@@ -3,15 +3,9 @@
 </div>
 <h3>Standard Reports</h3>
 <% if admin? %>
-  Team Registrations :
-  <%= link_to 'All', :controller => 'reports', :action => 'team_registrations_all' %> :
-  <%= link_to 'Complete', :controller => 'reports', :action => 'team_registrations_complete' %> :
-  <%= link_to 'Incomplete', :controller => 'reports', :action => 'team_registrations_incomplete' %>
+  <%= link_to 'Team Registrations', :controller => 'reports', :action => 'team_registrations_all' %>
   <br/>
-  Participant Registrations :
-  <%= link_to 'All', :controller => 'reports', :action => 'participant_registrations_all' %> :
-  <%= link_to 'Complete', :controller => 'reports', :action => 'participant_registrations_complete' %> :
-  <%= link_to 'Incomplete', :controller => 'reports', :action => 'participant_registrations_incomplete' %>
+  <%= link_to 'Participant Registrations', :controller => 'reports', :action => 'participant_registrations_all' %>
   <br/>
   Participants and Teams :
   <%= link_to 'All', :controller => 'reports', :action => 'coaches_quizzers_teams' %> :
