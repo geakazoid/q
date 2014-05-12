@@ -132,14 +132,11 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Team 3'
     sheet1[0,column+=1] = 'Housing Assignment'
     sheet1[0,column+=1] = 'Ministry Project'
-    sheet1[0,column+=1] = 'Food Allergies?'
-    sheet1[0,column+=1] = 'Food Allergy Details'
     sheet1[0,column+=1] = 'Special Needs?'
     sheet1[0,column+=1] = 'Special Needs Details'
     sheet1[0,column+=1] = 'Needs Housing'
     sheet1[0,column+=1] = 'Needs Meals'
     sheet1[0,column+=1] = 'Guardian'
-    sheet1[0,column+=1] = 'Agrees To Promotion'
     sheet1[0,column+=1] = 'Exhibitor School'
     sheet1[0,column+=1] = 'Exhibitor School Fax'
     sheet1[0,column+=1] = 'Travel Type'
@@ -156,49 +153,12 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Departure Shuttle'
     sheet1[0,column+=1] = 'Housing Sunday'
     sheet1[0,column+=1] = 'Housing Saturday'
-    sheet1[0,column+=1] = 'Breakfast Monday'
-    sheet1[0,column+=1] = 'Lunch Monday'
-    sheet1[0,column+=1] = 'Group Photos Purchased'
-    sheet1[0,column+=1] = 'Group Photos Amount'
-    sheet1[0,column+=1] = 'Event DVDs Purchased'
-    sheet1[0,column+=1] = 'Event DVDs Amount'
-    sheet1[0,column+=1] = 'Youth Small Shirts Purchased'
-    sheet1[0,column+=1] = 'Youth Small Shirts Amount'
-    sheet1[0,column+=1] = 'Youth Medium Shirts Purchased'
-    sheet1[0,column+=1] = 'Youth Medium Shirts Amount'
-    sheet1[0,column+=1] = 'Youth Large Shirts Purchased'
-    sheet1[0,column+=1] = 'Youth Large Shirts Amount'
-    sheet1[0,column+=1] = 'Small Shirts Purchased'
-    sheet1[0,column+=1] = 'Small Shirts Amount'
-    sheet1[0,column+=1] = 'Medium Shirts Purchased'
-    sheet1[0,column+=1] = 'Medium Shirts Amount'
-    sheet1[0,column+=1] = 'Large Shirts Purchased'
-    sheet1[0,column+=1] = 'Large Shirts Amount'
-    sheet1[0,column+=1] = 'X-Large Shirts Purchased'
-    sheet1[0,column+=1] = 'X-Large Shirts Amount'
-    sheet1[0,column+=1] = '2X-Large Shirts Purchased'
-    sheet1[0,column+=1] = '2X-Large Shirts Amount'
-    sheet1[0,column+=1] = '3X-Large Shirts Purchased'
-    sheet1[0,column+=1] = '3X-Large Shirts Amount'
-    sheet1[0,column+=1] = '4X-Large Shirts Purchased'
-    sheet1[0,column+=1] = '4X-Large Shirts Amount'
-    sheet1[0,column+=1] = '5X-Large Shirts Purchased'
-    sheet1[0,column+=1] = '5X-Large Shirts Amount'
-    sheet1[0,column+=1] = 'Splash Valley Tickets Purchased'
-    sheet1[0,column+=1] = 'Splash Valley Transportation Needed?'
-    sheet1[0,column+=1] = 'Splash Valley Tickets Amount'
-    sheet1[0,column+=1] = 'Complete?'
     sheet1[0,column+=1] = 'Medical / Liability?'
     sheet1[0,column+=1] = 'Background Check?'
     sheet1[0,column+=1] = 'NazSafe?'
-    sheet1[0,column+=1] = 'Registration Fee'
-    sheet1[0,column+=1] = 'Registration Due'
-    sheet1[0,column+=1] = 'Extras Due'
-    sheet1[0,column+=1] = 'Total Due'
-    sheet1[0,column+=1] = 'Discount Applied'
-    sheet1[0,column+=1] = 'Registration Paid'
-    sheet1[0,column+=1] = 'Extras Paid'
-    sheet1[0,column+=1] = 'Total Paid'
+    sheet1[0,column+=1] = 'Amount Ordered'
+    sheet1[0,column+=1] = 'Amount Paid'
+    sheet1[0,column+=1] = 'Amount Due'
     sheet1[0,column+=1] = 'Created On'
     sheet1[0,column+=1] = 'Updated On'
 
@@ -268,9 +228,7 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = ''
       end
 
-      sheet1[pos,column+=1] = participant_registration.food_allergies.upcase
-      sheet1[pos,column+=1] = participant_registration.food_allergies_details
-      sheet1[pos,column+=1] = participant_registration.special_needs.upcase
+      sheet1[pos,column+=1] = !participant_registration.special_needs.nil? ? participant_registration.special_needs.upcase : '' 
       sheet1[pos,column+=1] = participant_registration.special_needs_details
 
       # needs housing?
@@ -296,7 +254,6 @@ class ReportsController < ApplicationController
       end
 
       sheet1[pos,column+=1] = participant_registration.guardian
-      sheet1[pos,column+=1] = participant_registration.promotion_agree.upcase
 
       # school name (if it exists)
       if !participant_registration.school.nil?
@@ -331,49 +288,6 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant_registration.departure_shuttle_amount ? participant_registration.departure_shuttle_amount : ''
       sheet1[pos,column+=1] = participant_registration.housing_sunday_amount ? participant_registration.housing_sunday_amount : ''
       sheet1[pos,column+=1] = participant_registration.housing_saturday_amount ? participant_registration.housing_saturday_amount : ''
-      sheet1[pos,column+=1] = participant_registration.breakfast_monday_amount ? participant_registration.breakfast_monday_amount : ''
-      sheet1[pos,column+=1] = participant_registration.lunch_monday_amount ? participant_registration.lunch_monday_amount : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_group_photos') > 0 ? participant_registration.count_bought_extra('num_extra_group_photos') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_group_photos') * 2 > 0 ? participant_registration.count_bought_extra('num_extra_group_photos') * 2 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_dvd') > 0 ? participant_registration.count_bought_extra('num_dvd') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_dvd') * 17 > 0 ? participant_registration.count_bought_extra('num_dvd') * 17 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_youth_small_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_youth_small_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_youth_small_shirts') * 10 > 0 ? participant_registration.count_bought_extra('num_extra_youth_small_shirts') * 10 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_youth_medium_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_youth_medium_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_youth_medium_shirts') * 10 > 0 ? participant_registration.count_bought_extra('num_extra_youth_medium_shirts') * 10 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_youth_large_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_youth_large_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_youth_large_shirts') * 10 > 0 ? participant_registration.count_bought_extra('num_extra_youth_large_shirts') * 10 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_small_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_small_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_small_shirts') * 10 > 0 ? participant_registration.count_bought_extra('num_extra_small_shirts') * 10 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_medium_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_medium_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_medium_shirts') * 10 > 0 ? participant_registration.count_bought_extra('num_extra_medium_shirts') * 10 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_large_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_large_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_large_shirts') * 10 > 0 ? participant_registration.count_bought_extra('num_extra_large_shirts') * 10 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_xlarge_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_xlarge_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_xlarge_shirts') * 10 > 0 ? participant_registration.count_bought_extra('num_extra_xlarge_shirts') * 10 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_2xlarge_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_2xlarge_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_2xlarge_shirts') * 15 > 0 ? participant_registration.count_bought_extra('num_extra_2xlarge_shirts') * 15 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_3xlarge_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_3xlarge_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_3xlarge_shirts') * 15 > 0 ? participant_registration.count_bought_extra('num_extra_3xlarge_shirts') * 15 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_4xlarge_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_4xlarge_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_4xlarge_shirts') * 15 > 0 ? participant_registration.count_bought_extra('num_extra_4xlarge_shirts') * 15 : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_5xlarge_shirts') > 0 ? participant_registration.count_bought_extra('num_extra_5xlarge_shirts') : ''
-      sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_extra_5xlarge_shirts') * 15 > 0 ? participant_registration.count_bought_extra('num_extra_5xlarge_shirts') * 15 : ''
-      if participant_registration.count_bought_extra('num_sv_tickets') > 0
-        sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_sv_tickets')
-        if participant_registration.sv_transportation?
-          sheet1[pos,column+=1] = 'YES'
-          sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_sv_tickets') * 7
-        else
-          sheet1[pos,column+=1] = 'NO'
-          sheet1[pos,column+=1] = participant_registration.count_bought_extra('num_sv_tickets') * 6
-        end
-      else
-        sheet1[pos,column+=1] = ''
-        sheet1[pos,column+=1] = ''
-        sheet1[pos,column+=1] = ''
-      end
-      sheet1[pos,column+=1] = participant_registration.complete? ? 'YES' : 'NO'
       sheet1[pos,column+=1] = participant_registration.medical_liability? ? 'YES' : 'NO'
       if participant_registration.needs_background_check?
         sheet1[pos,column+=1] = participant_registration.background_check? ? 'YES' : 'NO'
@@ -382,14 +296,9 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = ''
         sheet1[pos,column+=1] = ''
       end
-      sheet1[pos,column+=1] = participant_registration.registration_fee / 100
-      sheet1[pos,column+=1] = participant_registration.registration_amount_due
-      sheet1[pos,column+=1] = participant_registration.extras_amount_due
-      sheet1[pos,column+=1] = participant_registration.total_amount_due
-      sheet1[pos,column+=1] = participant_registration.applied_discount
-      sheet1[pos,column+=1] = participant_registration.paid_registration_amount
-      sheet1[pos,column+=1] = participant_registration.paid_extras_amount
-      sheet1[pos,column+=1] = participant_registration.total_paid_amount
+      sheet1[pos,column+=1] = participant_registration.amount_ordered
+      sheet1[pos,column+=1] = participant_registration.amount_paid
+      sheet1[pos,column+=1] = participant_registration.amount_due
       sheet1[pos,column+=1] = participant_registration.created_at.strftime("%m/%d/%Y %H:%M:%S")
       sheet1[pos,column+=1] = participant_registration.updated_at.strftime("%m/%d/%Y %H:%M:%S")
       pos += 1
