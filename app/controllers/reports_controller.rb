@@ -56,10 +56,7 @@ class ReportsController < ApplicationController
     sheet1[0,5] = 'Division'
     sheet1[0,6] = 'District'
     sheet1[0,7] = 'Region'
-    sheet1[0,8] = 'Paid?'
-    sheet1[0,9] = 'Amount'
-    sheet1[0,10] = 'Discounted?'
-    sheet1[0,11] = 'Registration Time'
+    sheet1[0,8] = 'Registration Time'
 
     pos = 1
     @team_registrations.each do |team_registration|
@@ -72,10 +69,7 @@ class ReportsController < ApplicationController
         sheet1[pos,5] = team.division.name
         sheet1[pos,6] = team_registration.district.name
         sheet1[pos,7] = team_registration.district.region.name
-        sheet1[pos,8] = team_registration.paid?
-        sheet1[pos,9] = team.amount_in_cents / 100 if team_registration.complete?
-        sheet1[pos,10] = team.discounted? if team_registration.complete?
-        sheet1[pos,11] = team_registration.created_at.strftime("%m/%d/%Y %H:%M:%S")
+        sheet1[pos,8] = team_registration.created_at.strftime("%m/%d/%Y %H:%M:%S")
         pos = pos + 1
       end
     end
