@@ -158,7 +158,7 @@ class ReportsController < ApplicationController
       else
         sheet1[pos,column+=1] = ''
       end
-      if !participant_registration.district.nil? and !participant_registration.district.region.nil? or 
+      if !participant_registration.district.nil? and !participant_registration.district.region.nil?
         sheet1[pos,column+=1] = participant_registration.district.region.name
       else
         sheet1[pos,column+=1] = ''
