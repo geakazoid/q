@@ -4,196 +4,82 @@
   <%= render :partial => 'pages/page', :locals => { :page => @page } if !@page.nil? %>
   <p>
     <%= pform.label :registration_type, 'Registration Type' %><br/>
-    <%= pform.select :registration_type,
-      {'Quizzer' => 'quizzer',
-      'Coach' => 'coach',
-      'Official' => 'official',
-      'Volunteer' => 'volunteer',
-      'Family' => 'family',
-      'Guest' => 'guest',
-      'Core Staff' => 'core_staff',
-      'Exhibitor' => 'exhibitor'},
-      {:prompt => "- Select -"},
-      {:onchange => 'javascript: update_registration_type();'} %>
+    <%= @participant_registration.registration_type %>
   </p>
-  <div id='registration_info'></div>
-  <div id='registration_code' style='display: none;'>
-    <br/>
-    <%= pform.label :registration_code, 'Registration Code' %><br/>
-    <%= pform.text_field :registration_code, {:size => 20} %>
-  </div>
-  <div id='discount_text' style='margin-top:20px; display: none;'>
-  </div>
-  <div id='participant_housing_details' style='display: none;'>
-    <p>Please tell us whether or not you will need housing and meals.</p>
-    <p>
-      <%= pform.radio_button :participant_housing,
-        'meals_and_housing',
-        {:onclick => "javascript: participant_housing('meals_and_housing');"} %>&nbsp;I would like meals and housing ($175).<br/>
-      <%= pform.radio_button :participant_housing,
-        'meals_only',
-        {:onclick => "javascript: participant_housing('meals_only');"} %>&nbsp;I will be staying off campus and would like just meals ($125).<br/>
-      <%= pform.radio_button :participant_housing,
-        'none',
-        {:onclick => "javascript: participant_housing('none');"} %>&nbsp;I will be staying off campus and do not require meals ($50).<br/><br/>
-      Please note that if you do not choose to pay for meals you can purchase meals on a per meal basis during the event.
-    </p>
-  </div>
-  <div id='exhibitor_housing_details' style='display: none;'>
-    <p>Please tell us whether or not you will need housing and meals.</p>
-    <p>
-      <%= pform.radio_button :exhibitor_housing,
-        'on_campus',
-        {:onclick => "javascript: exhibitor_housing('on_campus');"} %>&nbsp;I would like meals and housing (no discount).<br/>
-      <%= pform.radio_button :exhibitor_housing,
-        'off_campus_with_meals',
-        {:onclick => "javascript: exhibitor_housing('off_campus_with_meals');"} %>&nbsp;I will be staying off campus and would like just meals ($95 discount if NOT the first registration).<br/>
-      <%= pform.radio_button :exhibitor_housing,
-        'off_campus_without_meals',
-        {:onclick => "javascript: exhibitor_housing('off_campus_without_meals');"} %>&nbsp;I will be staying off campus and do not require meals (No Charge if NOT the first registration).<br/><br/>
-      Please note that if you do not choose to pay for meals you can purchase meals on a per meal basis during the event.
-    </p>
-  </div>
   <h3>Basics</h3>
   <p>
-    Please provide us some basic information about yourself.
+    Basic information about participant.
   </p>
-  <p>
-    <a href='#' onClick='javascript:fill_information(); return false;'>Use My Information</a>
-  </p>
-  <div style='float: left;'>
+  <div style='float: left; width: 100px;'>
     <%= pform.label :first_name, 'First Name' %><br/>
-    <%= pform.text_field :first_name, {:id => 'first_name', :size => 20} %>
+    <%= @participant_registration.first_name %>
     &nbsp;
   </div>
   <div style='float: left;'>
     <%= pform.label :last_name, 'Last Name' %><br/>
-    <%= pform.text_field :last_name, {:id => 'last_name', :size => 20} %>
+    <%= @participant_registration.last_name %>
   </div>
   <div style='clear: left; padding-top: 10px;'>
     <%= pform.label :email %><br />
-    <%= pform.text_field :email, {:id => 'email', :size => 35} %>
+    <%= @participant_registration.email %>
   </div>
   <p>
     <%= pform.label :gender, 'Gender' %><br/>
-    <%= pform.select :gender, ['Male','Female'], :prompt => '- Select -' %>
+    <%= @participant_registration.gender %>
   </p>
   <p>
     <%= pform.label :most_recent_grade, 'Age Group or grade most recently completed in school' %><br/>
-    <%= pform.select :most_recent_grade, ['Child Age 3 and Under','Child Age 4-12','6th','7th','8th','9th','10th','11th','12th','Adult'], {:prompt => "- Select -"}, {:onchange => 'javascript: check_for_small_child();'} %>
+    <%= @participant_registration.most_recent_grade %>
   </p>
   <p id='guardian_field' style='display:none;'>
     <%= pform.label :guardian, 'Child\'s Guardian' %><br/>
     <%= pform.text_field :guardian, {:size => 20} %>
   </p>
-  <p>
-    <%= pform.check_box :hide_from_others %>
-    <label>Check this box if you DO NOT want your name to be shown to other guests.</label><br/>
-    <!-- Who else is coming to this event? <a href='#'>View the Guest List</a> (Opens new window) -->
-  </p>
   <h3>Contact Information</h3>
   <p>
     <%= pform.label :street, 'Address' %><br/>
-    <%= pform.text_field :street %>
+    <%= @participant_registration.street %>
   </p>
   <p>
     <%= pform.label :city, 'City' %><br/>
-    <%= pform.text_field :city %>
+    <%= @participant_registration.city %>
   </p>
   <p>
     <%= pform.label :state, 'State / Province' %><br/>
-    <%= pform.select :state, ['AB','AK','AL','AR','AS','AZ','BC','CA','CO','CT','DC','DE','FL','FM','GA','GU','HI','IA','ID','IL','IN','KS','KY','LA','MA','MB','MD','ME','MH','MI','MN','MO','MP','MS','MT','NB','NC','ND','NE','NH','NJ','NL','NM','NS','NT','NU','NV','NY','OH','OK','ON','OR','PA','PE','PR','PW','QC','RI','SC','SD','SK','TN','TX','UT','VA','VI','VT','WA','WI','WV','WY','YT','Non USA/Canada'], :prompt => "- Select -" %>
+    <%= @participant_registration.state %>
   </p>
   <p>
     <%= pform.label :zipcode, 'Zipcode / Postal Code' %><br/>
-    <%= pform.text_field :zipcode %>
+    <%= @participant_registration.zipcode %>
   </p>
   <p>
     <%= pform.label :country, 'Country' %><br/>
-    <%= pform.country_select(:country, ['United States','Canada','Mexico'], {}) %>
+    <%= @participant_registration.country %>
   </p>
   <p>
-    <%= pform.label :home_phone, 'Home Phone (xxx-xxx-xxxx)' %><br/>
-    <%= pform.text_field :home_phone %>
+    <%= pform.label :mobile_phone, 'Mobile Phone (xxx-xxx-xxxx)' %><br/>
+    <%= @participant_registration.mobile_phone %>
   </p>
-  <p>
-    <%= pform.label :mobile_phone, 'Mobile Phone (xxx-xxx-xxxx) - Must have this on file for emergency contact and/or other communication! (If you do not own a mobile phone please enter the phone # of someone else who is attending the event.)' %><br/>
-    <%= pform.text_field :mobile_phone, {:id => 'phone'} %>
-  </p>
-  <div id='exhibitor_details' style='display: none'>
-    <h3>Exhibitor Information</h3>
-    <p>Please fill out the following information about your school or university.</p>
-    <p>
-      <%= pform.label :school_id, 'College / University Name' %><br/>
-      <%= pform.collection_select :school_id,
-        @schools,
-        :id,
-        :name,
-        {:prompt => '- Select -'},
-        {:onchange => 'javascript: check_school_paid_status(this.value);'} %>
-    </p>
-    <p>
-      <%= pform.label :school_fax, 'Fax' %><br/>
-      <%= pform.text_field :school_fax %>
-    </p>
-    <p id='school_registration_unpaid' style='display: none'>
-      In order to be an exhibitor at Q2014 each school is required to pay a registration fee. Your school only needs to pay this
-      once and as of right now this registration fee of $300 has not been paid. Your registration fee has been changed to $300 and is inclusive
-      of the school fee plus your registration.
-    </p>
-    <p id='school_registration_paid' style='display: none'>
-      In order to be an exhibitor at Q2014 each school is required to pay a registration fee. Your school has already paid this
-      registration fee.
-    </p>
-  </div>
   <div id='housing_details'>
     <h3>Housing Information</h3>
-    <p>Please answer the following questions regarding housing.</p>
     <p>Roommate Preferences</p>
     <p>
       <%= pform.label :roommate_preference_1, 'Roommate Preference Name - 1st Choice' %><br/>
-      <%= pform.text_field :roommate_preference_1 %>
+      <%= @participant_registration.roommate_preference_1 %>
     </p>
     <p>
       <%= pform.label :roommate_preference_2, 'Roommate Preference Name - 2nd Choice' %><br/>
-      <%= pform.text_field :roommate_preference_2 %>
+      <%= @participant_registration.roommate_preference_2 %>
     </p>
     <p>Extra Days</p>
     <p>
-      <%= pform.check_box :housing_sunday, {:onclick => 'javascript: update_participant_total();'} %>
-      <%= pform.label :housing_sunday, 'I need housing Sunday July 1st (<span id="housing_sunday_price">$8</span>).' %><br/>
-      <%= pform.check_box :housing_saturday, {:onclick => 'javascript: update_participant_total();'} %>
-      <%= pform.label :housing_saturday, 'I need housing Saturday July 7th (<span id="housing_saturday_price">$8</span>).' %>
+      <%= pform.check_box :housing_sunday, {:disabled => 'disabled'} %>
+      <%= pform.label :housing_sunday, 'Needs housing Sunday.' %><br/>
+      <%= pform.check_box :housing_saturday, {:disabled => 'disabled'} %>
+      <%= pform.label :housing_saturday, 'Needs housing Saturday.' %>
     </p>
   </div>
-  <div id='meals_details'>
-    <h3>Meals Information</h3>
-    <p>Please answer the following questions regarding meals.</p>
-    <p>
-      <%= pform.label :food_allergies, 'Do you have any food allergies?' %><br/>
-      <%= pform.select :food_allergies, ['Yes','No'], :prompt => "- Select -" %>
-    </p>
-    <p>
-      <%= pform.label :food_allergies_details, 'If you selected yes for allergies, please list your specific allergies.' %><br/>
-      <%= pform.text_area :food_allergies_details, :size => "50x12" %>
-    </p>
-    <p>Extra Meals</p>
-    <p>
-      <%= pform.check_box :breakfast_monday, {:onclick => 'javascript: update_participant_total();'} %>
-      <%= pform.label :breakfast_monday, 'I would like breakfast Monday July 2nd (<span id="breakfast_monday_price">$5</span>).' %><br/>
-      <%= pform.check_box :lunch_monday, {:onclick => 'javascript: update_participant_total();'} %>
-      <%= pform.label :lunch_monday, 'I would like lunch Monday July 2nd (<span id="lunch_monday_price">$6</span>).' %><br/>
-    </p>
-  </div>
-  <h3>Additional Questions</h3>
-  <p>Please answer the following additional questions to help us prepare for the event.</p>
-  <p>
-    <%= pform.label :promotion_agree, 'Participants may have their photograph or image used in a highlight video or other promotional material
-  (either for this event or in the future). If you agree, select Yes, if you do not agree, select No. By selecting No, you will not be able to
-  participate in the group photo nor any other time photos or videos are taken.  It is your responsibility to remove yourself from that
-  picture or video. Failure to do so will result in your agreement for use of your picture or image at that time.' %><br/>
-    <%= pform.select :promotion_agree, { 'Yes'  => 'Yes', 'No' => 'No' }, :prompt => "- Select -" %>
-  </p>
+  <h3>Additional Information</h3>
   <p>
     <%= pform.label :group_leader, 'Group Leader' %><br/>
     <select id="participant_registration_group_leader" name="participant_registration[group_leader]">
@@ -201,598 +87,115 @@
     </select>
   </p>
   <p>
-    <%= pform.label :local_church, 'Your Local Church' %><br/>
-    <%= pform.text_field :local_church %>
+    <label>Group Leader From CVent</label><br/>
+    <%= @participant_registration.group_leader_import %>
   </p>
   <p>
-    <%= pform.label :district, 'Your District and Region' %><br/>
-    <%= pform.collection_select :district_id,
-      @districts,
-      :id,
-      :display_with_region,
-      {:prompt => '- Select -'},
-      {:id => 'district'} %>
+    <%= pform.label :local_church, 'Local Church' %><br/>
+    <%= @participant_registration.local_church %>
   </p>
   <p>
-    <%= pform.label :shirt_size, 'T-shirt Size (one size for both genders)' %><br/>
-    <%= pform.select :shirt_size, ['Youth Small','Youth Medium','Youth Large','Small','Medium','Large','X-Large','2X-Large','3X-Large','4X-Large','5X-Large'], :prompt => "- Select -" %>
+    <%= pform.label :district, 'District and Region' %><br/>
+    <%= @participant_registration.district.name %>, <%= @participant_registration.district.region.name %>
   </p>
   <p>
-    <%= pform.label :special_needs, 'Do you have any special physical needs (such as prescription medication, wheelchair needs, etc.)?' %><br/>
-    <%= pform.select :special_needs, ['Yes','No'], :prompt => "- Select -" %>
+    <%= pform.label :shirt_size, 'T-shirt Size' %><br/>
+    <%= @participant_registration.shirt_size %>
   </p>
   <p>
-    <%= pform.label :special_needs_details, 'If you selected yes for special needs, please list what your special needs are. Please be detailed so that we can ensure your participation is enjoyable.' %><br/>
-    <%= pform.text_area :special_needs_details, :size => "50x12" %>
+    <%= pform.label :special_needs, 'Does the participant have any special needs?' %><br/>
+    <%= @participant_registration.special_needs %>
   </p>
-  <div id='team_selection' style='display: none;'>
-    <h3>Team(s) Selection</h3>
-    <p id='team_coach_description'>
-      Please choose the team(s) you will be coaching.
-    </p>
-    <p id='team_quizzer_description'>
-      Please choose the teams(s) you will be quizzing on. You will be able to quiz on up to 3 teams.
-      You must have qualified to quiz on a regional team.
-    </p>
+  <% if @participant_registration.special_needs != 'N/A' and !@participant_registration.special_needs.nil? %>
+  <p>
+    <%= pform.label :special_needs_details, 'Special Needs Details' %><br/>
+    <%= @participant_registration.special_needs_details %>
+  </p>
+  <% end %>
+  <div id='team_selection'>
+    <h3>Team(s)</h3>
+    <% @participant_registration.teams.each do |team| %>
     <p>
-      <%= pform.label :team1_id, 'Team #1' %><br/>
-      <%= pform.collection_select :team1_id,
-        @teams,
-        :id,
-        :name_with_division,
-        {:prompt => '- Select -', :include_blank => true} %>
+      <%= team.name_with_division %>
     </p>
-    <p>
-      <%= pform.label :team2_id, 'Team #2' %><br/>
-      <%= pform.collection_select :team2_id,
-        @teams,
-        :id,
-        :name_with_division,
-        {:prompt => '- Select -', :include_blank => true} %>
-    </p>
-    <p>
-      <%= pform.label :team3_id, 'Team #3' %><br/>
-      <%= pform.collection_select :team3_id,
-        @teams,
-        :id,
-        :name_with_division,
-        {:prompt => '- Select -', :include_blank => true} %>
-    </p>
+    <% end %>
   </div>
   <h3>Travel Information</h3>
-  <p>Please provide us with your travel information and how you plan to get to / from Q2014.</p>
   <p>
-    <%= pform.radio_button :travel_type,
-      'unknown',
-      {:onclick => "javascript: travel_details('unknown');"} %>&nbsp;I do not yet know how I am getting to the event.<br/>
-    <%= pform.radio_button :travel_type,
-      'flying',
-      {:onclick => "javascript: travel_details('flying');"} %>&nbsp;I am flying to the event.<br/>
-    <%= pform.radio_button :travel_type,
-      'driving',
-      {:onclick => "javascript: travel_details('driving');"} %>&nbsp;I am driving to the event.<br/>
+    <%= @participant_registration.travel_type %>
   </p>
   <div id='travel_details'>
-    <div id='flying_details' style='display: none;'>
+    <% if @participant_registration.travel_type == "I am flying to the event." %>
+    <div id='flying_details'>
       <p>
-        Please provide us your with your flight information.
+        Flight Information
       </p>
       <h4 style='margin-bottom: 5px;'>Arrival Information</h4>
-      <div>
-        <%= pform.label :arrival_airport, 'Airport' %><br/>
-        <%= pform.select :arrival_airport, ['O\'hare International','Midway'], {:prompt => '- Select -'} %>
-        &nbsp;
-      </div>
       <div style='float:left'>
         <%= pform.label :arrival_airline, 'Airline' %><br/>
-        <%= pform.select :arrival_airline, chicago_airlines, {:prompt => '- Select -'} %>
+        <%= @participant_registration.arrival_airline %>
         &nbsp;
       </div>
       <div style='float:left'>
         <%= pform.label :arrival_flight_number, 'Flight Number' %><br/>
-        <%= pform.text_field :arrival_flight_number, :size => 20 %>
+        <%= @participant_registration.arrival_flight_number %>
         &nbsp;
       </div>
       <div style='float:left'>
         <%= pform.label :airline_arrival_date, 'Date (MM/DD)' %><br/>
-        <%= pform.text_field :airline_arrival_date, :size => 20 %>
+        <%= @participant_registration.airline_arrival_date %>
         &nbsp;
       </div>
       <div style='float:left'>
         <%= pform.label :airline_arrival_time, 'Time (HH:MM AM/PM)' %><br/>
-        <%= pform.text_field :airline_arrival_time, :size => 20 %>
+        <%= @participant_registration.airline_arrival_time %>
         &nbsp;
-      </div>
-      <div style='float:left'>
-        <%= pform.label :airline_arrival_from, 'City Arriving From' %><br/>
-        <%= pform.text_field :airline_arrival_from, :size => 20 %>
       </div>
       <div style='clear: left; padding-top: 5px;'>
-        <%= pform.check_box :need_arrival_shuttle, {:onclick => 'javascript: update_participant_total();'} %>
-        <%= pform.label :need_arrival_shuttle, 'I need a shuttle from the airport when I arrive (<span id="arrival_shuttle_price">$3</span>).' %>
+        <%= pform.check_box :need_arrival_shuttle, {:disabled => 'disabled' } %>
+        <%= pform.label :need_arrival_shuttle, 'Needs a shuttle from the airport when they arrive.' %>
       </div>
       <h4 style='margin-bottom: 5px;'>Departure Information</h4>
-      <div>
-        <%= pform.label :departure_airport, 'Airport' %><br/>
-        <%= pform.select :departure_airport, ['O\'hare International','Midway'], {:prompt => '- Select -'} %>
-        &nbsp;
-      </div>
       <div style='float:left'>
         <%= pform.label :departure_airline, 'Airline' %><br/>
-        <%= pform.select :departure_airline, chicago_airlines, {:prompt => '- Select -'} %>
+        <%= @participant_registration.departure_airline %>
         &nbsp;
       </div>
       <div style='float:left'>
         <%= pform.label :departure_flight_number, 'Flight Number' %><br/>
-        <%= pform.text_field :departure_flight_number, :size => 20 %>
+        <%= @participant_registration.departure_flight_number %>
         &nbsp;
       </div>
       <div style='float:left'>
         <%= pform.label :airline_departure_date, 'Date (MM/DD)' %><br/>
-        <%= pform.text_field :airline_departure_date, :size => 20 %>
+        <%= @participant_registration.airline_departure_date %>
         &nbsp;
       </div>
       <div style='float:left'>
         <%= pform.label :airline_departure_time, 'Time (HH:MM AM/PM)' %><br/>
-        <%= pform.text_field :airline_departure_time, :size => 20 %>
+        <%= @participant_registration.airline_departure_time %>
         &nbsp;
       </div>
       <div style='clear: left; padding-top: 5px;'>
-        <%= pform.check_box :need_departure_shuttle, {:onclick => 'javascript: update_participant_total();'} %>
-        <%= pform.label :need_departure_shuttle, 'I need a shuttle to the airport when I leave (<span id="departure_shuttle_price">$3</span>).' %>
+        <%= pform.check_box :need_departure_shuttle, {:disabled => 'disabled'} %>
+        <%= pform.label :need_departure_shuttle, 'Needs a shuttle to the airport when they leave.' %>
       </div>
     </div>
-    <div id='driving_details' style='display: none;'>
-      <p>
-        Please provide us your with your approximate arrival information.
-      </p>
+    <% end %>
+    <% if @participant_registration.travel_type == "I am driving to the event." %>
+    <div id='driving_details'>
       <h4 style='margin-bottom: 5px;'>Arrival Information</h4>
       <div style='float:left'>
-        <%= pform.label :driving_arrival_date, 'Date (MM/DD)' %><br/>
-        <%= pform.text_field :driving_arrival_date, :size => 20 %>
-        &nbsp;
-      </div>
-      <div style='float:left'>
-        <%= pform.label :driving_arrival_time, 'Time (HH:MM AM/PM)' %><br/>
-        <%= pform.text_field :driving_arrival_time, :size => 20 %>
+        <%= pform.label :driving_arrival_date, 'Date and Time' %><br/>
+        <%= @participant_registration.driving_arrival_date %>
         &nbsp;
       </div>
       <div style='clear: left;'></div>
     </div>
-  </div>
-  <div style='display:none'>
-  <h3>The 4th of July</h3>
-  <p>
-    We will be providing an event on the 4th of July. If you would like to participate you can purchase tickets below.
-  </p>
-  <p>
-    <span style='font-weight:bold;'>Splash Valley Aquatic Center</span><br/>
-    <br/>
-    Q2014 will be taking partiticpants to the Splash Valley Aquatic Center for some fun in the water.
-    You can see info on the park <a href='http://splashvalley.com/home.htm' target='_blank'>here</a>.
-    <br/><br/>
-    If you'd like transportation to the event please check the box below. The cost for transportation
-    is $1.00 per ticket.
-  </p>
-  <p>
-    <%= pform.label :num_sv_tickets, 'Number of Splash Valley Tickets ($6/ticket)' %>
-    <%= pform.text_field :num_sv_tickets, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-    <input type='hidden' class='item_price' value='6'/>
-    <br/>
-    <%= pform.check_box :sv_transportation, {:checked => '', :onclick => 'javascript: update_participant_total();'} %>
-    <%= pform.label :sv_transportation, 'I would like transportation ($1).' %><br/>
-    <%= show_bought_extra('num_sv_tickets') %>
-  </p>
-  </div>
-  <h3>Extras</h3>
-  <p>
-    Please let us know if you'd like to purchase any extras. Your base registration comes with a t-shirt and one group photo.
-  </p>
-  <p>
-  <table class='extras'>
-    <tr>
-      <th>Extra</th>
-      <th>Quantity</th>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_group_photos, 'Extra Group Photo ($2.00)' %>
-        <%= show_bought_extra('num_extra_group_photos') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_group_photos, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='2'/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <%= pform.label :num_dvd, 'DVD Highlight Video ($10.00)' %>
-        <%= show_bought_extra('num_dvd') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_dvd, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();' %>
-        <input type='hidden' class='item_price' value='10'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_youth_small_shirts, 'Youth Small T-Shirt ($10.00)' %>
-        <%= show_bought_extra('num_extra_youth_small_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_youth_small_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='10'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_youth_medium_shirts, 'Youth Medium T-Shirt ($10.00)' %>
-        <%= show_bought_extra('num_extra_youth_medium_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_youth_medium_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='10'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_youth_large_shirts, 'Youth Large T-Shirt ($10.00)' %>
-        <%= show_bought_extra('num_extra_youth_large_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_youth_large_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='10'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_small_shirts, 'Small T-Shirt ($10.00)' %>
-        <%= show_bought_extra('num_extra_small_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_small_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='10'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_medium_shirts, 'Medium T-Shirt ($10.00)' %>
-        <%= show_bought_extra('num_extra_medium_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_medium_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='10'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_large_shirts, 'Large T-Shirt ($10.00)' %>
-        <%= show_bought_extra('num_extra_large_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_large_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='10'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_xlarge_shirts, 'X-Large T-Shirt ($10.00)' %>
-        <%= show_bought_extra('num_extra_xlarge_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_xlarge_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='10'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_2xlarge_shirts, '2X-Large T-Shirt ($15.00)' %>
-        <%= show_bought_extra('num_extra_2xlarge_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_2xlarge_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='15'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_3xlarge_shirts, '3X-Large T-Shirt ($15.00)' %>
-        <%= show_bought_extra('num_extra_3xlarge_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_3xlarge_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='15'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_4xlarge_shirts, '4X-Large T-Shirt ($15.00)' %>
-        <%= show_bought_extra('num_extra_4xlarge_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_4xlarge_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='15'/>
-      </td>
-    </tr>
-    <tr style='display: none;'>
-      <td>
-        <%= pform.label :num_extra_5xlarge_shirts, '5X-Large T-Shirt ($15.00)' %>
-        <%= show_bought_extra('num_extra_5xlarge_shirts') %>
-      </td>
-      <td>
-        <%= pform.text_field :num_extra_5xlarge_shirts, :size => 5, :class => 'item_count', :onblur => 'javascript: update_participant_total();', :value => 0 %>
-        <input type='hidden' class='item_price' value='15'/>
-      </td>
-    </tr>
-  </table>
-  </p>
-  <% if !@participant_registration.paid_any_registration_fee? %>
-    <div id='family_discount'>
-      <h3>Family Discount</h3>
-      <p>
-        <span id='family_discount_none' style='display:none'>
-          You are not yet eligible for a family discount. To be eligible for a family
-          discount you must have 2 or more family registrations which have already been paid for.
-        </span>
-        <span id='family_discount_3' style='display:none'>
-          You are eligible for a family discount (3 family registrations). Since you have already paid for some of your family
-          registrations those discounts will be applied to this registration. This registration and the two previous registrations
-          each receive a $35 discount. A discount of $105 has been applied to this registration.
-        </span>
-        <span id='family_discount_4' style='display:none'>
-          You are eligible for a family discount (4-6 family registrations). Since you have already paid for some of your family
-          registrations those discounts will be applied to this registration. This registration receives a $40 discount and the three
-          previous registrations each receive an additional $5 discount. A discount of $55 dollars has been applied to this registration.
-        </span>
-        <span id='family_discount_5' style='display:none'>
-          You are eligible for a family discount (4-6 family registrations). All previous family registrations have received the correct
-          discount. This registration receives a $40 discount.
-        </span>
-        <span id='family_discount_7' style='display:none'>
-          You are eligible for a family discount (7+ family registrations). Since you have already paid for some of your family
-          registrations those discounts will be applied to this registration. This registration receives a $45 discount and the six
-          previous registrations each receive an additional $5 discount. A discount of $75 dollars has been applied to this registration.
-        </span>
-        <span id='family_discount_7_plus' style='display:none'>
-          You are eligible for a family discount (7+ family registrations). All previous family registrations have received the correct
-          discount. This registration receives a $45 discount.
-        </span>
-
-      <p>
-        <b>Your Other Family Registrations</b><br/><br/>
-        <% if @family_participant_registrations.size > 0 %>
-          <% @family_participant_registrations.each do |family_registration| %>
-            <%= family_registration.full_name %>
-            <%= '(-$35)' if @family_participant_registrations.size == 2 %>
-            <%= '(-$5)' if @family_participant_registrations.size == 3 %>
-            <%= '(-$5)' if @family_participant_registrations.size == 6 %>
-            <br/>
-          <% end %>
-        <% else %>
-          You do not have any other family registrations.
-        <% end %>
-      </p>
-      <input type='hidden' id='family_registrations_count' value='<%= @family_participant_registrations.size %>'/>
-      <%= pform.hidden_field :family_registrations %>
-    </p>
-    </div>
-  <% else %>
-    <div id='family_discount'>
-      <h3>Family Discount</h3>
-      <p>
-        <span id='family_discount_none' style='display:none'>
-          You were not eligible for a family discount on this registration. To be eligible for a family
-          discount you must have had 2 or more family registrations which had already been paid for.
-        </span>
-        <span id='family_discount_3' style='display:none'>
-          You were eligible for a family discount on this registration (3 family registrations). Some of the family registrations you
-          had previously paid for received a discount with the completion of this registration and the discounted amount was applied
-          to this registration. This registration and the two previous registrations each received a $35 discount. A discount of $105
-          was applied to this registration.
-        </span>
-        <span id='family_discount_4' style='display:none'>
-          You were eligible for a family discount on this registration (4-6 family registrations). Some of the family registrations you
-          had previously paid for received a discount with the completion of this registration and the discounted amount was applied
-          to this registration. This registration received a $45 discount and the three previous registrations each received an additional
-          $5 discount. A discount of $55 dollars was applied to this registration.
-        </span>
-        <span id='family_discount_5' style='display:none'>
-          You were eligible for a family discount on this registration (4-6 family registrations). All previous family registrations
-          had already received the correct discount. This registration received a $40 discount.
-        </span>
-        <span id='family_discount_7' style='display:none'>
-          You were eligible for a family discount on this registration (7+ family registrations). Some of the family registrations you
-          had previously paid for received a discount with the completion of this registration and the discounted amount was applied
-          to this registration. This registration received a $45 discount and the six previous registrations each received an additional
-          $5 discount. A discount of $75 dollars was applied to this registration.
-        </span>
-        <span id='family_discount_7_plus' style='display:none'>
-          You were eligible for a family discount on this registration (7+ family registrations). All previous family registrations
-          had already received the correct discount. This registration received a $45 discount.
-        </span>
-
-      <p>
-        <b>Your Other Family Registrations</b><br/><br/>
-        <% if @participant_registration.family_participant_registrations.size > 0 %>
-          <% @participant_registration.family_participant_registrations.each do |family_registration| %>
-            <%= family_registration.full_name %>
-            <%= '(-$35)' if @participant_registration.family_participant_registrations.size == 2 %>
-            <%= '(-$5)' if @participant_registration.family_participant_registrations.size == 3 %>
-            <%= '(-$5)' if @participant_registration.family_participant_registrations.size == 6 %>
-            <br/>
-          <% end %>
-        <% else %>
-          You do not have any other family registrations.
-        <% end %>
-      </p>
-      <input type='hidden' id='family_registrations_count' value='<%= @participant_registration.family_participant_registrations.size %>'/>
-      <%= pform.hidden_field :family_registrations %>
-    </p>
-    </div>
-  <% end %>
-  <% if @participant_registration.new_record? or @participant_registration.owner == current_user or admin? %>
-    <h3>Sharing</h3>
-    <p>
-      You can allow this registration information to be viewed/modified by another registered user(s) (making payment
-      is a modification that would be beneficial) who is a parent or leader for your local church, district, or region.
-      Enter the email address of the authorized user you would like to allow access to your registration. Shared users
-      can be removed at anytime. Users will be notified via email when you save this registration. Some fields the
-      shared user may be able to change are flight information, quiz team (such as a regional team entry),
-      district/region, group leader, etc.
-    </p>
-    <p>
-      <label>Email Address</label><br/>
-      <input id='email_search' name='email_search' type='text' size='30'/>
-      <%= button_to_remote 'Add User', {:url => "#{AppConfig.site_url}/participant_registrations/add_shared_user", :method => :get, :with => "'email=' + $('email_search').value + '&shared_users=' + $('shared_users').value"} %>
-      <span id='extra_users_info'></span>
-      <% if @shared_users.size > 0 %>
-      <div id='extra_users_title'><b>Shared Users</b></div>
-    <% else %>
-      <div id='extra_users_title' style='display:none;'>Shared Users</div>
     <% end %>
-    <div id='extra_users'>
-      <% @shared_users.each do |user| %>
-        <span id='extra_user_<%= user.id %>'>
-          <input type='hidden' name='extra_users[]' value='<%= user.id %>'/><%= user.fullname %> (<%= user.email %>)
-          <%= link_to_remote('Remove', {:url => "#{AppConfig.site_url}/participant_registrations/remove_shared_user", :method => :get, :with => "'id=#{user.id}&shared_users=' + $('shared_users').value"}) %><br/>
-        </span>
-      <% end %>
-    </div>
-    <input id='shared_users' name='shared_users' type='hidden'/>
-    </p>
-  <% end %>
-  <% if !@participant_registration.new_record? and @participant_registration.has_discount? and !admin? %>
-    <h3>Discount</h3>
-    <p>
-      The following discount has been applied to your registration.
-    </p>
-    <p>
-      <strong><%= @participant_registration.discount %></strong> - <%= @participant_registration.discount_description %>
-      <%= pform.hidden_field :discount %>
-    </p>
-  <% elsif !@participant_registration.new_record? and admin? %>
-    <h3>Discount</h3>
-    <p>
-      Modify the discount for this registration.
-    </p>
-    <p>
-      <%= pform.label :discount, 'Amount' %><br/>
-      <%= pform.text_field :discount %>
-    </p>
-    <p>
-      <%= pform.label :discount_description, 'Description' %><br/>
-      <%= pform.text_area :discount_description, :size => "50x12" %>
-    </p>
-  <% elsif !@participant_registration.new_record? %>
-    <%= pform.hidden_field :discount %>
-  <% end %>
-  <% if !@participant_registration.new_record? and @participant_registration.payments.size > 0 %>
-    <h3>Previous Payments</h3>
-    <p>
-      You have submitted previous payments for this registration. Below is a detailed list of what you paid for.
-    </p>
-    <% @participant_registration.payments.each do |payment| %>
-      <p><%= describe_payment(payment) %></p>
-    <% end %>
-  <% end %>
-  <h3>Payment</h3>
-  <p id='full_fee_not_paid' style='display: none'>
-    You must pay for your entire registration as well as any extras. All registration fees and extras selected must be paid by
-    June 1st, 2012 or the registration (and extras) is subject to cancellation. There are NO REFUNDS. A breakdown of what you are paying for is below.
-  </p>
-  <p id='full_fee_paid_has_extras' style='display: none'>
-    You have already paid for your registration fee, but you have extras which need to be paid for. All extras selected must be paid by
-    June 1st, 2012 or they will be subject to cancellation. There are NO REFUNDS. A breakdown of what you are paying for is below.</p>
-  <p id='partial_fee_not_paid' style='display: none'>
-    You can pay for your entire registration fee or make a partial payment. You may choose to not pay for your selected extras at this time.
-    All registration fees and extras selected must be paid by June 1st, 2012 or the registration (and extras) is subject to cancellation.
-    There are NO REFUNDS. A breakdown of what you are paying for is below.
-  </p>
-  <p id='partial_last_payment' style='display: none'>
-    You must pay the rest of your registration fee at this time. You may choose to not pay for your selected extras at this time.
-    All registration fees and extras selected must be paid by June 1st, 2012 or the registration (and extras) is subject to cancellation.
-    There are NO REFUNDS. A breakdown of what you are paying for is below.
-  </p>
-  <p id='zero_balance' style='display: none'>
-    You have already paid for your registration fee and you have not selected any extras. You have nothing to pay for. However, you
-    can update any available information on your registration.
-  </p>
-  <p id='breakdown' style='display: none'></p>
-  <p id='payment_details' style='display: none'>
-    <%= pform.radio_button :payment_type, 'partial' %>&nbsp;<%= pform.label :partial_amount, 'Pay a partial amount:' %>
-    <%= pform.text_field :partial_amount, {:size => 10} %> <label>(Minimum $50)</label><br/>
-    <%= pform.radio_button :payment_type, 'full' %>&nbsp;<label>Pay your entire registration fee (<span id='registration_total_amount'></span>).</label><br/>
-  </p>
-  <p id='ask_about_extras'>
-    <%= check_box_tag :skip_extras, 'checked', false, {:onclick => 'javascript: update_participant_total();'} %><label>I do NOT want to pay for my extras at this time.</label>
-  </p>
-  <p>
-    By submitting this registration, you agree to the terms set forth in the Medical Release and Liability
-    forms that must be completed before you can attend this event "Q2014 at ONU". Your name and contact
-    information will only be shared with Nazarene colleges for recruiting purposes. Personal information
-    will not be shared with any other organization, group or advertising agency.
-  </p>
-  <div>
-  <p id='submit_payment' style='display: none'>
-    <%= pform.submit 'Submit Payment' %> <%= pform.submit 'Save For Later' %>
-  </p>
-  <p id='update_registration' style='display: none'>
+  </div>
+  <p id='update_registration'>
     <%= pform.submit 'Update Registration' %>
   </p>
   </div>
-  <p style='color: #f00; display: none;'>
-    You can no longer make changes to your participant registration, including purchasing extras.
-    If you need to make changes or purchase extras please do so in the quiz office.
-  </p>
-
-  <%= pform.hidden_field :registration_fee %>
-  <%= pform.hidden_field :extras_fee %>
-  <%= hidden_field_tag :registration_amount %>
-  <%= hidden_field_tag :extras_amount %>
-  <%= hidden_field_tag :payment_amount %>
-<% end %>
-<br/>
-<br/>
-<div id="total_footer">
-  <div class="container">
-    Total Balance: <span id='total_amount'>$0.00</span><br/>
-    <span class='small'>This total will automatically update as you change options.</span>
-  </div>
-</div>
-<div id='school_info'>
-  <% @schools.each do |school| %>
-    <input type='hidden' id='school_paid_<%= school.id %>' value='<%= school.paid? %>'/>
-  <% end %>
-</div>
-<script type='text/javascript'>
-  var user_first_name = '<%= current_user.first_name %>';
-  var user_last_name = '<%= current_user.last_name %>';
-  var user_phone = '<%= current_user.phone %>';
-  var user_email = '<%= current_user.email %>';
-  var user_district = '<%= current_user.district_id %>';
-</script>
-<script type='text/javascript'>
-  var paid_any_registration_fee = <%= @participant_registration.paid_any_registration_fee? %>;
-  var paid_full_registration_fee = <%= @participant_registration.paid? %>;
-  var paid_registration_amount = <%= @participant_registration.paid_registration_amount %>;
-  var paid_extras_amount = <%= @participant_registration.paid_extras_amount %>;
-  var bought_housing_sunday = <%= @participant_registration.bought_extra?('housing_sunday') %>;
-  var bought_housing_saturday = <%= @participant_registration.bought_extra?('housing_saturday') %>;
-  var bought_breakfast_monday = <%= @participant_registration.bought_extra?('breakfast_monday') %>;
-  var bought_lunch_monday = <%= @participant_registration.bought_extra?('lunch_monday') %>;
-  var bought_arrival_shuttle = <%= @participant_registration.bought_extra?('need_arrival_shuttle') %>;
-  var bought_departure_shuttle = <%= @participant_registration.bought_extra?('need_departure_shuttle') %>;
-  var new_record = <%= @participant_registration.new_record? ? true : false %>;
-  check_for_small_child();
-  update_registration_type();
-  update_travel_details();
-  disable_elements();
-  var form_is_loaded = true;
-  update_participant_total();
-  check_registration_code();
-</script>
-<%=  observe_field("participant_registration_registration_code", :frequency => 1, :function => "check_registration_code()") %>
-<%=  observe_field("participant_registration_registration_type", :frequency => 1, :function => "reset_registration_code()") %>
-<% if !@participant_registration.new_record? and admin? %>
-  <%=  observe_field("participant_registration_discount", :frequency => 1, :function => "update_participant_total()") %>
 <% end %>
