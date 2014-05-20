@@ -92,11 +92,19 @@
   </p>
   <p>
     <%= pform.label :local_church, 'Local Church' %><br/>
-    <%= @participant_registration.local_church %>
+    <% if !@participant_registration.local_church.nil? %>
+      <%= @participant_registration.local_church %>
+    <% else %>
+      N/A
+    <% end %>
   </p>
   <p>
     <%= pform.label :district, 'District and Region' %><br/>
-    <%= @participant_registration.district.name %>, <%= @participant_registration.district.region.name %>
+    <% if !@participant_registration.district.nil? and !@participant_registration.district.region.nil? %>
+      <%= @participant_registration.district.name %>, <%= @participant_registration.district.region.name %>
+    <% else %>
+      N/A
+    <% end %>
   </p>
   <p>
     <%= pform.label :shirt_size, 'T-shirt Size' %><br/>
