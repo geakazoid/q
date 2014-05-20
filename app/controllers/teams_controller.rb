@@ -21,9 +21,15 @@ class TeamsController < ApplicationController
       @output = "Something went horribly wrong."
     end
     
-    @quizzers = ParticipantRegistration.find(:all,
-                                             :conditions => 'district_id = ' + current_user.district_id.to_s + ' and (registration_type = "Quizzer" or registration_type = "Student")',
-                                             :order => 'first_name asc, last_name asc')
+    if @team.regional_team?
+      @quizzers = ParticipantRegistration.find(:all,
+                                               :conditions => 'district_id in (select district_id from districts where region_id = ' + current_user.district.region_id.to_s + ') and (registration_type = "Quizzer" or registration_type = "Student")',
+                                               :order => 'first_name asc, last_name asc')
+    else
+      @quizzers = ParticipantRegistration.find(:all,
+                                               :conditions => 'district_id = ' + current_user.district_id.to_s + ' and (registration_type = "Quizzer" or registration_type = "Student")',
+                                               :order => 'first_name asc, last_name asc')
+    end
     
     respond_to do |format|
       format.html # edit.html.erb

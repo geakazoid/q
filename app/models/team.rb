@@ -43,7 +43,7 @@ class Team < ActiveRecord::Base
 
   def regional_team?
     unless self.division.nil?
-      self.division.name == 'Regional Teams'
+      self.division.name == 'Regional A' or self.division.name == 'Regional B'
     else
       return false
     end

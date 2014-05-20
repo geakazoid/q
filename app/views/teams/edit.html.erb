@@ -17,17 +17,21 @@
   </uL>
 </p>
 <p>
-  Available quizzers from your district:
+  Available quizzers from your <%= @team.regional_team? ? 'region' : 'district' %>:
 </p>
-<div>
-  <% i = 0 %>
-  <% @quizzers.each do |quizzer| %>
-    <% i = i + 1 %>
-    <%= check_box_tag("team[participant_registration_ids][]", quizzer.id, @team.participant_registrations.include?(quizzer)) %>
-    <span id='participant_registration_<%= quizzer.id %>'><%= quizzer.full_name %></span><br/>
-    <%= '</div><div>' if i % 10 == 0 %>
-  <% end %>
+<div class='quizzer_list'>
+  <div>
+    <% i = 0 %>
+    <% num_per_column = @quizzers.size / 3 %>
+    <% @quizzers.each do |quizzer| %>
+      <% i = i + 1 %>
+      <%= check_box_tag("team[participant_registration_ids][]", quizzer.id, @team.participant_registrations.include?(quizzer)) %>
+      <span id='participant_registration_<%= quizzer.id %>'><%= quizzer.full_name %></span><br/>
+      <%= '</div><div>' if i % num_per_column == 0 %>
+    <% end %>
+  </div>
 </div>
+<div style='clear: left;'></div>
 </br/>
 <div>
     <%= f.submit 'Save Selections' %>

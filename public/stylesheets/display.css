@@ -1220,7 +1220,7 @@ div.registration div {
   padding: 10px 0px 10px 0px;
 }
 
-div.registration div.quizzer_list div {
+div.registration div.quizzer_list div, div.quizzer_list div {
   float: left;
   padding-right: 10px;
   padding: 0px;
