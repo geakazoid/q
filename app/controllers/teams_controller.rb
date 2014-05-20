@@ -22,7 +22,7 @@ class TeamsController < ApplicationController
     end
     
     @quizzers = ParticipantRegistration.find(:all,
-                                             :conditions => 'district_id = ' + current_user.district_id.to_s + ' and registration_type = "quizzer"',
+                                             :conditions => 'district_id = ' + current_user.district_id.to_s + ' and (registration_type = "Quizzer" or registration_type = "Student")',
                                              :order => 'first_name asc, last_name asc')
     
     respond_to do |format|
