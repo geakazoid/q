@@ -1222,7 +1222,7 @@ div.registration div {
 
 div.registration div.quizzer_list div, div.quizzer_list div {
   float: left;
-  padding-right: 10px;
+  margin-right: 20px;
   padding: 0px;
 }
 

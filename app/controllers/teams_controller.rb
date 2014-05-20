@@ -23,11 +23,11 @@ class TeamsController < ApplicationController
     
     if @team.regional_team?
       @quizzers = ParticipantRegistration.find(:all,
-                                               :conditions => 'district_id in (select district_id from districts where region_id = ' + current_user.district.region_id.to_s + ') and (registration_type = "Quizzer" or registration_type = "Student")',
+                                               :conditions => 'district_id in (select id from districts where region_id = ' + @team.team_registration.user.district.region_id.to_s + ') and (registration_type = "Quizzer" or registration_type = "Student")',
                                                :order => 'first_name asc, last_name asc')
     else
       @quizzers = ParticipantRegistration.find(:all,
-                                               :conditions => 'district_id = ' + current_user.district_id.to_s + ' and (registration_type = "Quizzer" or registration_type = "Student")',
+                                               :conditions => 'district_id = ' + @team.team_registration.user.district_id.to_s + ' and (registration_type = "Quizzer" or registration_type = "Student")',
                                                :order => 'first_name asc, last_name asc')
     end
     
