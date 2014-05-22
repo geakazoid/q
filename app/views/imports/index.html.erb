@@ -3,7 +3,7 @@
 </div>
 <h3>Imports</h3>
 
-Import user data by uploading a csv pulled from CVent.
+Import user data by uploading a csv pulled from CVent. You can specify corrections <%= link_to 'here', corrections_imports_path() %>.
 
 <% form_tag({:action => 'upload_file'}, :multipart => true) do %>
 <p><label for="upload_file">Select File</label> : 

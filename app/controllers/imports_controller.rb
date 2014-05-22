@@ -6,6 +6,7 @@ class ImportsController < ApplicationController
   def index
   end
   
+  # POST /imports/upload_file
   def upload_file
     upload = params['upload']
     name = upload['datafile'].original_filename
@@ -119,11 +120,51 @@ class ImportsController < ApplicationController
       pr.save(false)
     end
     
+    # apply corrections
+    connection = ActiveRecord::Base.connection
+    result = connection.select_all("select correction_list from cvent_corrections limit 1")
+    list = result[0]['correction_list'].split(/\r\n/)
+    
+    list.each do |line|
+      correction = line.split(/,/)
+      3.times do |i|
+        correction[i].strip! unless correction[i].blank?
+      end
+      
+      pr = ParticipantRegistration.find_by_confirmation_number(correction[0])
+      pr.send("#{correction[1]}=".to_sym, correction[2])
+      pr.save(false)
+    end
+    
     respond_to do |format|
       format.html {
         flash[:notice] = "File imported successfully."
         redirect_to(imports_path)
       }
     end
+  end
+
+  # GET /imports/corrections
+  # lists import corrections page
+  def corrections
+    # make a db connections
+    connection = ActiveRecord::Base.connection
+  
+    # update our corrections in the database
+    if request.post?
+      connection.execute("update cvent_corrections set correction_list = '" + params[:corrections_text] + "'")
+      
+      respond_to do |format|
+        format.html {
+          flash[:notice] = "Corrections updated."
+          redirect_to(corrections_imports_path)
+        }
+      end
+    end
+    
+    result = connection.select_all("select correction_list from cvent_corrections limit 1")
+    @correction_list = result[0]['correction_list']
+    
+    #connection.close
   end
 end

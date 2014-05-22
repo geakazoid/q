@@ -94,7 +94,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :core_staff => :get,
                                 :no_team => :get,
                                 :housing_meals => :get}
-  map.resources :imports
+  map.resources :imports, :collection => { :corrections => [:get,:post] }
   map.resources :rooms, :collection => {:auto_complete_for_room => :post}
   map.resources :ministry_projects, :collection => {:auto_complete_for_ministry_project_group => :post}
   map.resources :housing_rooms,
