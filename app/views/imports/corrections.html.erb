@@ -1,0 +1,16 @@
+<div id='page_title'>
+  <%= title('Specify Corrections', :h1) %>
+</div>
+
+<p>
+  Add new corrections that should be applied to the CVent import file after processing.
+</p>
+<% form_tag({:action => 'corrections'}) do %>
+<p>
+  <label>Corrections</label><br />
+  <%= text_area_tag :corrections_text, @correction_list, :size => "100x30" %>
+</p>
+<p>
+  <%= submit_tag 'Update Corrections' %> or <%= link_to 'Cancel', imports_path %>
+</p>
+<% end %>
