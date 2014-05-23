@@ -1063,8 +1063,8 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.gender
         sheet1[pos,column+=1] = participant.formatted_registration_type
         sheet1[pos,column+=1] = participant.most_recent_grade
-        sheet1[pos,column+=1] = participant.district.name
-        sheet1[pos,column+=1] = participant.district.region.name
+        sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+        sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
         # group leader
         if (participant.group_leader == '-1')
@@ -1142,8 +1142,8 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.gender
           sheet1[pos,column+=1] = participant.formatted_registration_type
           sheet1[pos,column+=1] = participant.most_recent_grade
-          sheet1[pos,column+=1] = participant.district.name
-          sheet1[pos,column+=1] = participant.district.region.name
+          sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+          sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
           # group leader
           if (participant.group_leader == '-1')
@@ -1259,8 +1259,8 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.gender
         sheet1[pos,column+=1] = participant.formatted_registration_type
         sheet1[pos,column+=1] = participant.most_recent_grade
-        sheet1[pos,column+=1] = participant.district.name
-        sheet1[pos,column+=1] = participant.district.region.name
+        sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+        sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
         sheet1[pos,column+=1] = participant.bought_extra?('housing_sunday') ? 'Yes' : ''
         sheet1[pos,column+=1] = participant.bought_extra?('housing_saturday') ? 'Yes' : ''
 
@@ -1348,8 +1348,8 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.gender
           sheet1[pos,column+=1] = participant.formatted_registration_type
           sheet1[pos,column+=1] = participant.most_recent_grade
-          sheet1[pos,column+=1] = participant.district.name
-          sheet1[pos,column+=1] = participant.district.region.name
+          sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+          sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
           sheet1[pos,column+=1] = participant.bought_extra?('housing_sunday') ? 'Yes' : ''
           sheet1[pos,column+=1] = participant.bought_extra?('housing_saturday') ? 'Yes' : ''
 
@@ -1412,8 +1412,8 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.gender
         sheet1[pos,column+=1] = participant.formatted_registration_type
         sheet1[pos,column+=1] = participant.most_recent_grade
-        sheet1[pos,column+=1] = participant.district.name
-        sheet1[pos,column+=1] = participant.district.region.name
+        sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+        sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
         # group leader
         if (participant.group_leader == '-1')
@@ -1484,8 +1484,8 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.gender
           sheet1[pos,column+=1] = participant.formatted_registration_type
           sheet1[pos,column+=1] = participant.most_recent_grade
-          sheet1[pos,column+=1] = participant.district.name
-          sheet1[pos,column+=1] = participant.district.region.name
+          sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+          sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
           # group leader
           if (participant.group_leader == '-1')
@@ -1562,8 +1562,8 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant.home_phone
       sheet1[pos,column+=1] = participant.mobile_phone
       sheet1[pos,column+=1] = participant.email
-      sheet1[pos,column+=1] = participant.district.name
-      sheet1[pos,column+=1] = participant.district.region.name
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
       # group leader
       if (participant.group_leader == '-1')
@@ -1629,8 +1629,8 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant.home_phone
       sheet1[pos,column+=1] = participant.mobile_phone
       sheet1[pos,column+=1] = participant.email
-      sheet1[pos,column+=1] = participant.district.name
-      sheet1[pos,column+=1] = participant.district.region.name
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
       # group leader
       if (participant.group_leader == '-1')
@@ -1696,8 +1696,8 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant.gender
       sheet1[pos,column+=1] = participant.formatted_registration_type
       sheet1[pos,column+=1] = participant.most_recent_grade
-      sheet1[pos,column+=1] = participant.district.name
-      sheet1[pos,column+=1] = participant.district.region.name
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
       sheet1[pos,column+=1] = participant.group_leader_name
 
       pos += 1
@@ -1766,7 +1766,7 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant.keycode
       sheet1[pos,column+=1] = participant.full_name_reversed
       sheet1[pos,column+=1] = participant.group_leader_name
-      sheet1[pos,column+=1] = participant.district.name
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
       sheet1[pos,column+=1] = participant.bought_extra?('housing_sunday') ? 'Yes' : ''
       sheet1[pos,column+=1] = participant.bought_extra?('housing_saturday') ? 'Yes' : ''
       pos += 1
@@ -1813,7 +1813,7 @@ class ReportsController < ApplicationController
       sheet1[pos,column] = participant.full_name_reversed
       sheet1[pos,column+=1] = participant.gender
       sheet1[pos,column+=1] = participant.group_leader_name
-      sheet1[pos,column+=1] = participant.district.name
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
       sheet1[pos,column+=1] = participant.special_needs_details
       pos += 1
     end
@@ -1855,7 +1855,7 @@ class ReportsController < ApplicationController
       sheet1[pos,column] = participant.full_name_reversed
       sheet1[pos,column+=1] = participant.mobile_phone
       sheet1[pos,column+=1] = participant.email
-      sheet1[pos,column+=1] = participant.district.name
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
       pos += 1
     end
 
@@ -1938,8 +1938,7 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant.needs_meals? ? 'YES' : ''
       sheet1[pos,column+=1] = participant.full_name_reversed
       sheet1[pos,column+=1] = participant.group_leader_name
-      sheet1[pos,column+=1] = participant.district.name
-      
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''      
       # housing
       if !participant.building.nil? or !participant.room.blank?
         assignment = ''
