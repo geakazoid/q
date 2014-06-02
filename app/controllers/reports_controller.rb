@@ -451,9 +451,9 @@ class ReportsController < ApplicationController
       sheet1.row(0).set_format(1,group_leader_format)
 
       # write out group headers
-      sheet1[1,8] = 'Extra Housing'
-      sheet1[1,10] = 'Shuttles'
-      for i in 8..11
+      sheet1[1,9] = 'Extra Housing'
+      sheet1[1,11] = 'Shuttles'
+      for i in 8..12
         sheet1.row(1).set_format(i,group_header_format)
       end
 
@@ -517,7 +517,7 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.need_arrival_shuttle? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.need_departure_shuttle? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.amount_due > 0 ? '$' + participant.total_amount_due.to_s : ''
+        sheet1[pos,column+=1] = participant.amount_due > 0 ? '$' + participant.amount_due.to_s : ''
         
         # set format
         for i in 1..19
