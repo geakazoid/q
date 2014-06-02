@@ -451,11 +451,9 @@ class ReportsController < ApplicationController
       sheet1.row(0).set_format(1,group_leader_format)
 
       # write out group headers
-      sheet1[1,8] = 'Extras'
-      sheet1[1,13] = 'Extra Housing'
-      sheet1[1,15] = 'Extra Meals'
-      sheet1[1,17] = 'Shuttles'
-      for i in 8..18
+      sheet1[1,8] = 'Extra Housing'
+      sheet1[1,10] = 'Shuttles'
+      for i in 8..11
         sheet1.row(1).set_format(i,group_header_format)
       end
 
