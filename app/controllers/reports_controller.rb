@@ -512,8 +512,8 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.teams[1].name
           sheet1[pos,column+=1] = participant.teams[2].name
         end
-        sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
+        sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.need_arrival_shuttle? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.need_departure_shuttle? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
