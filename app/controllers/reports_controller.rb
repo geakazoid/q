@@ -470,14 +470,8 @@ class ReportsController < ApplicationController
       sheet1[2,column+=1] = 'Team 1'
       sheet1[2,column+=1] = 'Team 2'
       sheet1[2,column+=1] = 'Team 3'
-      sheet1[2,column+=1] = 'Extra Shirt Sizes'
-      sheet1[2,column+=1] = 'Extra Pictures'
-      sheet1[2,column+=1] = 'DVDs'
-      sheet1[2,column+=1] = 'Splash Valley Tickets'
-      sheet1[2,column+=1] = 'July 1st'
-      sheet1[2,column+=1] = 'July 7th'
-      sheet1[2,column+=1] = 'Breakfast July 2nd'
-      sheet1[2,column+=1] = 'Lunch July 2nd'
+      sheet1[2,column+=1] = 'Housing June 28th'
+      sheet1[2,column+=1] = 'Housing June 29th'
       sheet1[2,column+=1] = 'Arrival Shuttle'
       sheet1[2,column+=1] = 'Departure Shuttle'
       sheet1[2,column+=1] = 'Medical Liability Received'
@@ -503,21 +497,29 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = ''
         end
 
-        sheet1[pos,column+=1] = !participant.team1.nil? ? participant.team1.name : ''
-        sheet1[pos,column+=1] = !participant.team2.nil? ? participant.team2.name : ''
-        sheet1[pos,column+=1] = !participant.team3.nil? ? participant.team3.name : ''
-        sheet1[pos,column+=1] = participant.extra_shirts
-        sheet1[pos,column+=1] = participant.count_bought_extra('num_extra_group_photos') > 0 ? participant.count_bought_extra('num_extra_group_photos') : ''
-        sheet1[pos,column+=1] = participant.count_bought_extra('num_dvd') > 0 ? participant.count_bought_extra('num_dvd') : ''
-        sheet1[pos,column+=1] = participant.count_bought_extra('num_sv_tickets') > 0 ? participant.count_bought_extra('num_sv_tickets') : ''
-        sheet1[pos,column+=1] = participant.bought_extra?('housing_sunday') ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.bought_extra?('housing_saturday') ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.bought_extra?('breakfast_monday') ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.bought_extra?('lunch_monday') ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.bought_extra?('need_arrival_shuttle') ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.bought_extra?('need_departure_shuttle') ? 'YES' : ''
+        if participant.teams.size == 0
+          sheet1[pos,column+=1] = ''
+          sheet1[pos,column+=1] = ''
+          sheet1[pos,column+=1] = ''
+        elsif participant.teams.size == 1
+          sheet1[pos,column+=1] = participant.teams[0].name
+          sheet1[pos,column+=1] = ''
+          sheet1[pos,column+=1] = ''
+        elsif participant.teams.size == 2
+          sheet1[pos,column+=1] = participant.teams[0].name
+          sheet1[pos,column+=1] = participant.teams[1].name
+          sheet1[pos,column+=1] = ''
+        elsif participant.teams.size == 3
+          sheet1[pos,column+=1] = participant.teams[0].name
+          sheet1[pos,column+=1] = participant.teams[1].name
+          sheet1[pos,column+=1] = participant.teams[2].name
+        end
+        sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
+        sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
+        sheet1[pos,column+=1] = participant.need_arrival_shuttle? ? 'YES' : ''
+        sheet1[pos,column+=1] = participant.need_departure_shuttle? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.total_amount_due > 0 ? '$' + participant.total_amount_due.to_s : ''
+        sheet1[pos,column+=1] = participant.amount_due > 0 ? '$' + participant.total_amount_due.to_s : ''
         
         # set format
         for i in 1..19
