@@ -517,7 +517,7 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.need_arrival_shuttle? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.need_departure_shuttle? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.amount_due > 0 ? '$' + participant.amount_due.to_s : ''
+        sheet1[pos,column+=1] = '$' + participant.amount_due.to_s
         
         # set format
         for i in 1..19
