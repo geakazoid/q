@@ -65,10 +65,8 @@ class TeamRegistrationsController < ApplicationController
       record_not_found and return if !admin?
     end
 
-    if (!@team_registration.complete?)
-      @districts = District.find(:all, :order => "name")
-      @divisions = Division.find(:all)
-    end
+    @districts = District.find(:all, :order => "name")
+    @divisions = Division.find(:all)
 
     respond_to do |format|
       format.html {
