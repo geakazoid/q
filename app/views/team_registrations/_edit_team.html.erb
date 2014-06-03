@@ -4,7 +4,17 @@
     <%= form.text_field :name, :size => 30 %>
 	&nbsp;
 	<%= form.label :division, "Division:" %>
-	<%= form.object.division.name %>
+	<% if admin? %>
+	  <%= form.collection_select :division_id,
+                                 @divisions,
+                                 :id,
+                                 :name,
+                                 {:prompt => '- Select -' },
+                                 {:class => 'division',
+                                  :onchange => 'javascript: check_regional_selection()'} %>
+    <% else %>
+      <%= form.object.division.name %>
+    <% end %>
 	&nbsp;
     <%= link_to 'Edit Quizzers', edit_team_path(form.object.id) %>
   </p>

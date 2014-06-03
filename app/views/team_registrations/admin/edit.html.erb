@@ -31,8 +31,14 @@
 
   <div id="teams">
     <h3>Teams</h3>
-    <% f.fields_for :teams do |team_form| %>
-      <%= render :partial => 'team', :locals => { :form => team_form } %>
+    <% if @team_registration.new_record? %>
+      <% f.fields_for :teams do |team_form| %>
+        <%= render :partial => 'team', :locals => { :form => team_form } %>
+      <% end %>
+    <% else %>
+      <% f.fields_for :teams do |team_form| %>
+        <%= render :partial => 'edit_team', :locals => { :form => team_form } %>
+      <% end %>
     <% end %>
   </div>
   <p>
