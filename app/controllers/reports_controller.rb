@@ -290,21 +290,21 @@ class ReportsController < ApplicationController
 
   # generate a report of coaches and teams (this only grabs coaches with a complete registration)
   def coaches_teams
-    @participant_registrations = ParticipantRegistration.all(:conditions => 'paid = 1 and registration_type = "coach"', :order => 'last_name asc, first_name asc')
+    @participant_registrations = ParticipantRegistration.all(:conditions => 'registration_type = "Coach"', :order => 'last_name asc, first_name asc')
     @report_type = 'coaches'
     participants_teams
   end
 
   # generate a report of quizzers and teams (this only grabs quizzers with a complete registration)
   def quizzers_teams
-    @participant_registrations = ParticipantRegistration.all(:conditions => 'paid = 1 and registration_type = "quizzer"', :order => 'last_name asc, first_name asc')
+    @participant_registrations = ParticipantRegistration.all(:conditions => 'registration_type = "Quizzer"', :order => 'last_name asc, first_name asc')
     @report_type = 'quizzers'
     participants_teams
   end
 
   # generate a report of coaches, quizzers and teams (this only grabs coaches and quizzers with a complete registration)
   def coaches_quizzers_teams
-    @participant_registrations = ParticipantRegistration.all(:conditions => 'paid = 1 and (registration_type = "quizzer" or registration_type = "coach")', :order => 'first_name asc, last_name asc')
+    @participant_registrations = ParticipantRegistration.all(:conditions => 'registration_type = "Quizzer" or registration_type = "Coach"', :order => 'first_name asc, last_name asc')
     @report_type = 'coaches_quizzers'
     participants_teams
   end
@@ -327,9 +327,16 @@ class ReportsController < ApplicationController
     @participant_registrations.each do |participant_registration|
 
       # teams
-      team1 = Team.find(participant_registration.team1_id) unless participant_registration.team1_id.blank?
-      team2 = Team.find(participant_registration.team2_id) unless participant_registration.team2_id.blank?
-      team3 = Team.find(participant_registration.team3_id) unless participant_registration.team3_id.blank?
+      if participant_registration.teams.size == 1
+          team1 = participant_registration.teams[0]
+        elsif participant_registration.teams.size == 2
+          team1 = participant_registration.teams[0]
+          team2 = participant_registration.teams[1]
+        elsif participant_registration.teams.size == 3
+          team1 = participant_registration.teams[0]
+          team2 = participant_registration.teams[1]
+          team3 = participant_registration.teams[2]
+        end
 
       if !team1.nil?
         column = 0
