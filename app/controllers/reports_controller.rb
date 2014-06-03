@@ -1087,8 +1087,10 @@ class ReportsController < ApplicationController
         elsif (participant.group_leader == '-6')
           group_leader_name = 'Volunteer'
         else
-          user = User.find(participant.group_leader)
-          group_leader_name = user.fullname
+          if !participant.group_leader.nil? and !participant.group_leader.empty?
+            user = User.find(participant.group_leader)
+            group_leader_name = user.fullname
+          end
         end
         sheet1[pos,column+=1] = group_leader_name
 
@@ -1166,8 +1168,10 @@ class ReportsController < ApplicationController
           elsif (participant.group_leader == '-6')
             group_leader_name = 'Volunteer'
           else
-            user = User.find(participant.group_leader)
-            group_leader_name = user.fullname
+            if !participant.group_leader.nil? and !participant.group_leader.empty?
+              user = User.find(participant.group_leader)
+              group_leader_name = user.fullname
+            end
           end
           sheet1[pos,column+=1] = group_leader_name
 
@@ -1436,8 +1440,10 @@ class ReportsController < ApplicationController
         elsif (participant.group_leader == '-6')
           group_leader_name = 'Volunteer'
         else
-          user = User.find(participant.group_leader)
-          group_leader_name = user.fullname
+          if !participant.group_leader.nil? and !participant.group_leader.empty?
+            user = User.find(participant.group_leader)
+            group_leader_name = user.fullname
+          end
         end
         sheet1[pos,column+=1] = group_leader_name
 
@@ -1508,8 +1514,10 @@ class ReportsController < ApplicationController
           elsif (participant.group_leader == '-6')
             group_leader_name = 'Volunteer'
           else
-            user = User.find(participant.group_leader)
-            group_leader_name = user.fullname
+            if !participant.group_leader.nil? and !participant.group_leader.empty?
+              user = User.find(participant.group_leader)
+              group_leader_name = user.fullname
+            end
           end
           sheet1[pos,column+=1] = group_leader_name
 
@@ -1586,8 +1594,10 @@ class ReportsController < ApplicationController
       elsif (participant.group_leader == '-6')
         group_leader_name = 'Volunteer'
       else
-        user = User.find(participant.group_leader)
-        group_leader_name = user.fullname
+        if !participant.group_leader.nil? and !participant.group_leader.empty?
+          user = User.find(participant.group_leader)
+          group_leader_name = user.fullname
+        end
       end
       sheet1[pos,column+=1] = group_leader_name
 
@@ -1654,7 +1664,7 @@ class ReportsController < ApplicationController
       elsif (participant.group_leader == '-6')
         group_leader_name = 'Volunteer'
       else
-        if !participant.group_leader.nil?
+        if !participant.group_leader.nil? and !participant.group_leader.empty?
           user = User.find(participant.group_leader)
           group_leader_name = user.fullname
         end
