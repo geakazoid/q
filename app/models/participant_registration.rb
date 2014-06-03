@@ -153,6 +153,12 @@ class ParticipantRegistration < ActiveRecord::Base
     :conditions => "special_needs = 'Yes'"
   }
 
+  named_scope :no_team, {
+    :joins      => "LEFT JOIN participant_registrations_teams ON participant_registrations.id = participant_registrations_teams.participant_registration_id",
+    :conditions => "participant_registrations_teams.participant_registration_id IS NULL and registration_type = 'Quizzer'",
+    :select     => "DISTINCT participant_registrations.*"
+  }
+
   # strip out extra characters in mobile phone
   def before_validation
     self.home_phone = '' if self.home_phone.nil?

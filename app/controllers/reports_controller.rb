@@ -1625,9 +1625,9 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Region'
     sheet1[0,column+=1] = 'Group Leader'
     sheet1.row(0).default_format = header_format
-
-    @participants = ParticipantRegistration.all(:conditions => "(registration_type = 'quizzer' or registration_type = 'coach') and (team1_id = '' or team1_id is null) and (team2_id = '' or team2_id is null) and (team3_id = '' or team3_id is null)")
-
+       
+    @participants = ParticipantRegistration.no_team
+                         
     pos = 1
     @participants.each do |participant|
       column = 0
@@ -1638,8 +1638,9 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant.email
       sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
       sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
-
+      
       # group leader
+      group_leader_name = ''
       if (participant.group_leader == '-1')
         group_leader_name = 'Group Leader Not Listed'
       elsif (participant.group_leader == '-2')
@@ -1653,8 +1654,10 @@ class ReportsController < ApplicationController
       elsif (participant.group_leader == '-6')
         group_leader_name = 'Volunteer'
       else
-        user = User.find(participant.group_leader)
-        group_leader_name = user.fullname
+        if !participant.group_leader.nil?
+          user = User.find(participant.group_leader)
+          group_leader_name = user.fullname
+        end
       end
       sheet1[pos,column+=1] = group_leader_name
 
