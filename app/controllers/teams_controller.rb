@@ -21,7 +21,12 @@ class TeamsController < ApplicationController
       @output = "Something went horribly wrong."
     end
     
-    if @team.regional_team?
+    if params[:show_all] && admin?
+      @quizzers = ParticipantRegistration.find(:all,
+                                               :joins => :district,
+                                               :conditions => 'registration_type = "Quizzer" or registration_type = "Student"',
+                                               :order => 'districts.name desc, first_name asc, last_name asc')
+    elsif @team.regional_team?
       @quizzers = ParticipantRegistration.find(:all,
                                                :conditions => 'district_id in (select id from districts where region_id = ' + @team.team_registration.user.district.region_id.to_s + ') and (registration_type = "Quizzer" or registration_type = "Student")',
                                                :order => 'first_name asc, last_name asc')
@@ -30,6 +35,13 @@ class TeamsController < ApplicationController
                                                :conditions => 'district_id = ' + @team.team_registration.user.district_id.to_s + ' and (registration_type = "Quizzer" or registration_type = "Student")',
                                                :order => 'first_name asc, last_name asc')
     end
+    
+    @districts = Hash.new
+    @quizzers.each do |quizzer|
+      @districts[quizzer.district.name] = Array.new if @districts[quizzer.district.name].nil?
+      @districts[quizzer.district.name].push(quizzer)
+    end
+    @districts.keys.sort
     
     respond_to do |format|
       format.html # edit.html.erb
