@@ -36,6 +36,11 @@ class TeamsController < ApplicationController
                                                :order => 'first_name asc, last_name asc')
     end
     
+    # add in quizzers that are already on the team
+    @quizzers = @quizzers + @team.participant_registrations
+    @quizzers = @quizzers.uniq
+    
+    # create a list of districts with matching quizzers for display
     @districts = Hash.new
     @quizzers.each do |quizzer|
       @districts[quizzer.district.name] = Array.new if @districts[quizzer.district.name].nil?
@@ -54,11 +59,40 @@ class TeamsController < ApplicationController
     respond_to do |format|
       if @team.update_attributes(params[:team])
         flash[:notice] = 'Team updated successfully.'
-        format.html { redirect_to(user_team_registrations_url(current_user)) }
+        format.html { 
+          if admin? and current_user != @team.team_registration.user
+            redirect_to(team_registrations_url())
+          else
+            redirect_to(user_team_registrations_url(current_user))
+          end
+        }
       else
-        @quizzers = ParticipantRegistration.find(:all,
-                                             :conditions => 'district_id = ' + current_user.district_id.to_s + ' and registration_type = "quizzer"',
-                                             :order => 'first_name asc, last_name asc')
+        if params[:show_all] && admin?
+          @quizzers = ParticipantRegistration.find(:all,
+                                                   :joins => :district,
+                                                   :conditions => 'registration_type = "Quizzer" or registration_type = "Student"',
+                                                   :order => 'districts.name desc, first_name asc, last_name asc')
+        elsif @team.regional_team?
+          @quizzers = ParticipantRegistration.find(:all,
+                                                   :conditions => 'district_id in (select id from districts where region_id = ' + @team.team_registration.user.district.region_id.to_s + ') and (registration_type = "Quizzer" or registration_type = "Student")',
+                                                   :order => 'first_name asc, last_name asc')
+        else
+          @quizzers = ParticipantRegistration.find(:all,
+                                                   :conditions => 'district_id = ' + @team.team_registration.user.district_id.to_s + ' and (registration_type = "Quizzer" or registration_type = "Student")',
+                                                   :order => 'first_name asc, last_name asc')
+        end
+
+        # add in quizzers that are already on the team
+        @quizzers = @quizzers + @team.participant_registrations
+        @quizzers = @quizzers.uniq
+
+        # create a list of districts with matching quizzers for display
+        @districts = Hash.new
+        @quizzers.each do |quizzer|
+          @districts[quizzer.district.name] = Array.new if @districts[quizzer.district.name].nil?
+          @districts[quizzer.district.name].push(quizzer)
+        end
+        @districts.keys.sort
         format.html { render :action => "edit" }
       end
     end

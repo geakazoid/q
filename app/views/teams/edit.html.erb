@@ -21,7 +21,7 @@
 </p>
 <% if admin? %>
 <p>
-  <a href="?show_all=true">Show all quizzers</a>
+  <%= link_to 'Show all quizzers', edit_team_path(@team.id, :show_all => true) %>
 </p>
 <% end %>
   <% if @quizzers.size == 0 %>
@@ -50,6 +50,9 @@
 <div style='clear: left;'></div>
 </br/>
 <div>
+    <% if params[:show_all] && admin? %>
+      <input type='hidden' name='show_all' value='true'>
+    <% end %>
     <%= f.submit 'Save Selections' %>
 </div>
 <% end %>
