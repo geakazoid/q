@@ -1854,7 +1854,7 @@ class ReportsController < ApplicationController
 
     sheet1.row(0).default_format = header_format
 
-    participants = ParticipantRegistration.by_registration_type('core_staff').ordered_by_last_name
+    participants = ParticipantRegistration.by_registration_type('Event Staff').ordered_by_last_name
 
     pos = 1
     participants.each do |participant|
@@ -1872,9 +1872,9 @@ class ReportsController < ApplicationController
     sheet1.column(2).width = 30
     sheet1.column(3).width = 25
 
-    book.write "#{RAILS_ROOT}/public/download/core_staff.xls"
+    book.write "#{RAILS_ROOT}/public/download/event_staff.xls"
 
-    send_file "#{RAILS_ROOT}/public/download/core_staff.xls", :filename => "core_staff.xls"
+    send_file "#{RAILS_ROOT}/public/download/event_staff.xls", :filename => "event_staff.xls"
   end
 
   # create a downloadable excel file of housing and meals on one sheet
