@@ -63,6 +63,7 @@ class ImportsController < ApplicationController
       emergency_contact_relationship = row[42]
       saturday_early_housing = row[47]
       sunday_early_housing = row[48]
+      liability_form_received = row[54]
       
       # skip empty rows
       if full_name.nil?
@@ -114,9 +115,7 @@ class ImportsController < ApplicationController
       pr.gender = gender
       pr.housing_saturday = saturday_early_housing
       pr.housing_sunday = sunday_early_housing
-      logger.debug(pr.inspect)
-      logger.debug("VALID:" + pr.valid?.to_s)
-      logger.debug(pr.errors.inspect)
+      pr.medical_liability = true if liability_form_received == "Yes"
       pr.save(false)
     end
     
