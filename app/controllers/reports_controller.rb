@@ -1742,10 +1742,17 @@ class ReportsController < ApplicationController
     housing
   end
 
-  # create a downloadable excel file of pre / post housing on one sheet
-  def housing_pre_post
-    @only_pre_post = true
-    @filename = 'pre_post'
+  # create a downloadable excel file of pre housing on one sheet
+  def housing_pre
+    @only_pre = true
+    @filename = 'pre'
+    housing
+  end
+  
+  # create a downloadable excel file of off campus guests on one sheet
+  def housing_offcampus
+    @only_offcampus = true
+    @filename = 'offcampus'
     housing
   end
 
@@ -1776,7 +1783,11 @@ class ReportsController < ApplicationController
 
     pos = 1
     participants.each do |participant|
-      if @only_pre_post && !participant.bought_extra?('housing_sunday') && !participant.bought_extra?('housing_saturday')
+      if @only_pre && !participant.housing_saturday? && !participant.housing_sunday?
+        next
+      end
+      
+      if @only_offcampus && participant.registration_type != "Guest (Lodging off-campus)"
         next
       end
 
@@ -1787,8 +1798,8 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant.full_name_reversed
       sheet1[pos,column+=1] = participant.group_leader_name
       sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
-      sheet1[pos,column+=1] = participant.bought_extra?('housing_saturday') ? 'Yes' : ''
-      sheet1[pos,column+=1] = participant.bought_extra?('housing_sunday') ? 'Yes' : ''
+      sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
+      sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
       pos += 1
     end
 
@@ -1888,100 +1899,5 @@ class ReportsController < ApplicationController
     book.write "#{RAILS_ROOT}/public/download/event_staff.xls"
 
     send_file "#{RAILS_ROOT}/public/download/event_staff.xls", :filename => "event_staff.xls"
-  end
-
-  # create a downloadable excel file of housing and meals on one sheet
-  # depending on various params we either provide all participants or a subset
-  def housing_meals
-    unless params[:report].blank?
-      @report = params[:report]
-    else
-      @report = 'all'
-    end
-
-    book = Spreadsheet::Workbook.new
-    sheet1 = book.create_worksheet
-
-    # formatting
-    header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify
-
-    # write out headers
-    column = 0
-    sheet1[0,column] = 'Housing?'
-    sheet1[0,column+=1] = 'Meals?'
-    sheet1[0,column+=1] = 'Participant'
-    sheet1[0,column+=1] = 'Group Leader'
-    sheet1[0,column+=1] = 'District'
-    sheet1[0,column+=1] = 'Housing Location'
-
-    sheet1.row(0).default_format = header_format
-
-    participants = ParticipantRegistration.ordered_by_last_name
-
-    pos = 1
-    participants.each do |participant|
-      # conditionals
-      if @report == 'both' and (!participant.needs_housing? or !participant.needs_meals?)
-        next
-      end
-
-      if @report == 'housing' and !participant.needs_housing?
-        next
-      end
-
-      if @report == 'meals' and !participant.needs_meals?
-        next
-      end
-
-      if @report == 'only_housing' and (!participant.needs_housing? or participant.needs_meals?)
-        next
-      end
-
-      if @report == 'only_meals' and (participant.needs_housing? or !participant.needs_meals?)
-        next
-      end
-
-      if @report == 'no_housing' and participant.needs_housing?
-        next
-      end
-
-      if @report == 'no_meals' and participant.needs_meals?
-        next
-      end
-
-      if @report == 'neither' and (participant.needs_housing? or participant.needs_meals?)
-        next
-      end
-
-      column = 0
-      sheet1[pos,column] = participant.needs_housing? ? 'YES' : ''
-      sheet1[pos,column+=1] = participant.needs_meals? ? 'YES' : ''
-      sheet1[pos,column+=1] = participant.full_name_reversed
-      sheet1[pos,column+=1] = participant.group_leader_name
-      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''      
-      # housing
-      if !participant.building.nil? or !participant.room.blank?
-        assignment = ''
-        assignment += participant.building ? participant.building.name : ''
-        assignment += !participant.room.blank? ? ' - ' + participant.room : ''
-        sheet1[pos,column+=1] = assignment
-      else
-        sheet1[pos,column+=1] = ''
-      end
-
-      pos += 1
-    end
-
-    # column widths
-    sheet1.column(0).width = 10
-    sheet1.column(1).width = 10
-    sheet1.column(2).width = 25
-    sheet1.column(3).width = 25
-    sheet1.column(4).width = 25
-    sheet1.column(5).width = 30
-
-    book.write "#{RAILS_ROOT}/public/download/housing_meals_#{@report}.xls"
-
-    send_file "#{RAILS_ROOT}/public/download/housing_meals_#{@report}.xls", :filename => "housing_meals_#{@report}.xls"
   end
 end

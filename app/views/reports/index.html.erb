@@ -27,16 +27,10 @@
   <%= link_to 'Not Received', :controller => 'reports', :action => 'participants_liability', :params => {:not_received => 'true'} %>
   <br/>
   <%= link_to 'Special Needs', :controller => 'reports', :action => 'special_needs' %><br/>
-  Housing / Meals :
-  <%= link_to 'All', :controller => 'reports', :action => 'housing_meals'  %> :
-  <%= link_to 'Both', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'both'} %> :
-  <%= link_to 'Housing', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'housing'} %> :
-  <%= link_to 'Meals', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'meals'} %> :
-  <%= link_to 'Only Housing', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'only_housing'} %> :
-  <%= link_to 'Only Meals', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'only_meals'} %> :
-  <%= link_to 'No Housing', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'no_housing'} %> :
-  <%= link_to 'No Meals', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'no_meals'} %> :
-  <%= link_to 'Neither', :controller => 'reports', :action => 'housing_meals', :params => {:report => 'neither'} %>
+  Housing :
+  <%= link_to 'All', :controller => 'reports', :action => 'housing_all'  %> :
+  <%= link_to 'Pre Housing', :controller => 'reports', :action => 'housing_pre' %> :
+  <%= link_to 'Off Campus Guests', :controller => 'reports', :action => 'housing_offcampus' %>
   <h3>Group Leader Summary</h3>
   <% form_tag '/reports/group_leader_summary' do %>
     Select Group Leader:
