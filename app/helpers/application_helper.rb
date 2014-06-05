@@ -65,10 +65,6 @@ module ApplicationHelper
     team_complete = current_user.complete_team_registrations.size
     team_incomplete = current_user.incomplete_team_registrations.size
     team_total = current_user.team_registrations.size
-
-    participant_complete = current_user.complete_participant_registrations.size
-    participant_incomplete = current_user.incomplete_participant_registrations.size
-    participant_total = current_user.participant_registrations.size
     
     equipment_total = current_user.equipment_registrations.size
 
@@ -84,18 +80,6 @@ module ApplicationHelper
         info << "#{team_incomplete} incomplete.<br/>"
       end
       info << link_to("View my team registrations.", user_team_registrations_path(current_user))
-      info << "<br/><br/>"
-    end
-
-    if participant_total > 0
-      info << "Participant Registrations<br/>"
-      if participant_complete > 0
-        info << "#{participant_complete} complete.<br/>"
-      end
-      if participant_incomplete > 0
-        info << "#{participant_incomplete} incomplete.<br/>"
-      end
-      info << link_to("View my participant registrations.", user_participant_registrations_path(current_user))
       info << "<br/><br/>"
     end
     
