@@ -156,7 +156,8 @@ class ParticipantRegistration < ActiveRecord::Base
   named_scope :no_team, {
     :joins      => "LEFT JOIN participant_registrations_teams ON participant_registrations.id = participant_registrations_teams.participant_registration_id",
     :conditions => "participant_registrations_teams.participant_registration_id IS NULL and registration_type = 'Quizzer'",
-    :select     => "DISTINCT participant_registrations.*"
+    :select     => "DISTINCT participant_registrations.*",
+    :order      => "last_name asc"
   }
 
   # strip out extra characters in mobile phone
