@@ -458,9 +458,16 @@ class ReportsController < ApplicationController
       sheet1.row(0).set_format(1,group_leader_format)
 
       # write out group headers
-      sheet1[1,9] = 'Extra Housing'
-      sheet1[1,11] = 'Shuttles'
+      sheet1[1,4] = 'Teams'
+      for i in 4..6
+        sheet1.row(1).set_format(i,group_header_format)
+      end
+      sheet1[1,8] = 'Housing'
       for i in 8..12
+        sheet1.row(1).set_format(i,group_header_format)
+      end
+      sheet1[1,13] = 'Airline Information'
+      for i in 13..19
         sheet1.row(1).set_format(i,group_header_format)
       end
 
@@ -470,15 +477,22 @@ class ReportsController < ApplicationController
       sheet1[2,column+=1] = 'Role'
       sheet1[2,column+=1] = 'Gender'
       sheet1[2,column+=1] = 'Shirt Size'
-      sheet1[2,column+=1] = 'Housing'
-      sheet1[2,column+=1] = 'Ministry Project'
       sheet1[2,column+=1] = 'Team 1'
       sheet1[2,column+=1] = 'Team 2'
       sheet1[2,column+=1] = 'Team 3'
+      sheet1[2,column+=1] = 'Ministry Project'
+      sheet1[2,column+=1] = 'Housing'
       sheet1[2,column+=1] = 'Housing June 28th'
       sheet1[2,column+=1] = 'Housing June 29th'
-      sheet1[2,column+=1] = 'Arrival Shuttle'
-      sheet1[2,column+=1] = 'Departure Shuttle'
+      sheet1[2,column+=1] = 'Roommate Preference 1'
+      sheet1[2,column+=1] = 'Roommate Preference 2'
+      sheet1[2,column+=1] = 'Airline Arrival Date'
+      sheet1[2,column+=1] = 'Arrival Airline'
+      sheet1[2,column+=1] = 'Arrival Flight Number'
+      sheet1[2,column+=1] = 'Airline Departure Date'
+      sheet1[2,column+=1] = 'Departure Airline'
+      sheet1[2,column+=1] = 'Departure Flight Number'
+      sheet1[2,column+=1] = 'Airport Shuttle'
       sheet1[2,column+=1] = 'Medical Liability Received'
       sheet1[2,column+=1] = 'Amount Owed'
       sheet1.row(2).default_format = header_format
@@ -490,18 +504,6 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.formatted_registration_type
         sheet1[pos,column+=1] = participant.gender
         sheet1[pos,column+=1] = participant.shirt_size
-        sheet1[pos,column+=1] = participant.housing
-
-        # ministry project
-        if !participant.ministry_project.nil? or !participant.ministry_project_group.blank?
-          assignment = ''
-          assignment += participant.ministry_project ? participant.ministry_project.name : ''
-          assignment += !participant.ministry_project_group.blank? ? ' - ' + participant.ministry_project_group : ''
-          sheet1[pos,column+=1] = assignment
-        else
-          sheet1[pos,column+=1] = ''
-        end
-
         if participant.teams.size == 0
           sheet1[pos,column+=1] = ''
           sheet1[pos,column+=1] = ''
@@ -519,15 +521,39 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.teams[1].name
           sheet1[pos,column+=1] = participant.teams[2].name
         end
+
+        # ministry project
+        if !participant.ministry_project.nil? or !participant.ministry_project_group.blank?
+          assignment = ''
+          assignment += participant.ministry_project ? participant.ministry_project.name : ''
+          assignment += !participant.ministry_project_group.blank? ? ' - ' + participant.ministry_project_group : ''
+          sheet1[pos,column+=1] = assignment
+        else
+          sheet1[pos,column+=1] = ''
+        end
+        
+        # housing
+        sheet1[pos,column+=1] = participant.housing
         sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.need_arrival_shuttle? ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.need_departure_shuttle? ? 'YES' : ''
+        sheet1[pos,column+=1] = participant.roommate_preference_1
+        sheet1[pos,column+=1] = participant.roommate_preference_2
+        
+        # airline information
+        sheet1[pos,column+=1] = participant.airline_arrival_date
+        sheet1[pos,column+=1] = participant.arrival_airline
+        sheet1[pos,column+=1] = participant.arrival_flight_number
+        sheet1[pos,column+=1] = participant.airline_departure_date
+        sheet1[pos,column+=1] = participant.departure_airline
+        sheet1[pos,column+=1] = participant.departure_flight_number
+        sheet1[pos,column+=1] = participant.airport_transportation? ? 'YES' : ''
+        
+        # other stuff
         sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
         sheet1[pos,column+=1] = '$' + participant.amount_due.to_s
         
         # set format
-        for i in 1..19
+        for i in 1..21
           sheet1.row(pos).set_format(i,data_format)
         end
       
@@ -543,7 +569,19 @@ class ReportsController < ApplicationController
       sheet1.column(6).width = 30
       sheet1.column(7).width = 30
       sheet1.column(8).width = 30
-      sheet1.column(9).width = 20
+      sheet1.column(9).width = 10
+      sheet1.column(10).width = 10
+      sheet1.column(11).width = 30
+      sheet1.column(12).width = 30
+      sheet1.column(13).width = 20
+      sheet1.column(14).width = 20
+      sheet1.column(15).width = 20
+      sheet1.column(16).width = 20
+      sheet1.column(17).width = 20
+      sheet1.column(18).width = 20
+      sheet1.column(19).width = 10
+      sheet1.column(20).width = 10
+      sheet1.column(21).width = 10
 
       book.write "#{RAILS_ROOT}/public/download/group_leader_summary_#{file_name}.xls"
 
@@ -600,41 +638,47 @@ class ReportsController < ApplicationController
         sheet1[0,column+=1] = 'Group Leader: ' + group_leader_name
         sheet1.row(0).set_format(0,title_format)
         sheet1.row(0).set_format(1,group_leader_format)
-
+  
         # write out group headers
-        sheet1[1,9] = 'Extras'
-        sheet1[1,13] = 'Extra Housing'
-        sheet1[1,15] = 'Extra Meals'
-        sheet1[1,17] = 'Shuttles'
-        for i in 9..18
+        sheet1[1,4] = 'Teams'
+        for i in 4..6
           sheet1.row(1).set_format(i,group_header_format)
         end
-
+        sheet1[1,8] = 'Housing'
+        for i in 8..12
+          sheet1.row(1).set_format(i,group_header_format)
+        end
+        sheet1[1,13] = 'Airline Information'
+        for i in 13..19
+          sheet1.row(1).set_format(i,group_header_format)
+        end
+  
         # write out headers
         column = 0
         sheet1[2,column] = 'Name'
         sheet1[2,column+=1] = 'Role'
         sheet1[2,column+=1] = 'Gender'
         sheet1[2,column+=1] = 'Shirt Size'
-        sheet1[2,column+=1] = 'Housing'
-        sheet1[2,column+=1] = 'Ministry Project'
         sheet1[2,column+=1] = 'Team 1'
         sheet1[2,column+=1] = 'Team 2'
         sheet1[2,column+=1] = 'Team 3'
-        sheet1[2,column+=1] = 'Extra Shirt Sizes'
-        sheet1[2,column+=1] = 'Extra Pictures'
-        sheet1[2,column+=1] = 'DVDs'
-        sheet1[2,column+=1] = 'Splash Valley Tickets'
-        sheet1[2,column+=1] = 'July 1st'
-        sheet1[2,column+=1] = 'July 7th'
-        sheet1[2,column+=1] = 'Breakfast July 2nd'
-        sheet1[2,column+=1] = 'Lunch July 2nd'
-        sheet1[2,column+=1] = 'Arrival Shuttle'
-        sheet1[2,column+=1] = 'Departure Shuttle'
+        sheet1[2,column+=1] = 'Ministry Project'
+        sheet1[2,column+=1] = 'Housing'
+        sheet1[2,column+=1] = 'Housing June 28th'
+        sheet1[2,column+=1] = 'Housing June 29th'
+        sheet1[2,column+=1] = 'Roommate Preference 1'
+        sheet1[2,column+=1] = 'Roommate Preference 2'
+        sheet1[2,column+=1] = 'Airline Arrival Date'
+        sheet1[2,column+=1] = 'Arrival Airline'
+        sheet1[2,column+=1] = 'Arrival Flight Number'
+        sheet1[2,column+=1] = 'Airline Departure Date'
+        sheet1[2,column+=1] = 'Departure Airline'
+        sheet1[2,column+=1] = 'Departure Flight Number'
+        sheet1[2,column+=1] = 'Airport Shuttle'
         sheet1[2,column+=1] = 'Medical Liability Received'
         sheet1[2,column+=1] = 'Amount Owed'
         sheet1.row(2).default_format = header_format
-
+  
         pos = 3
         participants.each do |participant|
           column = 0
@@ -642,8 +686,24 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.formatted_registration_type
           sheet1[pos,column+=1] = participant.gender
           sheet1[pos,column+=1] = participant.shirt_size
-          sheet1[pos,column+=1] = participant.housing
-
+          if participant.teams.size == 0
+            sheet1[pos,column+=1] = ''
+            sheet1[pos,column+=1] = ''
+            sheet1[pos,column+=1] = ''
+          elsif participant.teams.size == 1
+            sheet1[pos,column+=1] = participant.teams[0].name
+            sheet1[pos,column+=1] = ''
+            sheet1[pos,column+=1] = ''
+          elsif participant.teams.size == 2
+            sheet1[pos,column+=1] = participant.teams[0].name
+            sheet1[pos,column+=1] = participant.teams[1].name
+            sheet1[pos,column+=1] = ''
+          elsif participant.teams.size == 3
+            sheet1[pos,column+=1] = participant.teams[0].name
+            sheet1[pos,column+=1] = participant.teams[1].name
+            sheet1[pos,column+=1] = participant.teams[2].name
+          end
+  
           # ministry project
           if !participant.ministry_project.nil? or !participant.ministry_project_group.blank?
             assignment = ''
@@ -653,31 +713,35 @@ class ReportsController < ApplicationController
           else
             sheet1[pos,column+=1] = ''
           end
-
-          sheet1[pos,column+=1] = !participant.team1.nil? ? participant.team1.name : ''
-          sheet1[pos,column+=1] = !participant.team2.nil? ? participant.team2.name : ''
-          sheet1[pos,column+=1] = !participant.team3.nil? ? participant.team3.name : ''
-          sheet1[pos,column+=1] = participant.extra_shirts
-          sheet1[pos,column+=1] = participant.count_bought_extra('num_extra_group_photos') > 0 ? participant.count_bought_extra('num_extra_group_photos') : ''
-          sheet1[pos,column+=1] = participant.count_bought_extra('num_dvd') > 0 ? participant.count_bought_extra('num_dvd') : ''
-          sheet1[pos,column+=1] = participant.count_bought_extra('num_sv_tickets') > 0 ? participant.count_bought_extra('num_sv_tickets') : ''
-          sheet1[pos,column+=1] = participant.bought_extra?('housing_sunday') ? 'YES' : ''
-          sheet1[pos,column+=1] = participant.bought_extra?('housing_saturday') ? 'YES' : ''
-          sheet1[pos,column+=1] = participant.bought_extra?('breakfast_monday') ? 'YES' : ''
-          sheet1[pos,column+=1] = participant.bought_extra?('lunch_monday') ? 'YES' : ''
-          sheet1[pos,column+=1] = participant.bought_extra?('need_arrival_shuttle') ? 'YES' : ''
-          sheet1[pos,column+=1] = participant.bought_extra?('need_departure_shuttle') ? 'YES' : ''
+          
+          # housing
+          sheet1[pos,column+=1] = participant.housing
+          sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
+          sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
+          sheet1[pos,column+=1] = participant.roommate_preference_1
+          sheet1[pos,column+=1] = participant.roommate_preference_2
+          
+          # airline information
+          sheet1[pos,column+=1] = participant.airline_arrival_date
+          sheet1[pos,column+=1] = participant.arrival_airline
+          sheet1[pos,column+=1] = participant.arrival_flight_number
+          sheet1[pos,column+=1] = participant.airline_departure_date
+          sheet1[pos,column+=1] = participant.departure_airline
+          sheet1[pos,column+=1] = participant.departure_flight_number
+          sheet1[pos,column+=1] = participant.airport_transportation? ? 'YES' : ''
+          
+          # other stuff
           sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
-          sheet1[pos,column+=1] = participant.total_amount_due > 0 ? '$' + participant.total_amount_due.to_s : ''
+          sheet1[pos,column+=1] = '$' + participant.amount_due.to_s
           
           # set format
-          for i in 1..19
+          for i in 1..21
             sheet1.row(pos).set_format(i,data_format)
           end
         
           pos += 1
         end
-
+  
         sheet1.column(0).width = 30
         sheet1.column(1).width = 12
         sheet1.column(2).width = 12
@@ -687,7 +751,19 @@ class ReportsController < ApplicationController
         sheet1.column(6).width = 30
         sheet1.column(7).width = 30
         sheet1.column(8).width = 30
-        sheet1.column(9).width = 20
+        sheet1.column(9).width = 10
+        sheet1.column(10).width = 10
+        sheet1.column(11).width = 30
+        sheet1.column(12).width = 30
+        sheet1.column(13).width = 20
+        sheet1.column(14).width = 20
+        sheet1.column(15).width = 20
+        sheet1.column(16).width = 20
+        sheet1.column(17).width = 20
+        sheet1.column(18).width = 20
+        sheet1.column(19).width = 10
+        sheet1.column(20).width = 10
+        sheet1.column(21).width = 10
 
         sheet1.name = group_leader_name
       end

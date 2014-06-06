@@ -37,8 +37,8 @@ class ImportsController < ApplicationController
       airline_name = row[27]
       arrival_date_and_time = row[26]
       special_needs = row[21]
-      flight_arrival_date_and_time = row[28]
-      arrival_flight_number = row[29]
+      flight_arrival_date_and_time = row[29]
+      arrival_flight_number = row[28]
       departure_flight_number = row[36]
       flight_departure_date_and_time = row[37]
       grade_completed = row[23]
@@ -65,6 +65,11 @@ class ImportsController < ApplicationController
       sunday_early_housing = row[48]
       liability_form_received = row[54]
       
+      # departure airline (sigh cvent sigh)
+      for i in 29..34
+        departure_airline_name = row[i] if !row[i].nil?
+      end
+      
       # skip empty rows
       if full_name.nil?
         next
@@ -89,6 +94,7 @@ class ImportsController < ApplicationController
       pr.confirmation_number = confirmation_number
       #pr.age = age
       pr.arrival_airline = airline_name
+      pr.departure_airline = departure_airline_name
       pr.driving_arrival_date = arrival_date_and_time
       pr.special_needs = special_needs
       pr.airline_arrival_date = flight_arrival_date_and_time
@@ -105,6 +111,7 @@ class ImportsController < ApplicationController
       pr.roommate_preference_2 = roommate_preference_2
       pr.shirt_size = shirt_size
       pr.local_church = local_church
+      pr.airport_transportation = round_trip_airport_transportation
       pr.num_local_teams = num_local_teams
       pr.num_district_teams = num_district_teams
       district = District.find_by_name(district_name)
