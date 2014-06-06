@@ -90,7 +90,6 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Zipcode'
     sheet1[0,column+=1] = 'Gender'
     sheet1[0,column+=1] = 'Age / Most Recent Grade'
-    sheet1[0,column+=1] = 'Home Phone'
     sheet1[0,column+=1] = 'Mobile Phone'
     sheet1[0,column+=1] = 'Group Leader'
     sheet1[0,column+=1] = 'Local Church'
@@ -106,28 +105,17 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Ministry Project'
     sheet1[0,column+=1] = 'Special Needs?'
     sheet1[0,column+=1] = 'Special Needs Details'
-    sheet1[0,column+=1] = 'Needs Housing'
-    sheet1[0,column+=1] = 'Needs Meals'
-    sheet1[0,column+=1] = 'Guardian'
-    sheet1[0,column+=1] = 'Exhibitor School'
-    sheet1[0,column+=1] = 'Exhibitor School Fax'
     sheet1[0,column+=1] = 'Travel Type'
     sheet1[0,column+=1] = 'Arrival Date'
-    sheet1[0,column+=1] = 'Arrival Time'
     sheet1[0,column+=1] = 'Arrival Airline'
     sheet1[0,column+=1] = 'Arrival Airline Flight Number'
-    sheet1[0,column+=1] = 'Arriving From'
-    sheet1[0,column+=1] = 'Arrival Shuttle'
     sheet1[0,column+=1] = 'Departure Date'
-    sheet1[0,column+=1] = 'Departure Time'
     sheet1[0,column+=1] = 'Departure Airline'
     sheet1[0,column+=1] = 'Departure Airline Flight Number'
-    sheet1[0,column+=1] = 'Departure Shuttle'
-    sheet1[0,column+=1] = 'Housing Sunday'
-    sheet1[0,column+=1] = 'Housing Saturday'
+    sheet1[0,column+=1] = 'Airport Shuttle'
+    sheet1[0,column+=1] = 'Housing June 28th'
+    sheet1[0,column+=1] = 'Housing June29th'
     sheet1[0,column+=1] = 'Medical / Liability?'
-    sheet1[0,column+=1] = 'Background Check?'
-    sheet1[0,column+=1] = 'NazSafe?'
     sheet1[0,column+=1] = 'Amount Ordered'
     sheet1[0,column+=1] = 'Amount Paid'
     sheet1[0,column+=1] = 'Amount Due'
@@ -149,7 +137,6 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant_registration.zipcode
       sheet1[pos,column+=1] = participant_registration.gender
       sheet1[pos,column+=1] = participant_registration.most_recent_grade
-      sheet1[pos,column+=1] = participant_registration.home_phone
       sheet1[pos,column+=1] = participant_registration.mobile_phone
       sheet1[pos,column+=1] = participant_registration.group_leader_name
       sheet1[pos,column+=1] = participant_registration.local_church
@@ -168,24 +155,22 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant_registration.roommate_preference_2
 
       # teams
-      team1 = Team.find(participant_registration.team1_id) unless participant_registration.team1_id.blank?
-      team2 = Team.find(participant_registration.team2_id) unless participant_registration.team2_id.blank?
-      team3 = Team.find(participant_registration.team3_id) unless participant_registration.team3_id.blank?
-
-      if !team1.nil?
-        sheet1[pos,column+=1] = team1.name_with_division
-      else
+      if participant_registration.teams.size == 0
         sheet1[pos,column+=1] = ''
-      end
-      if !team2.nil?
-        sheet1[pos,column+=1] = team2.name_with_division
-      else
         sheet1[pos,column+=1] = ''
-      end
-      if !team3.nil?
-        sheet1[pos,column+=1] = team3.name_with_division
-      else
         sheet1[pos,column+=1] = ''
+      elsif participant_registration.teams.size == 1
+        sheet1[pos,column+=1] = participant_registration.teams[0].name_with_division
+        sheet1[pos,column+=1] = ''
+        sheet1[pos,column+=1] = ''
+      elsif participant_registration.teams.size == 2
+        sheet1[pos,column+=1] = participant_registration.teams[0].name_with_division
+        sheet1[pos,column+=1] = participant_registration.teams[1].name_with_division
+        sheet1[pos,column+=1] = ''
+      elsif participant_registration.teams.size == 3
+        sheet1[pos,column+=1] = participant_registration.teams[0].name_with_division
+        sheet1[pos,column+=1] = participant_registration.teams[1].name_with_division
+        sheet1[pos,column+=1] = participant_registration.teams[2].name_with_division
       end
 
       # housing
@@ -211,47 +196,13 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = !participant_registration.special_needs.nil? ? participant_registration.special_needs.upcase : '' 
       sheet1[pos,column+=1] = participant_registration.special_needs_details
 
-      # needs housing?
-      if participant_registration.exhibitor? and participant_registration.exhibitor_housing == 'on_campus'
-        sheet1[pos,column+=1] = 'YES'
-      elsif !participant_registration.exhibitor? and participant_registration.participant_housing == 'meals_and_housing'
-        sheet1[pos,column+=1] = 'YES'
-      else
-        sheet1[pos,column+=1] = 'NO'
-      end
-
-      # needs meals?
-      if participant_registration.exhibitor? and participant_registration.exhibitor_housing == 'on_campus'
-        sheet1[pos,column+=1] = 'YES'
-      elsif participant_registration.exhibitor? and participant_registration.exhibitor_housing == 'off_campus_with_meals'
-        sheet1[pos,column+=1] = 'YES'
-      elsif !participant_registration.exhibitor? and participant_registration.participant_housing == 'meals_and_housing'
-        sheet1[pos,column+=1] = 'YES'
-      elsif !participant_registration.exhibitor? and participant_registration.participant_housing == 'meals_only'
-        sheet1[pos,column+=1] = 'YES'
-      else
-        sheet1[pos,column+=1] = 'NO'
-      end
-
-      sheet1[pos,column+=1] = participant_registration.guardian
-
-      # school name (if it exists)
-      if !participant_registration.school.nil?
-        sheet1[pos,column+=1] = participant_registration.school.name
-      else
-        sheet1[pos,column+=1] = ''
-      end
-
-      sheet1[pos,column+=1] = participant_registration.school_fax
       sheet1[pos,column+=1] = participant_registration.travel_type
 
       # arrival date
-      if participant_registration.travel_type == 'driving'
+      if participant_registration.travel_type == 'I am driving to the event.'
         sheet1[pos,column+=1] = participant_registration.driving_arrival_date
-        sheet1[pos,column+=1] = participant_registration.driving_arrival_time
-      elsif participant_registration.travel_type == 'flying'
+      elsif participant_registration.travel_type == 'I am flying to the event.'
         sheet1[pos,column+=1] = participant_registration.airline_arrival_date
-        sheet1[pos,column+=1] = participant_registration.airline_arrival_time
       else
         sheet1[pos,column+=1] = ''
         sheet1[pos,column+=1] = ''
@@ -259,23 +210,13 @@ class ReportsController < ApplicationController
 
       sheet1[pos,column+=1] = participant_registration.arrival_airline
       sheet1[pos,column+=1] = participant_registration.arrival_flight_number
-      sheet1[pos,column+=1] = participant_registration.airline_arrival_from
-      sheet1[pos,column+=1] = participant_registration.arrival_shuttle_amount ? participant_registration.arrival_shuttle_amount : ''
       sheet1[pos,column+=1] = participant_registration.airline_departure_date
-      sheet1[pos,column+=1] = participant_registration.airline_departure_time
       sheet1[pos,column+=1] = participant_registration.departure_airline
       sheet1[pos,column+=1] = participant_registration.departure_flight_number
-      sheet1[pos,column+=1] = participant_registration.departure_shuttle_amount ? participant_registration.departure_shuttle_amount : ''
-      sheet1[pos,column+=1] = participant_registration.housing_sunday_amount ? participant_registration.housing_sunday_amount : ''
-      sheet1[pos,column+=1] = participant_registration.housing_saturday_amount ? participant_registration.housing_saturday_amount : ''
+      sheet1[pos,column+=1] = participant_registration.airport_transportation? ? 'YES' : ''
+      sheet1[pos,column+=1] = participant_registration.housing_saturday? ? 'YES' : ''
+      sheet1[pos,column+=1] = participant_registration.housing_sunday? ? 'YES' : ''
       sheet1[pos,column+=1] = participant_registration.medical_liability? ? 'YES' : 'NO'
-      if participant_registration.needs_background_check?
-        sheet1[pos,column+=1] = participant_registration.background_check? ? 'YES' : 'NO'
-        sheet1[pos,column+=1] = participant_registration.nazsafe? ? 'YES' : 'NO'
-      else
-        sheet1[pos,column+=1] = ''
-        sheet1[pos,column+=1] = ''
-      end
       sheet1[pos,column+=1] = participant_registration.amount_ordered
       sheet1[pos,column+=1] = participant_registration.amount_paid
       sheet1[pos,column+=1] = participant_registration.amount_due
