@@ -90,7 +90,7 @@ module ApplicationHelper
       info << "<br/><br/>"
     end
     
-    if team_total == 0 and participant_total == 0 and equipment_total == 0
+    if team_total == 0 and equipment_total == 0
       info << "You do not have any registrations."
     end
     info << "<p>"
