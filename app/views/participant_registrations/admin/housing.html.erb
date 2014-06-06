@@ -31,14 +31,14 @@
         <%= select_tag :filter_type,
                        (session[:registration_type].blank? ? '<option>- Select -</option>' : '') +
                         options_for_select({
-                          'Quizzer' => 'quizzer',
-                          'Coach' => 'coach',
-                          'Official' => 'official',
-                          'Volunteer' => 'volunteer',
-                          'Family' => 'family',
-                          'Guest' => 'guest',
-                          'Core Staff' => 'core_staff',
-                          'Exhibitor' => 'exhibitor'},
+                          'Children under 3 years old' => 'Children under 3 years old',
+                          'Coach' => 'Coach',
+                          'Event Staff' => 'Event Staff',
+                          'Guest (Lodging on-campus)' => 'Guest (Lodging on-campus)',
+                          'Intern' => 'Intern',
+                          'Official' => 'Official',
+                          'Quizzer' => 'Quizzer',
+                          'Volunteer' => 'Volunteer'}.sort.map,
                           session[:registration_type]),
                         :onchange => "document.location='/participant_registrations/filter_housing/?registration_type=' + this.value;" %>
         <% unless session[:registration_type].blank? %>

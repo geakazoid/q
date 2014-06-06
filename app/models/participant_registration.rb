@@ -117,6 +117,10 @@ class ParticipantRegistration < ActiveRecord::Base
   named_scope :ordered_by_last_name, {
     :order => 'last_name asc'
   }
+  
+  named_scope :needs_housing, {
+    :conditions => "registration_type != 'Guest (Lodging off-campus)'"
+  }
 
   named_scope :ordered_by_building_room_last_name, {
     :select => "participant_registrations.*, building_id is null as buildingisnull, room is null as roomisnull",
