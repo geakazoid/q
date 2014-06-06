@@ -450,17 +450,17 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = ''
           sheet1[pos,column+=1] = ''
         elsif participant.teams.size == 1
-          sheet1[pos,column+=1] = participant.teams[0].name
+          sheet1[pos,column+=1] = participant.teams[0].name_with_division
           sheet1[pos,column+=1] = ''
           sheet1[pos,column+=1] = ''
         elsif participant.teams.size == 2
-          sheet1[pos,column+=1] = participant.teams[0].name
-          sheet1[pos,column+=1] = participant.teams[1].name
+          sheet1[pos,column+=1] = participant.teams[0].name_with_division
+          sheet1[pos,column+=1] = participant.teams[1].name_with_division
           sheet1[pos,column+=1] = ''
         elsif participant.teams.size == 3
-          sheet1[pos,column+=1] = participant.teams[0].name
-          sheet1[pos,column+=1] = participant.teams[1].name
-          sheet1[pos,column+=1] = participant.teams[2].name
+          sheet1[pos,column+=1] = participant.teams[0].name_with_division
+          sheet1[pos,column+=1] = participant.teams[1].name_with_division
+          sheet1[pos,column+=1] = participant.teams[2].name_with_division
         end
 
         # ministry project
@@ -632,17 +632,17 @@ class ReportsController < ApplicationController
             sheet1[pos,column+=1] = ''
             sheet1[pos,column+=1] = ''
           elsif participant.teams.size == 1
-            sheet1[pos,column+=1] = participant.teams[0].name
+            sheet1[pos,column+=1] = participant.teams[0].name_with_division
             sheet1[pos,column+=1] = ''
             sheet1[pos,column+=1] = ''
           elsif participant.teams.size == 2
-            sheet1[pos,column+=1] = participant.teams[0].name
-            sheet1[pos,column+=1] = participant.teams[1].name
+            sheet1[pos,column+=1] = participant.teams[0].name_with_division
+            sheet1[pos,column+=1] = participant.teams[1].name_with_division
             sheet1[pos,column+=1] = ''
           elsif participant.teams.size == 3
-            sheet1[pos,column+=1] = participant.teams[0].name
-            sheet1[pos,column+=1] = participant.teams[1].name
-            sheet1[pos,column+=1] = participant.teams[2].name
+            sheet1[pos,column+=1] = participant.teams[0].name_with_division
+            sheet1[pos,column+=1] = participant.teams[1].name_with_division
+            sheet1[pos,column+=1] = participant.teams[2].name_with_division
           end
   
           # ministry project
