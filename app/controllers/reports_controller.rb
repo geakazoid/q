@@ -10,6 +10,7 @@ class ReportsController < ApplicationController
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])
     @group_leaders.push(['Volunteer', -6])
+    @group_leaders.push(['Representative', -7])
     @group_leaders.push(['Group Leader Not Listed', -1])
     @group_leaders.push(['Group Leader Not Known', -2])
     @group_leaders.push(['No Group Leader', -3])
@@ -377,6 +378,10 @@ class ReportsController < ApplicationController
         group_leader_name = 'Volunteer'
         file_name = 'volunteer'
         participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-6)
+      elsif (params['group_leader'] == '-7')
+        group_leader_name = 'Representative'
+        file_name = 'representative'
+        participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-7)
       else
         group_leader = User.find(params['group_leader'])
         group_leader_name = group_leader.fullname
@@ -538,6 +543,7 @@ class ReportsController < ApplicationController
       group_leaders.push(-4)
       group_leaders.push(-5)
       group_leaders.push(-6)
+      group_leaders.push(-7)
 
       group_leaders.each do |leader|
         sheet1 = book.create_worksheet
@@ -560,6 +566,9 @@ class ReportsController < ApplicationController
         elsif (leader == -6)
           group_leader_name = 'Volunteer'
           participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-6)
+        elsif (leader == -7)
+          group_leader_name = 'Representative'
+          participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-7)
         else
           user = User.find(leader)
           group_leader_name = user.fullname
@@ -1103,6 +1112,8 @@ class ReportsController < ApplicationController
           group_leader_name = 'Official'
         elsif (participant.group_leader == '-6')
           group_leader_name = 'Volunteer'
+        elsif (participant.group_leader == '-7')
+          group_leader_name = 'Representative'
         else
           if !participant.group_leader.nil? and !participant.group_leader.empty?
             user = User.find(participant.group_leader)
@@ -1184,6 +1195,8 @@ class ReportsController < ApplicationController
             group_leader_name = 'Official'
           elsif (participant.group_leader == '-6')
             group_leader_name = 'Volunteer'
+          elsif (participant.group_leader == '-7')
+            group_leader_name = 'Representative'
           else
             if !participant.group_leader.nil? and !participant.group_leader.empty?
               user = User.find(participant.group_leader)
@@ -1247,6 +1260,10 @@ class ReportsController < ApplicationController
         group_leader_name = 'Volunteer'
         file_name = 'volunteer'
         participants = ParticipantRegistration.by_group_leader(-6).ordered_by_building_room_last_name
+      elsif (params['group_leader'] == '-7')
+        group_leader_name = 'Representative'
+        file_name = 'representative'
+        participants = ParticipantRegistration.by_group_leader(-7).ordered_by_building_room_last_name
       else
         group_leader = User.find(params['group_leader'])
         group_leader_name = group_leader.fullname
@@ -1315,6 +1332,7 @@ class ReportsController < ApplicationController
       group_leaders.push(-4)
       group_leaders.push(-5)
       group_leaders.push(-6)
+      group_leaders.push(-7)
 
       group_leaders.each do |leader|
         sheet1 = book.create_worksheet
@@ -1337,6 +1355,9 @@ class ReportsController < ApplicationController
         elsif (leader == -6)
           group_leader_name = 'Volunteer'
           participants = ParticipantRegistration.by_group_leader(-6).ordered_by_building_room_last_name
+        elsif (leader == -7)
+          group_leader_name = 'Representative'
+          participants = ParticipantRegistration.by_group_leader(-7).ordered_by_building_room_last_name
         else
           user = User.find(leader)
           group_leader_name = user.fullname
@@ -1456,6 +1477,8 @@ class ReportsController < ApplicationController
           group_leader_name = 'Official'
         elsif (participant.group_leader == '-6')
           group_leader_name = 'Volunteer'
+        elsif (participant.group_leader == '-7')
+          group_leader_name = 'Representative'
         else
           if !participant.group_leader.nil? and !participant.group_leader.empty?
             user = User.find(participant.group_leader)
@@ -1530,6 +1553,8 @@ class ReportsController < ApplicationController
             group_leader_name = 'Official'
           elsif (participant.group_leader == '-6')
             group_leader_name = 'Volunteer'
+          elsif (participant.group_leader == '-7')
+            group_leader_name = 'Representative'
           else
             if !participant.group_leader.nil? and !participant.group_leader.empty?
               user = User.find(participant.group_leader)
@@ -1610,6 +1635,8 @@ class ReportsController < ApplicationController
         group_leader_name = 'Official'
       elsif (participant.group_leader == '-6')
         group_leader_name = 'Volunteer'
+      elsif (participant.group_leader == '-7')
+        group_leader_name = 'Representative'
       else
         if !participant.group_leader.nil? and !participant.group_leader.empty?
           user = User.find(participant.group_leader)
@@ -1680,6 +1707,8 @@ class ReportsController < ApplicationController
         group_leader_name = 'Official'
       elsif (participant.group_leader == '-6')
         group_leader_name = 'Volunteer'
+      elsif (participant.group_leader == '-7')
+        group_leader_name = 'Representative'
       else
         if !participant.group_leader.nil? and !participant.group_leader.empty?
           user = User.find(participant.group_leader)

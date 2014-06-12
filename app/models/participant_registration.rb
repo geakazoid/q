@@ -597,6 +597,8 @@ class ParticipantRegistration < ActiveRecord::Base
       leader = 'Official'
     elsif self.group_leader.to_i == -6
       leader = 'Volunteer'
+    elsif self.group_leader.to_i == -7
+      leader = 'Representative'
     else
       unless self.group_leader.blank?
         user = User.find(self.group_leader.to_i)
