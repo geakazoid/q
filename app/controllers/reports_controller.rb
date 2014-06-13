@@ -443,7 +443,7 @@ class ReportsController < ApplicationController
       sheet1[2,column+=1] = 'Medical Liability Received'
       sheet1[2,column+=1] = 'Amount Owed'
       sheet1.row(2).default_format = header_format
-
+      
       pos = 3
       participants.each do |participant|
         column = 0
@@ -640,7 +640,21 @@ class ReportsController < ApplicationController
         sheet1[2,column+=1] = 'Medical Liability Received'
         sheet1[2,column+=1] = 'Amount Owed'
         sheet1.row(2).default_format = header_format
-  
+
+        # keep track of t-shirt numbers
+        youth_small = 0
+        youth_medium = 0
+        youth_large = 0
+        small = 0
+        medium = 0
+        large = 0
+        x_large = 0
+        xx_large = 0
+        xxx_large = 0
+        xxxx_large = 0
+        xxxxx_large = 0
+        undefined_size = 0
+      
         pos = 3
         participants.each do |participant|
           column = 0
@@ -710,7 +724,35 @@ class ReportsController < ApplicationController
           
           # update highlight of money owed (if needed)
           sheet1.row(pos).set_format(column_highlight,money_owed_format) if change_highlight
-        
+
+          # tabulate shirt size
+          case participant.shirt_size
+          when 'Youth Small'
+            youth_small += 1
+          when 'Youth Medium'
+            youth_medium += 1
+          when 'Youth Large'
+            youth_large += 1
+          when 'Small'
+            small += 1
+          when 'Medium'
+            medium += 1
+          when 'Large'
+            large += 1
+          when 'X-Large'
+            x_large += 1
+          when '2X-Large'
+            xx_large += 1
+          when '3X-Large'
+            xxx_large += 1
+          when '4X-Large'
+            xxxx_large += 1
+          when '5X-Large'
+            xxxxx_large += 1
+          else
+            undefined_size += 1
+          end
+          
           pos += 1
         end
   
@@ -737,6 +779,38 @@ class ReportsController < ApplicationController
         sheet1.column(20).width = 10
         sheet1.column(21).width = 10
 
+        # output shirt size counts
+        pos += 2
+        sheet1[pos,1] = "Youth Small"
+        sheet1[pos,2] = youth_small
+        sheet1[pos,3] = "X-Large"
+        sheet1[pos,4] = x_large
+        pos += 1
+        sheet1[pos,1] = "Youth Medium"
+        sheet1[pos,2] = youth_medium
+        sheet1[pos,3] = "2X-Large"
+        sheet1[pos,4] = xx_large
+        pos += 1
+        sheet1[pos,1] = "Youth Large"
+        sheet1[pos,2] = youth_large
+        sheet1[pos,3] = "3X-Large"
+        sheet1[pos,4] = xxx_large
+        pos += 1
+        sheet1[pos,1] = "Small"
+        sheet1[pos,2] = small
+        sheet1[pos,3] = "4X-Large"
+        sheet1[pos,4] = xxxx_large
+        pos += 1
+        sheet1[pos,1] = "Medium"
+        sheet1[pos,2] = medium
+        sheet1[pos,3] = "5X-Large"
+        sheet1[pos,4] = xxxxx_large
+        pos += 1
+        sheet1[pos,1] = "Large"
+        sheet1[pos,2] = large
+        sheet1[pos,3] = "Undefined"
+        sheet1[pos,4] = undefined_size
+        
         sheet1.name = group_leader_name
       end
 
