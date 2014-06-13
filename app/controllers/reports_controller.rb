@@ -395,6 +395,7 @@ class ReportsController < ApplicationController
       group_header_format = Spreadsheet::Format.new :weight => :bold, :align => :merge, :size => 9
       header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify, :size => 9
       data_format = Spreadsheet::Format.new :size => 9
+      money_owed_format = Spreadsheet::Format.new :pattern_fg_color => :yellow, :pattern => 1, :size => 9
 
       # write out title
       column = 0
@@ -498,10 +499,20 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
         sheet1[pos,column+=1] = '$' + participant.amount_due.to_s
         
-        # set format
-        for i in 1..21
-          sheet1.row(pos).set_format(i,data_format)
-        end
+        # should we highlight the amount due field?
+        change_highlight = false
+          if participant.amount_due > 0
+            change_highlight = true
+            column_highlight = column
+          end
+          
+          # set format
+          for i in 1..21
+            sheet1.row(pos).set_format(i,data_format)
+          end
+          
+          # update highlight of money owed (if needed)
+          sheet1.row(pos).set_format(column_highlight,money_owed_format) if change_highlight
       
         pos += 1
       end
@@ -581,6 +592,7 @@ class ReportsController < ApplicationController
         group_header_format = Spreadsheet::Format.new :weight => :bold, :align => :merge, :size => 9
         header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify, :size => 9
         data_format = Spreadsheet::Format.new :size => 9
+        money_owed_format = Spreadsheet::Format.new :pattern_fg_color => :yellow, :pattern => 1, :size => 9
 
         # write out title
         column = 0
@@ -684,10 +696,20 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
           sheet1[pos,column+=1] = '$' + participant.amount_due.to_s
           
+          # should we highlight the amount due field?
+          change_highlight = false
+          if participant.amount_due > 0
+            change_highlight = true
+            column_highlight = column
+          end
+          
           # set format
           for i in 1..21
             sheet1.row(pos).set_format(i,data_format)
           end
+          
+          # update highlight of money owed (if needed)
+          sheet1.row(pos).set_format(column_highlight,money_owed_format) if change_highlight
         
           pos += 1
         end
