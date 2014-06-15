@@ -1218,8 +1218,8 @@ class ReportsController < ApplicationController
         end
         sheet1[pos,column+=1] = group_leader_name
 
-        sheet1[pos,column+=1] = participant.bought_extra?('housing_saturday') ? 'Yes' : ''
-        sheet1[pos,column+=1] = participant.bought_extra?('housing_sunday') ? 'Yes' : ''
+        sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
+      sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
 
         pos += 1
       end
@@ -1262,8 +1262,8 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Region'
         sheet1[1,column+=1] = 'Group Leader'
-        sheet1[1,column+=1] = 'July 1st'
-        sheet1[1,column+=1] = 'July 7th'
+        sheet1[1,column+=1] = 'June 28th'
+        sheet1[1,column+=1] = 'June 29th'
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1301,8 +1301,8 @@ class ReportsController < ApplicationController
           end
           sheet1[pos,column+=1] = group_leader_name
 
-          sheet1[pos,column+=1] = participant.bought_extra?('housing_sunday') ? 'Yes' : ''
-          sheet1[pos,column+=1] = participant.bought_extra?('housing_saturday') ? 'Yes' : ''
+          sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
+          sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
 
           pos += 1
         end
@@ -1402,8 +1402,8 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.most_recent_grade
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
-        sheet1[pos,column+=1] = participant.bought_extra?('housing_saturday') ? 'Yes' : ''
-        sheet1[pos,column+=1] = participant.bought_extra?('housing_sunday') ? 'Yes' : ''
+        sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
+        sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
 
         pos += 1
       end
@@ -1495,8 +1495,8 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.most_recent_grade
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
-          sheet1[pos,column+=1] = participant.bought_extra?('housing_saturday') ? 'Yes' : ''
-          sheet1[pos,column+=1] = participant.bought_extra?('housing_sunday') ? 'Yes' : ''
+          sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
+          sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
 
           pos += 1
         end
