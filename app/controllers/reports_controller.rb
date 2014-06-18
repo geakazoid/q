@@ -2042,4 +2042,97 @@ class ReportsController < ApplicationController
 
     send_file "#{RAILS_ROOT}/public/download/event_staff.xls", :filename => "event_staff.xls"
   end
+  
+  # create a downloadable excel of participants who requested a shuttle, but don't have flight info
+  def shuttle_no_flight_info
+    self.shuttle ParticipantRegistration.needs_shuttle.no_flight_info, 'no_flight'
+  end
+  
+  # create a downloadable excel of participants who requested a shuttle
+  def shuttle_all
+    self.shuttle ParticipantRegistration.needs_shuttle
+  end
+  
+  # create a downloadable excel of participants who requested a shuttle
+  def shuttle(participants=ParticipantRegistration.all,filename='all')
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+
+    # formatting
+    header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify
+
+    # write out headers
+    column = 0
+    sheet1[0,column] = 'Name'
+    sheet1[0,column+=1] = 'Role'
+    sheet1[0,column+=1] = 'Home Phone'
+    sheet1[0,column+=1] = 'Mobile Phone'
+    sheet1[0,column+=1] = 'Email'
+    sheet1[0,column+=1] = 'District'
+    sheet1[0,column+=1] = 'Region'
+    sheet1[0,column+=1] = 'Group Leader'
+    sheet1[0,column+=1] = 'Airline Arrival Date'
+    sheet1[0,column+=1] = 'Arrival Airline'
+    sheet1[0,column+=1] = 'Arrival Flight Number'
+    sheet1[0,column+=1] = 'Airline Departure Date'
+    sheet1[0,column+=1] = 'Departure Airline'
+    sheet1[0,column+=1] = 'Departure Flight Number'
+    sheet1[0,column+=1] = 'Airport Shuttle'
+    sheet1.row(0).default_format = header_format
+                         
+    pos = 1
+    participants.each do |participant|
+      column = 0
+      sheet1[pos,column] = participant.full_name_reversed
+      sheet1[pos,column+=1] = participant.formatted_registration_type
+      sheet1[pos,column+=1] = participant.home_phone
+      sheet1[pos,column+=1] = participant.mobile_phone
+      sheet1[pos,column+=1] = participant.email
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
+      
+      # group leader
+      group_leader_name = ''
+      if (participant.group_leader == '-1')
+        group_leader_name = 'Group Leader Not Listed'
+      elsif (participant.group_leader == '-2')
+        group_leader_name = 'Group Leader Not Known'
+      elsif (participant.group_leader == '-3')
+        group_leader_name = 'No Group Leader'
+      elsif (participant.group_leader == '-4')
+        group_leader_name = 'Staff'
+      elsif (participant.group_leader == '-5')
+        group_leader_name = 'Official'
+      elsif (participant.group_leader == '-6')
+        group_leader_name = 'Volunteer'
+      elsif (participant.group_leader == '-7')
+        group_leader_name = 'Representative'
+      else
+        if !participant.group_leader.nil? and !participant.group_leader.empty?
+          user = User.find(participant.group_leader)
+          group_leader_name = user.fullname
+        end
+      end
+      sheet1[pos,column+=1] = group_leader_name
+
+      # airline information
+      sheet1[pos,column+=1] = participant.airline_arrival_date
+      sheet1[pos,column+=1] = participant.arrival_airline
+      sheet1[pos,column+=1] = participant.arrival_flight_number
+      sheet1[pos,column+=1] = participant.airline_departure_date
+      sheet1[pos,column+=1] = participant.departure_airline
+      sheet1[pos,column+=1] = participant.departure_flight_number
+      sheet1[pos,column+=1] = participant.airport_transportation? ? 'YES' : ''
+        
+      pos += 1
+    end
+
+    for i in 0..15
+      sheet1.column(i).width = 30
+    end
+
+    book.write "#{RAILS_ROOT}/public/download/shuttle_#{filename}.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/shuttle_#{filename}.xls", :filename => "shuttle_#{filename}.xls"
+  end
 end

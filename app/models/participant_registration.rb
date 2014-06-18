@@ -163,6 +163,14 @@ class ParticipantRegistration < ActiveRecord::Base
     :select     => "DISTINCT participant_registrations.*",
     :order      => "last_name asc"
   }
+  
+  named_scope :needs_shuttle, {
+    :conditions => "participant_registrations.airport_transportation = 1"
+  }
+  
+  named_scope :no_flight_info, {
+    :conditions => "participant_registrations.airline_arrival_date is null or airline_departure_date is null"
+  }
 
   # strip out extra characters in mobile phone
   def before_validation
