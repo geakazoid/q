@@ -66,7 +66,7 @@ class ImportsController < ApplicationController
       liability_form_received = row[54]
       
       # departure airline (sigh cvent sigh)
-      for i in 29..34
+      for i in 30..34
         departure_airline_name = row[i] if !row[i].nil?
       end
       
