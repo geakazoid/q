@@ -154,7 +154,7 @@ class ParticipantRegistration < ActiveRecord::Base
   }
 
   named_scope :has_special_needs, {
-    :conditions => "special_needs = 'Yes'"
+    :conditions => "special_needs is not null and special_needs != 'N/A'"
   }
 
   named_scope :no_team, {

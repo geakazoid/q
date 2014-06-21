@@ -1975,6 +1975,7 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Group Leader'
     sheet1[0,column+=1] = 'District'
     sheet1[0,column+=1] = 'Special Need'
+    sheet1[0,column+=1] = 'Special Need Details'
 
     sheet1.row(0).default_format = header_format
 
@@ -1987,6 +1988,7 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant.gender
       sheet1[pos,column+=1] = participant.group_leader_name
       sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+      sheet1[pos,column+=1] = participant.special_needs
       sheet1[pos,column+=1] = participant.special_needs_details
       pos += 1
     end
@@ -1996,7 +1998,8 @@ class ReportsController < ApplicationController
     sheet1.column(1).width = 10
     sheet1.column(2).width = 25
     sheet1.column(3).width = 25
-    sheet1.column(4).width = 100
+    sheet1.column(4).width = 25
+    sheet1.column(5).width = 100
 
     book.write "#{RAILS_ROOT}/public/download/special_needs.xls"
 
