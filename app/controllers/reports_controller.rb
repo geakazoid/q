@@ -1971,6 +1971,7 @@ class ReportsController < ApplicationController
     # write out headers
     column = 0
     sheet1[0,column] = 'Participant'
+    sheet1[0,column+=1] = 'Email'
     sheet1[0,column+=1] = 'Gender'
     sheet1[0,column+=1] = 'Group Leader'
     sheet1[0,column+=1] = 'District'
@@ -1985,6 +1986,7 @@ class ReportsController < ApplicationController
     participants.each do |participant|
       column = 0
       sheet1[pos,column] = participant.full_name_reversed
+      sheet1[pos,column+=1] = participant.email
       sheet1[pos,column+=1] = participant.gender
       sheet1[pos,column+=1] = participant.group_leader_name
       sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
@@ -1995,11 +1997,12 @@ class ReportsController < ApplicationController
 
     # column widths
     sheet1.column(0).width = 25
-    sheet1.column(1).width = 10
-    sheet1.column(2).width = 25
+    sheet1.column(1).width = 25
+    sheet1.column(2).width = 10
     sheet1.column(3).width = 25
     sheet1.column(4).width = 25
-    sheet1.column(5).width = 100
+    sheet1.column(5).width = 25
+    sheet1.column(6).width = 100
 
     book.write "#{RAILS_ROOT}/public/download/special_needs.xls"
 
