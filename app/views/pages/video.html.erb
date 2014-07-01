@@ -11,19 +11,16 @@
   </p>
   <p>
     <strong>Quizzing Rooms</strong><br/>
-    <%= link_to "Burke 001", video_pages_path({:source => "camera1"}) %><br/>
-    <%= link_to "Burke 007", video_pages_path({:source => "camera2"}) %><br/>
-    <%= link_to "Larsen 140", video_pages_path({:source => "camera3"}) %><br/>
-    <%= link_to "Larsen Auditorium", video_pages_path({:source => "camera4"}) %><br/>
-    <%= link_to "Burke 306", video_pages_path({:source => "camera5"}) %><br/>
-    <%= link_to "Burke 307", video_pages_path({:source => "camera6"}) %><br/>
-    <%= link_to "Wisner 137", video_pages_path({:source => "camera7"}) %><br/>
-    <%= link_to "Wisner 154", video_pages_path({:source => "camera8"}) %><br/>
-    <%= link_to "Wisner 137B", video_pages_path({:source => "camera9"}) %><br/>
-    <%= link_to "Wisner 137C", video_pages_path({:source => "camera10"}) %><br/>
-  </p>
-  <p>
-    <a href='https://www.q2012.org/files/Q2014%20Video%20Room%20Schedule.pdf'>Video Room Schedule</a>
+    <%= link_to "TCC Sanctuary", video_pages_path({:source => "tccSanctuary"}) %><br/>
+    <%= link_to "TCC Chapel", video_pages_path({:source => "tccChapel"}) %><br/>
+    <%= link_to "TCC LL02", video_pages_path({:source => "tccLL02"}) %><br/>
+    <%= link_to "Boone Convocation", video_pages_path({:source => "booneConvocation"}) %><br/>
+    <%= link_to "Boone 102", video_pages_path({:source => "boone102"}) %><br/>
+    <%= link_to "Boone 104", video_pages_path({:source => "boone104"}) %><br/>
+    <%= link_to "Boone 106", video_pages_path({:source => "boone106"}) %><br/>
+    <%= link_to "McClurkan Auditorium", video_pages_path({:source => "mcclurkanAuditorium"}) %><br/>
+    <%= link_to "McClurkan 100", video_pages_path({:source => "mcclurkan100"}) %><br/>
+    <%= link_to "McClurkan 101", video_pages_path({:source => "mcclurkan101"}) %><br/>
   </p>
 <% else %>
   <h2><%= @rooms[params[:source]] %></h2>
