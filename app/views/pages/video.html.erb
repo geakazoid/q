@@ -1,25 +1,32 @@
-<div id='page_title'>
-  <%= title('Live Video', :h1) %>
-</div>
 <% if !params[:source] %>
+  <div id='page_title'>
+    <%= title('Live Video', :h1) %>
+  </div>
   <p>
     You can watch live video from any of the following feeds!
   </p>
   <p>
+    <strong>Plenery Services</strong><br/>
+    <%= link_to "TCC Sanctuary", video_pages_path({:source => "tccSanctuary", :name => "TCC Sanctuary"}) %><br/>
+  </p>
+  <p>
     <strong>Quizzing Rooms</strong><br/>
-    <%= link_to "TCC Sanctuary", video_pages_path({:source => "tccSanctuary"}) %><br/>
-    <%= link_to "TCC Chapel", video_pages_path({:source => "tccChapel"}) %><br/>
-    <%= link_to "TCC LL02", video_pages_path({:source => "tccLL02"}) %><br/>
-    <%= link_to "Boone Convocation", video_pages_path({:source => "booneConvocation"}) %><br/>
-    <%= link_to "Boone 102", video_pages_path({:source => "boone102"}) %><br/>
-    <%= link_to "Boone 104", video_pages_path({:source => "boone104"}) %><br/>
-    <%= link_to "Boone 106", video_pages_path({:source => "boone106"}) %><br/>
-    <%= link_to "McClurkan Auditorium", video_pages_path({:source => "mcclurkanAuditorium"}) %><br/>
-    <%= link_to "McClurkan 100", video_pages_path({:source => "mcclurkan100"}) %><br/>
-    <%= link_to "McClurkan 101", video_pages_path({:source => "mcclurkan101"}) %><br/>
+    <%= link_to "TCC Sanctuary", video_pages_path({:source => "tccSanctuary", :name => "TCC Sanctuary"}) %><br/>
+    <%= link_to "TCC Chapel", video_pages_path({:source => "tccChapel", :name => "TCC Chapel"}) %><br/>
+    <%= link_to "TCC LL02", video_pages_path({:source => "tccLL02", :name => "TCC LL02"}) %><br/>
+    <%= link_to "Boone Convocation", video_pages_path({:source => "booneConvocation", :name => "Boone Convocation"}) %><br/>
+    <%= link_to "Boone 102", video_pages_path({:source => "boone102", :name => "Boone 102"}) %><br/>
+    <%= link_to "Boone 104", video_pages_path({:source => "boone104", :name => "Boone 104"}) %><br/>
+    <%= link_to "Boone 106", video_pages_path({:source => "boone106", :name => "Boone 106"}) %><br/>
+    <%= link_to "McClurkan Auditorium", video_pages_path({:source => "mcclurkanAuditorium", :name => "McClurkan Auditorium"}) %><br/>
+    <%= link_to "McClurkan 100", video_pages_path({:source => "mcclurkan100", :name => "McClurkan 100"}) %><br/>
+    <%= link_to "McClurkan 101", video_pages_path({:source => "mcclurkan101", :name => "McClurkan 101"}) %><br/>
   </p>
 <% else %>
-  <h2><%= @rooms[params[:source]] %></h2>
+  <div id='page_title'>
+    <%= title("Live Video: " + params[:name], :h1) %>
+  </div>
+  <p><%= link_to "Other Video Feeds", video_pages_path %></p>
   <p>
     <script type='text/javascript' src='/javascripts/jwplayer.js'></script>
   </p>
