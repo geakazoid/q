@@ -12,6 +12,8 @@
     <%= link_to "Boone 106", video_pages_path({:source => "boone106", :name => "Boone 106"}) %><br/>
     <%= link_to "Boone 115", video_pages_path({:source => "boone115", :name => "Boone 115"}) %><br/>
   </p>
+<% elsif !['boone102', 'boone106', 'boone115'].include? params[:source] %>
+  <script>window.location.replace("http://www.q2014.org/pages/video");</script>
 <% else %>
   <div id='page_title'>
     <%= title("Live Video: " + params[:name], :h1) %>
