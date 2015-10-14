@@ -1,0 +1,115 @@
+body {
+  background-color: #ccc;
+  font-family: 'Lucida Grande', Verdana, Arial, Helvetica, sans-serif;
+  font-size: 0.8em;
+}
+
+* {
+  /* border: 1px solid #fff; */
+}
+
+h1 {
+  font-size: 24px;
+  padding: 0px 0px 10px 0px;
+}
+
+h2 {
+  font-size: 20px;
+  padding: 0px 0px 5px 0px;
+}
+
+h3 {
+  font-size: 16px;
+  padding: 0px 0px 5px 0px;
+}
+
+a {
+  color: #ee5e61;
+}
+
+th {
+  background-color: #aaa;
+}
+
+td {
+  background-color: #fff;
+}
+
+/* header */
+#header {
+  background-color: #000;
+  color: #fff;
+  padding: 10px;
+  text-align: left;
+}
+
+#logo {
+  vertical-align: bottom;
+  display: inline-block;
+  /* ie6/7 */
+  *display: inline;
+  zoom: 1;
+}
+
+#header_text {
+  padding: 0px 0px 0px 10px;
+  vertical-align: bottom;
+  display: inline-block;
+  /* ie6/7 */
+  *display: inline;
+  zoom: 1;
+}
+
+/* navigation */
+#nav {
+  padding: 0px 0px 5px 0px;
+}
+
+/* main content */
+#content {
+  margin: 10px 10px 30px 10px;
+  padding: 10px;
+  text-align: center;
+}
+
+#content a {
+  color: #3cada9;
+}
+
+/* footer */
+#footer {
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  height: 30px;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  background-color: #000;
+  color: #fff;
+}
+
+/* divisions */
+#divisions {
+  text-align: center;
+}
+
+/* tables */
+table {
+  border-collapse: collapse;
+  margin: 10px auto;
+}
+
+table, table tr {
+  border: 0px !important;
+}
+
+table tr td, table tr th {
+  border: 2px solid #000;
+  padding: 7px;
+}
+
+/* other */
+.break {
+  clear: both;
+}
