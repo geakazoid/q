@@ -4,7 +4,7 @@ but is instead being sent to the currently logged in user.
 <% end %>
 Dear <%= h @user.first_name %>,
 
-Thank you for completing the following equipment registration on http://www.q2012.org. Details are below.
+Thank you for completing the following equipment registration on http://www.q2016.org. Details are below.
 
 Owner: <%= @equipment_registration.user.fullname %> (<%= @equipment_registration.user.email %>)
 <%- if @equipment_registration.user != @equipment_registration.creator -%>
@@ -27,4 +27,4 @@ Email: <%= h @equipment_registration.email %>
 <%= " Microphones/Recorders (" + @equipment_registration.recorders.size.to_s + ")\n" unless @equipment_registration.recorders.empty? -%>
 
 Sincerely,
-Q2014 Staff
+Q2016 Staff

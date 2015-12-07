@@ -4,7 +4,7 @@ but is instead being sent to the currently logged in user.
 
 <% end %>
 Dear Admin,
-The following equipment registration has been updated on http://www.q2012.org. Details are below.
+The following equipment registration has been updated on http://www.q2016.org. Details are below.
 
 Updated Time: <%= Time.now.strftime("%m.%d.%Y %H:%M") %>
 Updating User: <%= @user.fullname %> (<%= @user.email %>)
@@ -42,4 +42,4 @@ Equipment:
 <%= " Microphones/Recorders (" + @equipment_registration.recorders.count.to_s + ")\n" unless @equipment_registration.recorders.count == 0 -%>
 
 Sincerely,
-Q2014 Staff
+Q2016 Staff

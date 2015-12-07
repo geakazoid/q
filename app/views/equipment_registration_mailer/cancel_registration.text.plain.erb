@@ -4,7 +4,7 @@ but is instead being sent to the currently logged in user.
 
 <% end %>
 Dear Admin,
-The following equipment registration has been canceled on http://www.q2012.org. Details are below.
+The following equipment registration has been canceled on http://www.q2016.org. Details are below.
 
 Owner: <%= @equipment_registration.user.fullname %> (<%= @equipment_registration.user.email %>)
 Canceling User: <%= @user.fullname %> (<%= @user.email %>)
@@ -25,4 +25,4 @@ Email: <%= h @equipment_registration.email %>
 <%= " Microphones/Recorders (" + @equipment_registration.recorders.size.to_s + ")\n" unless @equipment_registration.recorders.empty? -%>
 
 Sincerely,
-Q2014 Staff
+Q2016 Staff

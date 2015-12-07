@@ -23,51 +23,67 @@ class ImportsController < ApplicationController
         next
       end
       
-      full_name = row[3]
-      email_address = row[6]
-      contact_type = row[8]
-      home_phone = ''
-      mobile_phone = row[16]
-      home_address = row[12]
-      home_city = row[13]
-      home_state_prov = row[14]
-      home_country_code = row[11]
-      home_zipcode = row[15]
-      confirmation_number = row[5]
-      airline_name = row[27]
-      arrival_date_and_time = row[26]
-      special_needs = row[21]
-      flight_arrival_date_and_time = row[29]
-      arrival_flight_number = row[28]
-      departure_flight_number = row[36]
-      flight_departure_date_and_time = row[37]
-      grade_completed = row[23]
-      group_leader = row[18]
-      travel_plan = row[25]
+      first_name = row[1] ##
+      last_name = row[2] ##
+      full_name = first_name + ' ' + last_name ##
+      guest_first_name = row[3] ##
+      guest_last_name = row[4] ##
+      guest_full_name = guest_first_name + ' ' + guest_last_name ##
+      email_address = row[6] ##
+      cc_email_address = row[7] ##
+      contact_type = row[20] ##
+      mobile_phone = row[13] ##
+      home_address = row[8] ##
+      home_city = row[9] ##
+      home_state_prov = row[10] ##
+      home_zipcode = row[11] ##
+      home_country_code = row[12] ##
+      confirmation_number = row[19] ##
+      arrival_airline_name = row[54] ##
+      arrival_date_and_time = row[57] ##
+      special_needs = row[46] ##
+      flight_arrival_date_and_time = row[56] ##
+      arrival_flight_number = row[55] ##
+      departure_flight_number = row[60] ##
+      flight_departure_date_and_time = row[61] ##
+      grade_completed = row[37] ##
+      group_leader = row[41] ##
+      travel_plan = row[53] ##
       understand_form_completion = row[19]
-      special_needs_details = row[22]
-      roommate_preference_1 = row[38]
-      roommate_preference_2 = row[39]
-      shirt_size = row[24]
-      local_church = row[17]
-      round_trip_airport_transportation = row[46]
-      num_local_teams = row[44].to_i
-      num_district_teams = row[45].to_i
-      district_name = row[10]
-      amount_ordered = row[50].to_i
-      amount_paid = row[52].to_i
-      amount_due = row[53].to_i
-      gender = row[9]
-      emergency_contact_name = row[40]
-      emergency_contact_number = row[41]
-      emergency_contact_relationship = row[42]
-      saturday_early_housing = row[47]
-      sunday_early_housing = row[48]
-      liability_form_received = row[54]
+      special_needs_details = row[47] ##
+      roommate_preference_1 = row[48] ##
+      roommate_preference_2 = row[49] ##
+      shirt_size = row[17] ##
+      local_church = row[38] ##
+      round_trip_airport_transportation = row[32] ##
+      num_experienced_local_teams = row[30].to_i ##
+      num_novice_local_teams = row[31].to_i ##
+      num_experienced_district_teams = row[26].to_i ##
+      num_novice_district_teams = row[27].to_i ##
+      wants_decades = row[28] ##
+      linens = row[29] ##
+      district_name = row[15] ##
+      field_name = row[16] ##
+      amount_ordered = row[21].to_i ##
+      amount_paid = row[22].to_i ##
+      amount_due = row[23].to_i ##
+      gender = row[14] ##
+      emergency_contact_name = row[50] ##
+      emergency_contact_number = row[52] ##
+      emergency_contact_relationship = row[51] ##
+      saturday_early_housing = row[33] ##
+      sunday_early_housing = row[34] ##
+      liability_form_received = row[62] ##
+      is_quizzer = row[39] ## 
+      is_coach = row[40] ##
+      planning_on_coaching = row[42] ##
+      coaching_team = row[43] ##
+      planning_on_officiating = row[44] ##
+      coaching_team_2 = row[45] ##
       
       # departure airline (sigh cvent sigh)
-      for i in 30..34
-        departure_airline_name = row[i] if !row[i].nil?
+      for i in 58..59
+        departure_airline_name = row[i] if !row[i].nil? ##
       end
       
       # skip empty rows
@@ -84,7 +100,7 @@ class ImportsController < ApplicationController
       pr.promotion_agree = nil
       pr.hide_from_others = nil
       pr.registration_type = contact_type
-      pr.home_phone = home_phone
+      pr.home_phone = ''
       pr.mobile_phone = mobile_phone
       pr.street = home_address
       pr.city = home_city
@@ -93,7 +109,7 @@ class ImportsController < ApplicationController
       pr.country = home_country_code
       pr.confirmation_number = confirmation_number
       #pr.age = age
-      pr.arrival_airline = airline_name
+      pr.arrival_airline = arrival_airline_name
       pr.departure_airline = departure_airline_name
       pr.driving_arrival_date = arrival_date_and_time
       pr.special_needs = special_needs

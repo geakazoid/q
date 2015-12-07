@@ -35,9 +35,12 @@
 
     <div id="header">
       <% if admin? %><div id='revision_info'><%= render :file => RAILS_ROOT + "/public/revision" %> (<a href='/history.txt'>history</a>)</div><% end %>
-      <h1><%= link_to(image_tag('q2014_header.jpg', :height => 200), root_path) %></h1>
+      <h1><%= link_to(image_tag('q2016_header.png', :height => 200), root_path) %></h1>
       <ul id="nav">
         <li><%= link_to 'Home', root_path %></li>
+        <li><a href="/registrations">Register for Q2016</a></li>
+        <li><a href="/officials/new">Register As An Official</a></li>
+        <li><a href="/Q2016%20Event%20Schedule.pdf" target="_blank">Event Schedule</a></li>
         <%= extra_pages %>
         <% if logged_in? %>
           <li><%= link_to 'Update Account', account_path %></li>
