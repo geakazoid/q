@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 60) do
+ActiveRecord::Schema.define(:version => 61) do
 
   create_table "Officials", :force => true do |t|
     t.integer  "user_id"
@@ -285,6 +285,21 @@ ActiveRecord::Schema.define(:version => 60) do
     t.string   "emergency_contact_number"
     t.string   "emergency_contact_relationship"
     t.boolean  "airport_transportation"
+    t.string   "guest_first_name"
+    t.string   "guest_last_name"
+    t.string   "group_leader_email"
+    t.integer  "num_novice_district_teams"
+    t.integer  "num_experienced_district_teams"
+    t.integer  "num_novice_local_teams"
+    t.integer  "num_experienced_local_teams"
+    t.boolean  "linens"
+    t.boolean  "pillow"
+    t.boolean  "is_quizzer"
+    t.boolean  "is_coach"
+    t.boolean  "planning_on_coaching"
+    t.boolean  "planning_on_officiating"
+    t.boolean  "coaching_team"
+    t.boolean  "coaching_team_2"
   end
 
   create_table "participant_registrations_teams", :id => false, :force => true do |t|
