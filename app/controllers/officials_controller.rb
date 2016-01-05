@@ -78,7 +78,7 @@ class OfficialsController < ApplicationController
     respond_to do |format|
       if @official.save
         # deliver new official registration notification
-        OfficialMailer.deliver_new_registration(@official, (admin_emails + official_admin_emails).uniq, current_user)
+        OfficialMailer.deliver_new_registration(@official, ['tolson27@gmail.com','chad.lynn91@gmail.com'], current_user)
         OfficialMailer.deliver_new_confirmation(@official, current_user)
         # deliver default evaluations
         send_default_evaluations
