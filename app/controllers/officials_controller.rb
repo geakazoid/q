@@ -187,8 +187,11 @@ class OfficialsController < ApplicationController
   # POST /officials/:id/send_evaluation
   # send an evaluation for this official to a third party
   def send_evaluation
-    # check and make sure this evaluation hasn't already been sent
-    return if Evaluation.find(:first, :conditions => "official_id = #{params[:id]} and sent_to_email = '#{params[:sent_to_email]}'")
+    
+    if (!params[:resend])
+      # check and make sure this evaluation hasn't already been sent
+      return if Evaluation.find(:first, :conditions => "official_id = #{params[:id]} and sent_to_email = '#{params[:sent_to_email]}'")
+    end
     
     # create a new evaluation
     @evaluation = Evaluation.new

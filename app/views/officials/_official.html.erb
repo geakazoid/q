@@ -44,6 +44,16 @@
           Status: Evaluation Completed
         <% else %>
           Status: Evaluation Sent
+          <% form_remote_tag(:url => send_evaluation_official_path(official), :loading  => "$('send_evaluation_spinner_district_#{official.id.to_s}').show(); $('send_evaluation_district_#{official.id.to_s}').disabled = true; $('send_evaluation_district_#{official.id.to_s}').value = 'Sending Evaluation...';") do %>
+            <%= hidden_field_tag 'sent_to_name', official.district.director %>
+            <%= hidden_field_tag 'sent_to_email', official.district.email %>
+            <%= hidden_field_tag 'resend', 'true' %>
+            <%= hidden_field_tag 'id_to_update', "evaluation_district_#{official.id.to_s}" %>
+            <%= submit_tag 'Resend Evaluation', :id => "send_evaluation_district_#{official.id.to_s}", :autocomplete => 'off' %>
+            <span id='send_evaluation_spinner_district_<%= official.id.to_s %>' style='display:none;'>
+              &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
+            </span>
+          <% end %>
         <% end %>
       </div>
       <div class='separator'></div>
@@ -66,6 +76,16 @@
           Status: Evaluation Completed
         <% else %>
           Status: Evaluation Sent
+          <% form_remote_tag(:url => send_evaluation_official_path(official), :loading  => "$('send_evaluation_spinner_region_#{official.id.to_s}').show(); $('send_evaluation_region_#{official.id.to_s}').disabled = true; $('send_evaluation_region_#{official.id.to_s}').value = 'Sending Evaluation...';") do %>
+            <%= hidden_field_tag 'sent_to_name', official.district.region.director %>
+            <%= hidden_field_tag 'sent_to_email', official.district.region.email %>
+            <%= hidden_field_tag 'resend', 'true' %>
+            <%= hidden_field_tag 'id_to_update', "evaluation_region_#{official.id.to_s}" %>
+            <%= submit_tag 'Resend Evaluation', :id => "send_evaluation_region_#{official.id.to_s}", :autocomplete => 'off' %>
+            <span id='send_evaluation_spinner_region_<%= official.id.to_s %>' style='display:none;'>
+              &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
+            </span>
+          <% end %>
         <% end %>
       </div>
       <div class='separator'></div>
