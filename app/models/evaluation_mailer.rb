@@ -9,7 +9,8 @@ class EvaluationMailer < ActionMailer::Base
     else
       @recipients << "#{evaluation.sent_to_name} <#{evaluation.sent_to_email}>"
     end
-    @from = 'Todd Olson <tolson27@gmail.com>'
+    @from = AppConfig.admin_email 
+    @reply_to = 'Todd Olson <tolson27@gmail.com>'
     @subject = "[Q2016] Official Evaluation Request"
     @sent_on = Time.now
     @body[:evaluation] = evaluation
