@@ -25,10 +25,10 @@ class ImportsController < ApplicationController
       
       first_name = row[0] ##
       last_name = row[1] ##
-      guest_first_name = row[2] ##
-      guest_last_name = row[3] ##
+      guest_type = row[2] ## #
+      guest_name = row[3] ## #
       email_address = row[5] ##
-      cc_email_address = row[6] ##
+      #cc_email_address = row[6] ##
       contact_type = row[19] ##
       mobile_phone = row[12] ##
       home_address = row[7] ##
@@ -71,12 +71,13 @@ class ImportsController < ApplicationController
       saturday_early_housing = row[33] ##
       sunday_early_housing = row[34] ##
       liability_form_received = row[62] ##
-      is_quizzer = row[38] ## 
+      #is_quizzer = row[38] ## 
       is_coach = row[39] ##
       planning_on_coaching = row[41] ##
       coaching_team = row[42] ##
       planning_on_officiating = row[43] ##
       coaching_team_2 = row[44] ##
+      group_leader_email = row[63]
       
       # departure airline (sigh cvent sigh)
       for i in 58..59
@@ -92,13 +93,22 @@ class ImportsController < ApplicationController
       if first_name.nil?
         next
       end
+
+      # try and figure out group leader based on grou leader email
+      unless group_leader_email.nil?
+        group_leader = User.find(:first, :conditions => "lower(email) = '#{group_leader_email.downcase}'")
+        unless group_leader.nil?
+          pr.group_leader = group_leader
+        end
+      end
       
       pr = ParticipantRegistration.find_by_confirmation_number(confirmation_number)
       pr = ParticipantRegistration.new if pr.nil?
       pr.first_name = first_name
       pr.last_name = last_name
-      pr.guest_first_name = guest_first_name
-      pr.guest_last_name = guest_last_name
+      #pr.guest_first_name = guest_first_name
+      #pr.guest_last_name = guest_last_name
+      pr.guest_last_name,pr.guest_first_name = guest_name.split(',').map(&:strip) if guest_type == "Guest"
       pr.email = email_address
       pr.promotion_agree = nil
       pr.hide_from_others = nil
@@ -122,7 +132,7 @@ class ImportsController < ApplicationController
       pr.departure_flight_number = departure_flight_number
       pr.most_recent_grade = grade_completed
       pr.group_leader_import = group_leader
-      pr.group_leader_email = cc_email_address
+      pr.group_leader_email = group_leader_email
       pr.travel_type = travel_plan
       pr.understand_form_completion = understand_form_completion
       pr.over_18
@@ -147,7 +157,7 @@ class ImportsController < ApplicationController
       pr.housing_saturday = saturday_early_housing
       pr.housing_sunday = sunday_early_housing
       pr.medical_liability = true if liability_form_received == "Yes"
-      pr.is_quizzer = is_quizzer
+      #pr.is_quizzer = is_quizzer
       pr.is_coach = is_coach
       pr.coaching_team = coaching_team
       pr.coaching_team_2 = coaching_team_2
