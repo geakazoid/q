@@ -45,7 +45,7 @@ class ImportsController < ApplicationController
       departure_flight_number = row[60] ##
       flight_departure_date_and_time = row[61] ##
       grade_completed = row[37] ##
-      group_leader = row[40] ##
+      group_leader = row[41] ##
       travel_plan = row[53] ##
       special_needs_details = row[47] ##
       roommate_preference_1 = row[48] ##
@@ -72,11 +72,11 @@ class ImportsController < ApplicationController
       sunday_early_housing = row[34] ##
       liability_form_received = row[62] ##
       #is_quizzer = row[38] ## 
-      is_coach = row[39] ##
-      planning_on_coaching = row[41] ##
-      coaching_team = row[42] ##
-      planning_on_officiating = row[43] ##
-      coaching_team_2 = row[44] ##
+      #is_coach = row[39] ##
+      planning_on_coaching = row[42] ##
+      coaching_team = row[43] ##
+      planning_on_officiating = row[44] ##
+      coaching_team_2 = row[45] ##
       group_leader_email = row[63]
       
       # departure airline (sigh cvent sigh)
@@ -158,7 +158,7 @@ class ImportsController < ApplicationController
       pr.housing_sunday = sunday_early_housing
       pr.medical_liability = true if liability_form_received == "Yes"
       #pr.is_quizzer = is_quizzer
-      pr.is_coach = is_coach
+      #pr.is_coach = is_coach
       pr.coaching_team = coaching_team
       pr.coaching_team_2 = coaching_team_2
       pr.save(false)
