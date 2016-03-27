@@ -93,14 +93,6 @@ class ImportsController < ApplicationController
       if first_name.nil?
         next
       end
-
-      # try and figure out group leader based on grou leader email
-      unless group_leader_email.nil?
-        group_leader = User.find(:first, :conditions => "lower(email) = '#{group_leader_email.downcase}'")
-        unless group_leader.nil?
-          pr.group_leader = group_leader
-        end
-      end
       
       pr = ParticipantRegistration.find_by_confirmation_number(confirmation_number)
       pr = ParticipantRegistration.new if pr.nil?
@@ -161,6 +153,16 @@ class ImportsController < ApplicationController
       #pr.is_coach = is_coach
       pr.coaching_team = coaching_team
       pr.coaching_team_2 = coaching_team_2
+
+      # try and figure out group leader based on grou leader email
+      unless group_leader_email.nil?
+        group_leader = User.find(:first, :conditions => "lower(email) = '#{group_leader_email.downcase}'")
+        unless group_leader.nil?
+          pr.group_leader = group_leader
+        end
+      end
+
+      # save the participant registration
       pr.save(false)
       
       # try to automatically link this registration to a user based on email
