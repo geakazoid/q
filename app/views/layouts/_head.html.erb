@@ -39,7 +39,9 @@
       <ul id="nav">
         <li><%= link_to 'Home', root_path %></li>
         <li><a href="/registrations">Register for Q2016</a></li>
-        <li><%= link_to 'Team Registrations', user_team_registrations_path(current_user) %></a></li>
+        <% if logged_in? %>
+          <li><%= link_to 'Team Registrations', user_team_registrations_path(current_user) %></a></li>
+        <% end %>
         <li><a href="/officials/new">Register As An Official</a></li>
         <li><a href="/Q2016%20Event%20Schedule.pdf" target="_blank">Event Schedule</a></li>
         <%= extra_pages %>
