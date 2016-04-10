@@ -65,6 +65,8 @@ module ApplicationHelper
     team_complete = current_user.complete_team_registrations.size
     team_incomplete = current_user.incomplete_team_registrations.size
     team_total = current_user.team_registrations.size
+    team_possible = current_user.num_total_teams_possible
+    team_available = current_user.num_total_teams_available
     
     equipment_total = current_user.equipment_registrations.size
 
@@ -82,6 +84,10 @@ module ApplicationHelper
       info << link_to("View my team registrations.", user_team_registrations_path(current_user))
       info << "<br/><br/>"
     end
+
+    if team_possible > 0
+      info << "You have " + team_available.to_s + " of " + team_possible.to_s + " teams you can <a href='/team_registrations/new'>register</a>.<br/><br/>"
+    end
     
     if equipment_total > 0
       info << "Equipment Registrations<br/>"
@@ -91,8 +97,9 @@ module ApplicationHelper
     end
     
     if team_total == 0 and equipment_total == 0
-      info << "You do not have any registrations."
+      info << "You do not have any active registrations."
     end
+
     info << "<p>"
   end
   

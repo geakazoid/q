@@ -4,18 +4,18 @@
 <%= render :partial => 'pages/page', :locals => { :page => @page } if !@page.nil? %>
 <p>
     Please use the form below to register a new team or teams. You may only register a team if you have purchased teams
-    through a <%= link_to 'Cvent', AppConfig.cvent_url, :target => '_blank' %> registration. 
+    through a <%= link_to 'Cvent', '/registrations/cvent', :target => '_blank' %> registration. 
 </p>
 <p>
-  You have <%= current_user.num_district_teams_available %> district team registrations available.<br/>
-  You have <%= current_user.num_local_teams_available %> local team registrations available.
+  You have <%= current_user.num_experienced_district_teams_available %> experienced and <%= current_user.num_novice_district_teams_available %> novice district team registrations available.<br/>
+  You have <%= current_user.num_experienced_local_teams_available %> experienced and <%= current_user.num_novice_local_teams_available %> novice local team registrations available.<br/>
 </p>
 <% form_for @team_registration do |f| %>
   <%= error_messages_for :team_registration, :header_message => "There were errors with your registration.", :message => "We encountered the following problems:" %>
 
   <h3>Basics</h3>
   <p>
-    <a href='#' onClick='javascript:fill_information(); update_district_teams(); return false;'>Use My Information</a>
+    <a href='#' onClick='javascript:fill_information(); return false;'>Use My Information</a>
   </p>
   <p>
   	<%= f.label :district, 'District' %><br/>

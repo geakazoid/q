@@ -5,7 +5,7 @@
 <% if @user.team_registrations.size > 0 %>
   From here you can view and make changes to your team registrations.<br/><br/>
 <% else %>
-  You do not have any team registrations. Would you like to <%= link_to 'create one', new_team_registration_path %>?
+  You do not have any team registrations. Would you like to <%= link_to 'register one', new_team_registration_path %>?
 <% end  %>
 
 <% if @user.incomplete_team_registrations.size > 0 %>
@@ -49,6 +49,8 @@
   </table>
 <% end  %>
 
+<% if @user.team_registrations.size > 0 %>
 <p>
-  <%= link_to('Register Teams', new_team_registration_url) %>
+  <%= link_to('Register More Teams', new_team_registration_url) %>
 </p>
+<% end  %>
