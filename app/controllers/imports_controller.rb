@@ -23,74 +23,74 @@ class ImportsController < ApplicationController
         next
       end
       
-      first_name = row[0] ##
-      last_name = row[1] ##
-      guest_type = row[2] ## #
-      guest_name = row[3] ## #
-      email_address = row[5] ##
-      #cc_email_address = row[6] ##
-      contact_type = row[19] ##
-      mobile_phone = row[12] ##
-      home_address = row[7] ##
-      home_city = row[8] ##
-      home_state_prov = row[9] ##
-      home_zipcode = row[10] ##
-      home_country_code = row[11] ##
-      confirmation_number = row[18] ##
-      arrival_airline_name = row[54] ##
-      arrival_date_and_time = row[57] ##
-      special_needs = row[46] ##
-      flight_arrival_date_and_time = row[56] ##
-      arrival_flight_number = row[55] ##
-      departure_flight_number = row[60] ##
-      flight_departure_date_and_time = row[61] ##
-      grade_completed = row[37] ##
-      group_leader = row[41] ##
-      travel_plan = row[53] ##
-      special_needs_details = row[47] ##
-      roommate_preference_1 = row[48] ##
-      roommate_preference_2 = row[49] ##
-      shirt_size = row[16] ##
-      local_church = row[38] ##
-      pillow = row[31] ##
-      round_trip_airport_transportation = row[32] ##
-      num_experienced_local_teams = row[29].to_i ##
-      num_novice_local_teams = row[30].to_i ##
-      num_experienced_district_teams = row[25].to_i ##
-      num_novice_district_teams = row[26].to_i ##
-      wants_decades = row[27] ##
-      linens = row[28] ##
-      district_name = row[14] ##
-      amount_ordered = row[20].to_i ##
-      amount_paid = row[21].to_i ##
-      amount_due = row[22].to_i ##
-      gender = row[13] ##
-      emergency_contact_name = row[50] ##
-      emergency_contact_number = row[52] ##
-      emergency_contact_relationship = row[51] ##
-      saturday_early_housing = row[33] ##
-      sunday_early_housing = row[34] ##
-      liability_form_received = row[62] ##
-      #is_quizzer = row[38] ## 
-      #is_coach = row[39] ##
-      planning_on_coaching = row[42] ##
-      coaching_team = row[43] ##
-      planning_on_officiating = row[44] ##
-      coaching_team_2 = row[45] ##
-      group_leader_email = row[63]
+      full_name = row[0] 
+      first_name, last_name = full_name.split(",") unless full_name.nil?
+      guest_type = row[1] ## #
+      guest_name = row[2] ## #
+      email_address = row[4] ##
+      #cc_email_address = row[5] ##
+      contact_type = row[18] ##
+      mobile_phone = row[11] ##
+      home_address = row[6] ##
+      home_city = row[7] ##
+      home_state_prov = row[8] ##
+      home_zipcode = row[9] ##
+      home_country_code = row[10] ##
+      confirmation_number = row[17] ##
+      arrival_airline_name = row[53] ##
+      arrival_date_and_time = row[56] ##
+      special_needs = row[45] ##
+      flight_arrival_date_and_time = row[55] ##
+      arrival_flight_number = row[54] ##
+      departure_flight_number = row[59] ##
+      flight_departure_date_and_time = row[60] ##
+      grade_completed = row[36] ##
+      group_leader = row[40] ##
+      travel_plan = row[52] ##
+      special_needs_details = row[46] ##
+      roommate_preference_1 = row[47] ##
+      roommate_preference_2 = row[48] ##
+      shirt_size = row[15] ##
+      local_church = row[37] ##
+      pillow = row[30] ##
+      round_trip_airport_transportation = row[31] ##
+      num_experienced_local_teams = row[28].to_i ##
+      num_novice_local_teams = row[29].to_i ##
+      num_experienced_district_teams = row[24].to_i ##
+      num_novice_district_teams = row[25].to_i ##
+      wants_decades = row[26] ##
+      linens = row[27] ##
+      district_name = row[13] ##
+      amount_ordered = row[19].to_i ##
+      amount_paid = row[20].to_i ##
+      amount_due = row[21].to_i ##
+      gender = row[12] ##
+      emergency_contact_name = row[49] ##
+      emergency_contact_number = row[51] ##
+      emergency_contact_relationship = row[50] ##
+      saturday_early_housing = row[32] ##
+      sunday_early_housing = row[33] ##
+      liability_form_received = row[61] ##
+      #is_quizzer = row[37] ## 
+      #is_coach = row[38] ##
+      planning_on_coaching = row[41] ##
+      coaching_team = row[42] ##
+      planning_on_officiating = row[43] ##
+      coaching_team_2 = row[44] ##
+      group_leader_email = row[62]
       
       # departure airline (sigh cvent sigh)
-      for i in 58..59
+      for i in 57..58
         departure_airline_name = row[i] if !row[i].nil? ##
       end
       
       # understand form submission (sigh cvent sigh)
-      for i in 35..36
+      for i in 34..35
         understand_form_completion = row[i] if !row[i].nil? ##
       end
       
       # skip empty rows
-      if first_name.nil?
+      if full_name.nil?
         next
       end
       
