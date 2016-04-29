@@ -24,7 +24,7 @@ class ImportsController < ApplicationController
       end
       
       full_name = row[0] 
-      first_name, last_name = full_name.split(",") unless full_name.nil?
+      last_name, first_name = full_name.split(",") unless full_name.nil?
       guest_type = row[1] ## #
       guest_name = row[2] ## #
       email_address = row[4] ##
