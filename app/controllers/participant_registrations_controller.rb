@@ -364,7 +364,7 @@ class ParticipantRegistrationsController < ApplicationController
     @districts = District.all(:order => 'name')
     @regions = Region.all(:order => 'name')
 
-    @group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
+    @group_leaders = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])
     @group_leaders.push(['Volunteer', -6])
@@ -490,7 +490,7 @@ class ParticipantRegistrationsController < ApplicationController
     @districts = District.all(:order => 'name')
     @regions = Region.all(:order => 'name')
 
-    @group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
+    @group_leaders = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])
     @group_leaders.push(['Volunteer', -6])
@@ -630,7 +630,7 @@ class ParticipantRegistrationsController < ApplicationController
     not_participating = MinistryProject.find_by_name('Not Participating')
     @ministry_projects.unshift(not_participating) unless not_participating.nil?
 
-    @group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
+    @group_leaders = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])
     @group_leaders.push(['Volunteer', -6])
@@ -781,7 +781,7 @@ class ParticipantRegistrationsController < ApplicationController
 
   # get all group leaders (someone who's registered a team)
   def get_group_leaders
-    @group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
+    @group_leaders = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
     @group_leaders.insert(0, ['- Select -', ''])
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])

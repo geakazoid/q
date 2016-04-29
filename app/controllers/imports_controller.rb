@@ -154,7 +154,8 @@ class ImportsController < ApplicationController
       pr.coaching_team = coaching_team
       pr.coaching_team_2 = coaching_team_2
 
-      # try and figure out group leader based on grou leader email
+      # TODO: Is this being overwritten if changed?
+      # try and figure out group leader based on group leader email
       unless group_leader_email.nil?
         group_leader = User.find(:first, :conditions => "lower(email) = '#{group_leader_email.downcase}'")
         unless group_leader.nil?
