@@ -61,9 +61,9 @@ class ImportsController < ApplicationController
       wants_decades = row[26] ##
       linens = row[27] ##
       district_name = row[13] ##
-      amount_ordered = row[19].delete(',').to_i ##
-      amount_paid = row[20].delete(',').to_i ##
-      amount_due = row[21].delete(',').to_i ##
+      amount_ordered = row[19].delete(',').to_i if !row[19].nil? ##
+      amount_paid = row[20].delete(',').to_i if !row[20].nil? ##
+      amount_due = row[21].delete(',').to_i if !row[21].nil? ##
       gender = row[12] ##
       emergency_contact_name = row[49] ##
       emergency_contact_number = row[51] ##
