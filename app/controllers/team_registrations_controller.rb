@@ -241,11 +241,11 @@ class TeamRegistrationsController < ApplicationController
         team.discounted = false
         # if the current user is melody sidor (id:20) she doesn't get a discount
         # this is a hack and should be removed as soon as she pays
-        if team.district_team? and applied_discount_count < discounted_count and current_user.id != 20
-          team.discounted = true
-          applied_discount_count += 1
-          team.amount_in_cents -= 1500
-        end
+        #if team.district_team? and applied_discount_count < discounted_count and current_user.id != 20
+        #  team.discounted = true
+        #  applied_discount_count += 1
+        #  team.amount_in_cents -= 1500
+        #end
 
         total_amount = total_amount + team.amount_in_cents
       end
