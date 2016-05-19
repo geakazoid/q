@@ -11,7 +11,7 @@ class TeamRegistrationsController < ApplicationController
     else
       # if we aren't an admin we shouldn't be here
       record_not_found and return if !admin?
-      @team_registrations = TeamRegistration.find(:all)
+      @team_registrations = TeamRegistration.find(:all, :order => "first_name asc, last_name asc")
     end
 
     respond_to do |format|
