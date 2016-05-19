@@ -96,7 +96,7 @@ class ImportsController < ApplicationController
       
       pr = ParticipantRegistration.find_by_confirmation_number(confirmation_number)
       pr = ParticipantRegistration.new if pr.nil?
-      pr.first_name = first_name
+      pr.first_name = first_name.strip
       pr.last_name = last_name
       #pr.guest_first_name = guest_first_name
       #pr.guest_last_name = guest_last_name
