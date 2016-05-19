@@ -427,7 +427,6 @@ class ReportsController < ApplicationController
       sheet1[2,column+=1] = 'Team 1'
       sheet1[2,column+=1] = 'Team 2'
       sheet1[2,column+=1] = 'Team 3'
-      sheet1[2,column+=1] = 'Ministry Project'
       sheet1[2,column+=1] = 'Housing'
       sheet1[2,column+=1] = 'Housing June 28th'
       sheet1[2,column+=1] = 'Housing June 29th'
@@ -469,16 +468,6 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.teams[2].name_with_division
         end
 
-        # ministry project
-        if !participant.ministry_project.nil? or !participant.ministry_project_group.blank?
-          assignment = ''
-          assignment += participant.ministry_project ? participant.ministry_project.name : ''
-          assignment += !participant.ministry_project_group.blank? ? ' - ' + participant.ministry_project_group : ''
-          sheet1[pos,column+=1] = assignment
-        else
-          sheet1[pos,column+=1] = ''
-        end
-        
         # housing
         sheet1[pos,column+=1] = participant.housing
         sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
@@ -624,7 +613,6 @@ class ReportsController < ApplicationController
         sheet1[2,column+=1] = 'Team 1'
         sheet1[2,column+=1] = 'Team 2'
         sheet1[2,column+=1] = 'Team 3'
-        sheet1[2,column+=1] = 'Ministry Project'
         sheet1[2,column+=1] = 'Housing'
         sheet1[2,column+=1] = 'Housing June 28th'
         sheet1[2,column+=1] = 'Housing June 29th'
@@ -680,16 +668,6 @@ class ReportsController < ApplicationController
             sheet1[pos,column+=1] = participant.teams[2].name_with_division
           end
   
-          # ministry project
-          if !participant.ministry_project.nil? or !participant.ministry_project_group.blank?
-            assignment = ''
-            assignment += participant.ministry_project ? participant.ministry_project.name : ''
-            assignment += !participant.ministry_project_group.blank? ? ' - ' + participant.ministry_project_group : ''
-            sheet1[pos,column+=1] = assignment
-          else
-            sheet1[pos,column+=1] = ''
-          end
-          
           # housing
           sheet1[pos,column+=1] = participant.housing
           sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
