@@ -514,20 +514,19 @@ class ReportsController < ApplicationController
       sheet1.column(5).width = 30
       sheet1.column(6).width = 30
       sheet1.column(7).width = 30
-      sheet1.column(8).width = 30
+      sheet1.column(8).width = 10
       sheet1.column(9).width = 10
-      sheet1.column(10).width = 10
+      sheet1.column(10).width = 30
       sheet1.column(11).width = 30
-      sheet1.column(12).width = 30
+      sheet1.column(12).width = 20
       sheet1.column(13).width = 20
       sheet1.column(14).width = 20
       sheet1.column(15).width = 20
       sheet1.column(16).width = 20
       sheet1.column(17).width = 20
-      sheet1.column(18).width = 20
+      sheet1.column(18).width = 10
       sheet1.column(19).width = 10
       sheet1.column(20).width = 10
-      sheet1.column(21).width = 10
 
       book.write "#{RAILS_ROOT}/public/download/group_leader_summary_#{file_name}.xls"
 
@@ -742,20 +741,19 @@ class ReportsController < ApplicationController
         sheet1.column(5).width = 30
         sheet1.column(6).width = 30
         sheet1.column(7).width = 30
-        sheet1.column(8).width = 30
+        sheet1.column(8).width = 10
         sheet1.column(9).width = 10
-        sheet1.column(10).width = 10
+        sheet1.column(10).width = 30
         sheet1.column(11).width = 30
-        sheet1.column(12).width = 30
+        sheet1.column(12).width = 20
         sheet1.column(13).width = 20
         sheet1.column(14).width = 20
         sheet1.column(15).width = 20
         sheet1.column(16).width = 20
         sheet1.column(17).width = 20
-        sheet1.column(18).width = 20
+        sheet1.column(18).width = 10
         sheet1.column(19).width = 10
         sheet1.column(20).width = 10
-        sheet1.column(21).width = 10
 
         # output shirt size counts
         pos += 2
