@@ -114,8 +114,8 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Departure Airline'
     sheet1[0,column+=1] = 'Departure Airline Flight Number'
     sheet1[0,column+=1] = 'Airport Shuttle'
-    sheet1[0,column+=1] = 'Housing June 28th'
-    sheet1[0,column+=1] = 'Housing June29th'
+    sheet1[0,column+=1] = 'Housing June 25th'
+    sheet1[0,column+=1] = 'Housing June26th'
     sheet1[0,column+=1] = 'Medical / Liability?'
     sheet1[0,column+=1] = 'Amount Ordered'
     sheet1[0,column+=1] = 'Amount Paid'
@@ -428,8 +428,8 @@ class ReportsController < ApplicationController
       sheet1[2,column+=1] = 'Team 2'
       sheet1[2,column+=1] = 'Team 3'
       sheet1[2,column+=1] = 'Housing'
-      sheet1[2,column+=1] = 'Housing June 28th'
-      sheet1[2,column+=1] = 'Housing June 29th'
+      sheet1[2,column+=1] = 'Housing June 25th'
+      sheet1[2,column+=1] = 'Housing June 26th'
       sheet1[2,column+=1] = 'Roommate Preference 1'
       sheet1[2,column+=1] = 'Roommate Preference 2'
       sheet1[2,column+=1] = 'Airline Arrival Date'
@@ -613,8 +613,8 @@ class ReportsController < ApplicationController
         sheet1[2,column+=1] = 'Team 2'
         sheet1[2,column+=1] = 'Team 3'
         sheet1[2,column+=1] = 'Housing'
-        sheet1[2,column+=1] = 'Housing June 28th'
-        sheet1[2,column+=1] = 'Housing June 29th'
+        sheet1[2,column+=1] = 'Housing June 25th'
+        sheet1[2,column+=1] = 'Housing June 26th'
         sheet1[2,column+=1] = 'Roommate Preference 1'
         sheet1[2,column+=1] = 'Roommate Preference 2'
         sheet1[2,column+=1] = 'Airline Arrival Date'
@@ -1155,8 +1155,8 @@ class ReportsController < ApplicationController
       sheet1[1,column+=1] = 'District'
       sheet1[1,column+=1] = 'Region'
       sheet1[1,column+=1] = 'Group Leader'
-      sheet1[1,column+=1] = 'June 28th'
-      sheet1[1,column+=1] = 'June 29th'
+      sheet1[1,column+=1] = 'June 25th'
+      sheet1[1,column+=1] = 'June 26th'
       sheet1.row(1).default_format = header_format
 
       pos = 2
@@ -1238,8 +1238,8 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Region'
         sheet1[1,column+=1] = 'Group Leader'
-        sheet1[1,column+=1] = 'June 28th'
-        sheet1[1,column+=1] = 'June 29th'
+        sheet1[1,column+=1] = 'June 25th'
+        sheet1[1,column+=1] = 'June 26th'
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1362,8 +1362,8 @@ class ReportsController < ApplicationController
       sheet1[1,column+=1] = 'Age Group / Grade'
       sheet1[1,column+=1] = 'District'
       sheet1[1,column+=1] = 'Region'
-      sheet1[1,column+=1] = 'June 28th'
-      sheet1[1,column+=1] = 'June 29th'
+      sheet1[1,column+=1] = 'June 25th'
+      sheet1[1,column+=1] = 'June 26th'
       sheet1.row(1).default_format = header_format
 
       pos = 2
@@ -1455,8 +1455,8 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'Age Group / Grade'
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Region'
-        sheet1[1,column+=1] = 'June 28th'
-        sheet1[1,column+=1] = 'June 29th'
+        sheet1[1,column+=1] = 'June 25th'
+        sheet1[1,column+=1] = 'June 26th'
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1892,8 +1892,8 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Participant'
     sheet1[0,column+=1] = 'Group Leader'
     sheet1[0,column+=1] = 'District'
-    sheet1[0,column+=1] = 'June 28th'
-    sheet1[0,column+=1] = 'June 29th'
+    sheet1[0,column+=1] = 'June 25th'
+    sheet1[0,column+=1] = 'June 26th'
 
     sheet1.row(0).default_format = header_format
 
