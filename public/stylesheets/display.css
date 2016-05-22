@@ -29,6 +29,7 @@ a
     border-width:0 5px 5px 0;
     margin:1em 0;
     padding:20px;
+    overflow: auto;
 }
 
 #content_stats
