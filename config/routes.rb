@@ -76,6 +76,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :team_registrations_all => :get,
                                 :team_registrations_complete => :get,
                                 :team_registrations_incomplete => :get,
+                                :claimed_teams => :get,
                                 :coaches_teams => :get,
                                 :quizzers_teams => :get,
                                 :coaches_quizzers_teams => :get,

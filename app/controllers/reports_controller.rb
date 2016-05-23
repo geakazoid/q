@@ -2117,4 +2117,86 @@ class ReportsController < ApplicationController
 
     send_file "#{RAILS_ROOT}/public/download/shuttle_#{filename}.xls", :filename => "shuttle_#{filename}.xls"
   end
+
+  # create a downloadable excel file of available and used team registrations
+  def claimed_teams
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+    # write out headers
+    sheet1[0,0] = 'First Name'
+    sheet1[0,1] = 'Last Name'
+    sheet1[0,2] = 'Phone'
+    sheet1[0,3] = 'Email'
+    sheet1[0,4] = 'District'
+    sheet1[0,5] = 'Region'
+    sheet1[0,6] = 'Confirmation Numbers'
+    sheet1[0,7] = 'Local Experienced'
+    sheet1[0,8] = 'Local Novice'
+    sheet1[0,9] = 'District Experienced'
+    sheet1[0,10] = 'District Novice'
+
+    pos = 1
+    #@participant_registrations = ParticipantRegistration.find(:all, :conditions => '(num_experienced_local_teams > 0 or num_novice_local_teams > 0 or num_experienced_district_teams > 0 or num_novice_district_teams > 0)'
+    @users = User.all
+
+    total_num_experienced_local_teams = 0
+    total_num_novice_local_teams = 0
+    total_num_experienced_district_teams = 0
+    total_num_novice_district_teams = 0
+    total = 0
+
+    @users.each do |user|
+      if user.owned_participant_registrations_with_teams.count > 0
+        sheet1[pos,0] = user.first_name
+        sheet1[pos,1] = user.last_name
+        sheet1[pos,2] = user.phone
+        sheet1[pos,3] = user.email
+        sheet1[pos,4] = user.district.name
+        sheet1[pos,5] = user.district.region.name
+        confirmation_numbers = ''
+        num_experienced_local_teams = 0
+        num_novice_local_teams = 0
+        num_experienced_district_teams = 0
+        num_novice_district_teams = 0
+        user.owned_participant_registrations_with_teams.each do |pr|
+          confirmation_numbers += pr.confirmation_number + ', '
+          num_experienced_local_teams += pr.num_experienced_local_teams
+          num_novice_local_teams += pr.num_novice_local_teams
+          num_experienced_district_teams += pr.num_experienced_district_teams
+          num_novice_district_teams += pr.num_novice_district_teams
+          total_num_experienced_local_teams += pr.num_experienced_local_teams
+          total_num_novice_local_teams += pr.num_novice_local_teams
+          total_num_experienced_district_teams += pr.num_experienced_district_teams
+          total_num_novice_district_teams += pr.num_novice_district_teams
+          total += pr.num_experienced_local_teams
+          total += pr.num_novice_local_teams
+          total += pr.num_experienced_district_teams
+          total += pr.num_novice_district_teams
+        end
+        confirmation_numbers.chomp!(', ')
+        sheet1[pos,6] = confirmation_numbers
+        sheet1[pos,7] = num_experienced_local_teams
+        sheet1[pos,8] = num_novice_local_teams
+        sheet1[pos,9] = num_experienced_district_teams
+        sheet1[pos,10] = num_novice_district_teams
+        pos = pos + 1
+      end
+    end
+    sheet1[pos,0] = ''
+    sheet1[pos,1] = ''
+    sheet1[pos,2] = ''
+    sheet1[pos,3] = ''
+    sheet1[pos,4] = ''
+    sheet1[pos,5] = ''
+    sheet1[pos,6] = 'Totals'
+    sheet1[pos,7] = total_num_experienced_local_teams
+    sheet1[pos,8] = total_num_novice_local_teams
+    sheet1[pos,9] = total_num_experienced_district_teams
+    sheet1[pos,10] = total_num_novice_district_teams
+    sheet1[pos,11] = total
+
+    book.write "#{RAILS_ROOT}/public/download/claimed_teams.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/claimed_teams.xls", :filename => "claimed_teams.xls"
+  end
 end
