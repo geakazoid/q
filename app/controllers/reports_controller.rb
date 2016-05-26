@@ -6,7 +6,10 @@ class ReportsController < ApplicationController
   # lists all available reports
   def index
     # populate group leaders
-    @group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
+    @group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders = @group_leaders1 + @group_leaders2
+    @group_leaders = @group_leaders.uniq.sort_by { |user| user[0].downcase }
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])
     @group_leaders.push(['Volunteer', -6])
@@ -327,8 +330,13 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'District'
     sheet1[0,column+=1] = 'Region'
 
-    @ids = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.id] }.uniq
+    @ids1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.id] }
+    @ids2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.id] }
+    @ids = @ids1 + @ids2
+    @ids.uniq!
+
     @group_leaders = User.find(@ids)
+    @group_leaders = @group_leaders.uniq.sort_by { |user| user.fullname.downcase }
 
     pos = 1
     @group_leaders.each do |group_leader|
@@ -535,7 +543,11 @@ class ReportsController < ApplicationController
       file_name = 'all'
 
       # loop through all group leaders
-      group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| user.id }.uniq
+      group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+      group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+      temp_group_leaders = group_leaders1 + group_leaders2
+      temp_group_leaders = temp_group_leaders.uniq.sort_by { |user| user[0].downcase }
+      group_leaders = temp_group_leaders.map { |user| user[1] }
       group_leaders.push(-1)
       group_leaders.push(-2)
       group_leaders.push(-3)
@@ -570,6 +582,7 @@ class ReportsController < ApplicationController
           participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-7)
         else
           user = User.find(leader)
+          logger.debug(user)
           group_leader_name = user.fullname
           participants = user.followers
         end
@@ -1397,7 +1410,11 @@ class ReportsController < ApplicationController
       file_name = 'all'
 
       # loop through all group leaders
-      group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| user.id }.uniq
+      group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+      group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+      temp_group_leaders = group_leaders1 + group_leaders2
+      temp_group_leaders = temp_group_leaders.uniq.sort_by { |user| user[0].downcase }
+      group_leaders = temp_group_leaders.map { |user| user[1] }
       group_leaders.push(-1)
       group_leaders.push(-2)
       group_leaders.push(-3)
