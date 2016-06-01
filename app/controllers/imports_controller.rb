@@ -73,9 +73,9 @@ class ImportsController < ApplicationController
       liability_form_received = row[61] ##
       #is_quizzer = row[37] ## 
       #is_coach = row[38] ##
-      planning_on_coaching = row[41] ##
+      planning_on_coaching = row[41] == 'Yes' ? 1 : 0 ##
       coaching_team = row[42] ##
-      planning_on_officiating = row[43] ##
+      planning_on_officiating = row[43] == 'Yes' ? 1 : 0 ##
       coaching_team_2 = row[44] ##
       group_leader_email = row[62]
       staying_off_campus = row[64]
@@ -153,6 +153,7 @@ class ImportsController < ApplicationController
       #pr.is_quizzer = is_quizzer
       #pr.is_coach = is_coach
       pr.planning_on_coaching = planning_on_coaching
+      pr.planning_on_officiating = planning_on_officiating
       pr.coaching_team = coaching_team
       pr.coaching_team_2 = coaching_team_2
       pr.staying_off_campus = staying_off_campus

@@ -81,6 +81,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :coaches_teams => :get,
                                 :quizzers_teams => :get,
                                 :coaches_quizzers_teams => :get,
+                                :officials => :get,
                                 :group_leaders => :get,
                                 :group_leader_summary => [:get, :post],
                                 :housing_by_building => [:get, :post],

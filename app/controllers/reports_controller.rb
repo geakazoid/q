@@ -1756,6 +1756,77 @@ class ReportsController < ApplicationController
     send_file "#{RAILS_ROOT}/public/download/participants_liability_#{file_name}.xls", :filename => "participants_liability_#{file_name}.xls"
   end
 
+  # create a downloadable excel of participants who are officials
+  def officials
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+
+    # find only officials
+    @participants = ParticipantRegistration.find(:all, :conditions => "registration_type = 'official'")
+
+    # formatting
+    header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify
+
+    # write out headers
+    column = 0
+    sheet1[0,column] = 'Name'
+    sheet1[0,column+=1] = 'Home Phone'
+    sheet1[0,column+=1] = 'Mobile Phone'
+    sheet1[0,column+=1] = 'Email'
+    sheet1[0,column+=1] = 'District'
+    sheet1[0,column+=1] = 'Region'
+    sheet1[0,column+=1] = 'Group Leader'
+    sheet1[0,column+=1] = 'Planning on Coaching'
+    sheet1.row(0).default_format = header_format
+
+    pos = 1
+    @participants.each do |participant|
+      column = 0
+      sheet1[pos,column] = participant.full_name_reversed
+      sheet1[pos,column+=1] = participant.home_phone
+      sheet1[pos,column+=1] = participant.mobile_phone
+      sheet1[pos,column+=1] = participant.email
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
+
+      # group leader
+      if (participant.group_leader == '-1')
+        group_leader_name = 'Group Leader Not Listed'
+      elsif (participant.group_leader == '-2')
+        group_leader_name = 'Group Leader Not Known'
+      elsif (participant.group_leader == '-3')
+        group_leader_name = 'No Group Leader'
+      elsif (participant.group_leader == '-4')
+        group_leader_name = 'Staff'
+      elsif (participant.group_leader == '-5')
+        group_leader_name = 'Official'
+      elsif (participant.group_leader == '-6')
+        group_leader_name = 'Volunteer'
+      elsif (participant.group_leader == '-7')
+        group_leader_name = 'Representative'
+      else
+        if !participant.group_leader.nil? and !participant.group_leader.empty?
+          user = User.find(participant.group_leader)
+          group_leader_name = user.fullname
+        end
+      end
+      sheet1[pos,column+=1] = group_leader_name
+
+      sheet1[pos,column+=1] = participant.planning_on_coaching ? "Yes" : "No"
+
+      pos += 1
+    end
+
+    for i in 0..7
+      sheet1.column(i).width = 20
+    end
+    sheet1.column(3).width = 30
+
+    book.write "#{RAILS_ROOT}/public/download/officials.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/officials.xls", :filename => "officials.xls"
+  end
+
   # create a downloadable excel of quizzers and coaches that don't have a team
   def no_team
     book = Spreadsheet::Workbook.new
