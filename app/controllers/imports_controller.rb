@@ -78,6 +78,7 @@ class ImportsController < ApplicationController
       planning_on_officiating = row[43] ##
       coaching_team_2 = row[44] ##
       group_leader_email = row[62]
+      staying_off_campus = row[64]
       
       # departure airline (sigh cvent sigh)
       for i in 57..58
@@ -153,6 +154,7 @@ class ImportsController < ApplicationController
       #pr.is_coach = is_coach
       pr.coaching_team = coaching_team
       pr.coaching_team_2 = coaching_team_2
+      pr.staying_off_campus = staying_off_campus
 
       # TODO: Is this being overwritten if changed?
       # try and figure out group leader based on group leader email

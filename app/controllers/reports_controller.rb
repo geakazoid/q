@@ -75,6 +75,13 @@ class ReportsController < ApplicationController
     participant_registrations
   end
 
+  # generate a report participant registrationsa staying off campus
+  def participant_registrations_off_campus
+    @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc', :conditions => 'staying_off_campus = "YES"')
+    @report_type = 'staying_off_campus'
+    participant_registrations
+  end
+
   # create a downloadable excel file of participant registrations
   # this method should not be accessed directly
   def participant_registrations

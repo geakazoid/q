@@ -73,6 +73,7 @@ ActionController::Routing::Routes.draw do |map|
                 :collection => {:participant_registrations_all => :get,
                                 :participant_registrations_complete => :get,
                                 :participant_registrations_incomplete => :get,
+                                :participant_registrations_off_campus => :get,
                                 :team_registrations_all => :get,
                                 :team_registrations_complete => :get,
                                 :team_registrations_incomplete => :get,

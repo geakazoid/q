@@ -54,7 +54,8 @@
     Select Building:
     <%= select_tag :building_id, '<option>- Select -</option>' + options_from_collection_for_select(@buildings, 'id', 'name') %>
     <%= submit_tag 'Submit' %><br/>
-    <%= link_to 'All Buildings', :controller => 'reports', :action => 'housing_by_building' %>
+    <%= link_to 'All Buildings', :controller => 'reports', :action => 'housing_by_building' %><br/>
+    <%= link_to 'Staying Off Campus', :controller => 'reports', :action => 'participant_registrations_off_campus' %>
   <% end %>
   <h3>Housing By Group Leader</h3>
   <% form_tag '/reports/housing_by_group_leader' do %>
