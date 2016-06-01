@@ -2,6 +2,7 @@ class Team < ActiveRecord::Base
   belongs_to :division
   belongs_to :team_registration
   has_and_belongs_to_many :participant_registrations
+  has_one :coach, :class_name => "ParticipantRegistration", :foreign_key => "coach_id"
   has_many :quizzers1, :class_name => "ParticipantRegistration", :foreign_key => "team1_id", :conditions => "registration_type = 'quizzer'"
   has_many :quizzers2, :class_name => "ParticipantRegistration", :foreign_key => "team2_id", :conditions => "registration_type = 'quizzer'"
   has_many :quizzers3, :class_name => "ParticipantRegistration", :foreign_key => "team3_id", :conditions => "registration_type = 'quizzer'"

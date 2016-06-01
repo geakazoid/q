@@ -41,6 +41,7 @@ class TeamRegistrationsController < ApplicationController
     @team_registration = TeamRegistration.new
     @districts = District.find(:all, :order => "name")
     @divisions = Division.find(:all)
+    @coaches = ParticipantRegistration.find(:all, :conditions => "registration_type = 'coach' OR planning_on_coaching = 'YES'")
     
     # find our first page (which should be the new team registration text)
     @page = Page.find_by_label('Register Teams Text')
@@ -67,6 +68,7 @@ class TeamRegistrationsController < ApplicationController
 
     @districts = District.find(:all, :order => "name")
     @divisions = Division.find(:all)
+    @coaches = ParticipantRegistration.find(:all, :conditions => "registration_type = 'coach' OR planning_on_coaching = 'YES'")
 
     respond_to do |format|
       format.html {

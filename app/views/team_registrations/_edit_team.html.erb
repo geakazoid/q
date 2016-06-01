@@ -5,15 +5,24 @@
 	&nbsp;
 	<%= form.label :division, "Division:" %>
 	<% if admin? %>
-	  <%= form.collection_select :division_id,
-                                 @divisions,
-                                 :id,
-                                 :name,
-                                 {:prompt => '- Select -' },
-                                 {:class => 'division',
-                                  :onchange => 'javascript: check_regional_selection()'} %>
+	<%= form.collection_select :division_id,
+                                   @divisions,
+                                   :id,
+                                   :name,
+                                   {:prompt => '- Select -' },
+                                   {:class => 'division',
+                                   :onchange => 'javascript: check_regional_selection()'} %>
+        &nbsp;
+	<%= form.label :coach, 'Coach:' %>
+        <%= form.collection_select :coach_id,
+                                   @coaches,
+                                   :id,
+                                   :full_name,
+                                   {:prompt => '- Select -' },
+                                   {:class => 'coach'} %>
     <% else %>
       <%= form.object.division.name %>
+      &nbsp;&nbsp;Coach: <%= form.object.coach.fullname %>
     <% end %>
 	&nbsp;
     <%= link_to 'Edit Quizzers', edit_team_path(form.object.id) %>

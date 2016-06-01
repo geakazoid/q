@@ -12,6 +12,14 @@
                                {:class => 'division',
                                 :onchange => 'javascript: check_regional_selection()'} %>
     &nbsp;
+	  <%= form.label :coach, 'Coach:' %>
+    <%= form.collection_select :coach_id,
+                               @coaches,
+                               :id,
+                               :full_name,
+                               {:prompt => '- Select -' },
+                               {:class => 'coach'} %>
+    &nbsp;
 	  <%= remove_team_link( form ) %>
   </p>
 </div>

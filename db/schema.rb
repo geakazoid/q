@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 62) do
+ActiveRecord::Schema.define(:version => 63) do
 
   create_table "Officials", :force => true do |t|
     t.integer  "user_id"
@@ -534,6 +534,7 @@ ActiveRecord::Schema.define(:version => 62) do
     t.datetime "updated_at"
     t.integer  "amount_in_cents"
     t.boolean  "discounted"
+    t.integer  "coach_id"
   end
 
   create_table "users", :force => true do |t|

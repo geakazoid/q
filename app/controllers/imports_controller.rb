@@ -152,6 +152,7 @@ class ImportsController < ApplicationController
       pr.medical_liability = true if liability_form_received == "Yes"
       #pr.is_quizzer = is_quizzer
       #pr.is_coach = is_coach
+      pr.planning_on_coaching = planning_on_coaching
       pr.coaching_team = coaching_team
       pr.coaching_team_2 = coaching_team_2
       pr.staying_off_campus = staying_off_campus
