@@ -2,7 +2,6 @@
   <%= title('Edit A Team', :h1) %>
 </div>
 
-<%= @output %>
 <% form_for(@team) do |f| %>
 <%= f.error_messages :header_message => 'Errors prevented you from saving your selections.', :message => 'We encountered the following problems:' %>
 

@@ -17,9 +17,6 @@ class TeamsController < ApplicationController
   
   def edit
     @team = Team.find(params[:id])
-    if @team.nil? or (@team.team_registration.user != current_user)
-      @output = "Something went horribly wrong."
-    end
     
     if params[:show_all] && admin?
       @quizzers = ParticipantRegistration.find(:all,
