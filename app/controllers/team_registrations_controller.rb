@@ -41,7 +41,11 @@ class TeamRegistrationsController < ApplicationController
     @team_registration = TeamRegistration.new
     @districts = District.find(:all, :order => "name")
     @divisions = Division.find(:all)
-    @coaches = ParticipantRegistration.find(:all, :conditions => "registration_type = 'coach' OR planning_on_coaching = 'YES'")
+    if (admin?)
+      @coaches = ParticipantRegistration.find(:all, :conditions => "registration_type = 'coach' OR planning_on_coaching = 1", :order => "first_name asc, last_name asc")
+    else
+      @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id}")
+    end
     
     # find our first page (which should be the new team registration text)
     @page = Page.find_by_label('Register Teams Text')
@@ -68,7 +72,11 @@ class TeamRegistrationsController < ApplicationController
 
     @districts = District.find(:all, :order => "name")
     @divisions = Division.find(:all)
-    @coaches = ParticipantRegistration.find(:all, :conditions => "registration_type = 'coach' OR planning_on_coaching = 'YES'")
+    if (admin?)
+      @coaches = ParticipantRegistration.find(:all, :conditions => "registration_type = 'coach' OR planning_on_coaching = 1", :order => "first_name asc, last_name asc")
+    else
+      @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id}")
+    end
 
     respond_to do |format|
       format.html {
