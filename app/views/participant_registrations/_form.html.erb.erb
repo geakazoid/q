@@ -203,7 +203,8 @@
     <% end %>
   </div>
   <p id='update_registration'>
-    <%= pform.submit 'Update Registration' %>
+    <%= pform.submit 'Update Registration' %>&nbsp;
+    <%= link_to 'Delete Registration', @participant_registration, :confirm => 'Are you sure you want to delete this participant registration?', :method => :delete %>
   </p>
   </div>
 <% end %>
