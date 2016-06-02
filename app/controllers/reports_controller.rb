@@ -424,12 +424,12 @@ class ReportsController < ApplicationController
       for i in 4..6
         sheet1.row(1).set_format(i,group_header_format)
       end
-      sheet1[1,8] = 'Housing'
-      for i in 8..12
+      sheet1[1,7] = 'Housing'
+      for i in 7..9
         sheet1.row(1).set_format(i,group_header_format)
       end
-      sheet1[1,13] = 'Airline Information'
-      for i in 13..19
+      sheet1[1,14] = 'Airline Information'
+      for i in 14..20
         sheet1.row(1).set_format(i,group_header_format)
       end
 
@@ -445,6 +445,8 @@ class ReportsController < ApplicationController
       sheet1[2,column+=1] = 'Housing'
       sheet1[2,column+=1] = 'Housing June 25th'
       sheet1[2,column+=1] = 'Housing June 26th'
+      sheet1[2,column+=1] = 'Linens'
+      sheet1[2,column+=1] = 'Pillow'
       sheet1[2,column+=1] = 'Roommate Preference 1'
       sheet1[2,column+=1] = 'Roommate Preference 2'
       sheet1[2,column+=1] = 'Airline Arrival Date'
@@ -487,6 +489,8 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.housing
         sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
+        sheet1[pos,column+=1] = participant.linens? ? 'YES' : ''
+        sheet1[pos,column+=1] = participant.pillow? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.roommate_preference_1
         sheet1[pos,column+=1] = participant.roommate_preference_2
         
@@ -511,7 +515,7 @@ class ReportsController < ApplicationController
           end
           
           # set format
-          for i in 1..21
+          for i in 1..22
             sheet1.row(pos).set_format(i,data_format)
           end
           
@@ -531,17 +535,19 @@ class ReportsController < ApplicationController
       sheet1.column(7).width = 30
       sheet1.column(8).width = 10
       sheet1.column(9).width = 10
-      sheet1.column(10).width = 30
-      sheet1.column(11).width = 30
-      sheet1.column(12).width = 20
-      sheet1.column(13).width = 20
+      sheet1.column(10).width = 10
+      sheet1.column(11).width = 10
+      sheet1.column(12).width = 30
+      sheet1.column(13).width = 30
       sheet1.column(14).width = 20
       sheet1.column(15).width = 20
       sheet1.column(16).width = 20
       sheet1.column(17).width = 20
-      sheet1.column(18).width = 10
-      sheet1.column(19).width = 10
+      sheet1.column(18).width = 20
+      sheet1.column(19).width = 20
       sheet1.column(20).width = 10
+      sheet1.column(21).width = 10
+      sheet1.column(22).width = 10
 
       book.write "#{RAILS_ROOT}/public/download/group_leader_summary_#{file_name}.xls"
 
@@ -614,12 +620,12 @@ class ReportsController < ApplicationController
         for i in 4..6
           sheet1.row(1).set_format(i,group_header_format)
         end
-        sheet1[1,8] = 'Housing'
-        for i in 8..12
+        sheet1[1,7] = 'Housing'
+        for i in 7..9
           sheet1.row(1).set_format(i,group_header_format)
         end
-        sheet1[1,13] = 'Airline Information'
-        for i in 13..19
+        sheet1[1,14] = 'Airline Information'
+        for i in 14..20
           sheet1.row(1).set_format(i,group_header_format)
         end
   
@@ -635,6 +641,8 @@ class ReportsController < ApplicationController
         sheet1[2,column+=1] = 'Housing'
         sheet1[2,column+=1] = 'Housing June 25th'
         sheet1[2,column+=1] = 'Housing June 26th'
+        sheet1[2,column+=1] = 'Linens'
+        sheet1[2,column+=1] = 'Pillow'
         sheet1[2,column+=1] = 'Roommate Preference 1'
         sheet1[2,column+=1] = 'Roommate Preference 2'
         sheet1[2,column+=1] = 'Airline Arrival Date'
@@ -691,6 +699,8 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.housing
           sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
           sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
+          sheet1[pos,column+=1] = participant.linens? ? 'YES' : ''
+          sheet1[pos,column+=1] = participant.pillow? ? 'YES' : ''
           sheet1[pos,column+=1] = participant.roommate_preference_1
           sheet1[pos,column+=1] = participant.roommate_preference_2
           
@@ -763,17 +773,18 @@ class ReportsController < ApplicationController
         sheet1.column(7).width = 30
         sheet1.column(8).width = 10
         sheet1.column(9).width = 10
-        sheet1.column(10).width = 30
-        sheet1.column(11).width = 30
-        sheet1.column(12).width = 20
+        sheet1.column(10).width = 10
+        sheet1.column(11).width = 10
+        sheet1.column(12).width = 30
         sheet1.column(13).width = 20
         sheet1.column(14).width = 20
         sheet1.column(15).width = 20
         sheet1.column(16).width = 20
         sheet1.column(17).width = 20
-        sheet1.column(18).width = 10
+        sheet1.column(18).width = 20
         sheet1.column(19).width = 10
         sheet1.column(20).width = 10
+        sheet1.column(21).width = 10
 
         # output shirt size counts
         pos += 2
