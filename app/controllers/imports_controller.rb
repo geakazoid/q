@@ -253,8 +253,10 @@ class ImportsController < ApplicationController
           end
           
           pr = ParticipantRegistration.find_by_confirmation_number(correction[0])
-          pr.send("#{correction[1]}=".to_sym, correction[2])
-          pr.save(false)
+          unless pr.nil?
+            pr.send("#{correction[1]}=".to_sym, correction[2])
+            pr.save(false)
+          end
     end
     
     respond_to do |format|
