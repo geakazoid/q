@@ -184,59 +184,59 @@ class ImportsController < ApplicationController
             participant_registration_user.save
           end
           # create team placeholders
-          teams = Array.new
-          if user.num_experienced_district_teams_available > 0
-            user.num_experienced_district_teams_available.times do
-              division = Division.find_by_name("District Experienced")
-              team = Team.new
-              team.name = user.fullname + "'s District Experienced Team"
-              team.division = division
-              teams << team
-            end
-          end
-          if user.num_novice_district_teams_available > 0
-            user.num_novice_district_teams_available.times do
-              division = Division.find_by_name("District Novice")
-              team = Team.new
-              team.name = user.fullname + "'s District Novice Team"
-              team.division = division
-              teams << team
-            end
-          end
-          if user.num_experienced_local_teams_available > 0
-            user.num_experienced_local_teams_available.times do
-              division = Division.find_by_name("Local Experienced")
-              team = Team.new
-              team.name = user.fullname + "'s Local Experienced Team"
-              team.division = division
-              teams << team
-            end
-          end
-          if user.num_novice_local_teams_available > 0
-            user.num_novice_local_teams_available.times do
-              division = Division.find_by_name("Local Novice")
-              team = Team.new
-              team.name = user.fullname + "'s Local Novice Team"
-              team.division = division
-              teams << team
-            end
-          end
-          if teams.count > 0
-            team_registration = TeamRegistration.new
-            team_registration.user = user
-            team_registration.audit_user = user
-            team_registration.first_name = user.first_name
-            team_registration.last_name = user.last_name
-            team_registration.phone = user.phone
-            team_registration.email = user.email
-            team_registration.district = user.district
-            team_registration.paid = true
-            team_registration.amount_in_cents = 0
-            teams.each do |team|
-              team_registration.teams << team
-            end
-            team_registration.save
-          end
+          #teams = Array.new
+          #if user.num_experienced_district_teams_available > 0
+          #  user.num_experienced_district_teams_available.times do
+          #    division = Division.find_by_name("District Experienced")
+          #    team = Team.new
+          #    team.name = user.fullname + "'s District Experienced Team"
+          #    team.division = division
+          #    teams << team
+          #  end
+          #end
+          #if user.num_novice_district_teams_available > 0
+          #  user.num_novice_district_teams_available.times do
+          #    division = Division.find_by_name("District Novice")
+          #    team = Team.new
+          #    team.name = user.fullname + "'s District Novice Team"
+          #    team.division = division
+          #    teams << team
+          #  end
+          #end
+          #if user.num_experienced_local_teams_available > 0
+          #  user.num_experienced_local_teams_available.times do
+          #    division = Division.find_by_name("Local Experienced")
+          #    team = Team.new
+          #    team.name = user.fullname + "'s Local Experienced Team"
+          #    team.division = division
+          #    teams << team
+          #  end
+          #end
+          #if user.num_novice_local_teams_available > 0
+          #  user.num_novice_local_teams_available.times do
+          #    division = Division.find_by_name("Local Novice")
+          #    team = Team.new
+          #    team.name = user.fullname + "'s Local Novice Team"
+          #    team.division = division
+          #    teams << team
+          #  end
+          #end
+          #if teams.count > 0
+          #  team_registration = TeamRegistration.new
+          #  team_registration.user = user
+          #  team_registration.audit_user = user
+          #  team_registration.first_name = user.first_name
+          #  team_registration.last_name = user.last_name
+          #  team_registration.phone = user.phone
+          #  team_registration.email = user.email
+          #  team_registration.district = user.district
+          #  team_registration.paid = true
+          #  team_registration.amount_in_cents = 0
+          #  teams.each do |team|
+          #    team_registration.teams << team
+          #  end
+          #  team_registration.save
+          #end
         end
       end
     end
