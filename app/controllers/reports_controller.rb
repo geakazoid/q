@@ -113,7 +113,7 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Team 2'
     sheet1[0,column+=1] = 'Team 3'
     sheet1[0,column+=1] = 'Housing Assignment'
-    sheet1[0,column+=1] = 'Ministry Project'
+    sheet1[0,column+=1] = 'Staying Off Campus'
     sheet1[0,column+=1] = 'Special Needs?'
     sheet1[0,column+=1] = 'Special Needs Details'
     sheet1[0,column+=1] = 'Travel Type'
@@ -194,16 +194,7 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = ''
       end
 
-      # ministry project
-      if !participant_registration.ministry_project.nil? or !participant_registration.ministry_project_group.blank?
-        assignment = ''
-        assignment += participant_registration.ministry_project ? participant_registration.ministry_project.name : ''
-        assignment += !participant_registration.ministry_project_group.blank? ? ' - ' + participant_registration.ministry_project_group : ''
-        sheet1[pos,column+=1] = assignment
-      else
-        sheet1[pos,column+=1] = ''
-      end
-
+      sheet1[pos,column+=1] = !participant_registration.staying_off_campus.nil? ? participant_registration.staying_off_campus : '' 
       sheet1[pos,column+=1] = !participant_registration.special_needs.nil? ? participant_registration.special_needs.upcase : '' 
       sheet1[pos,column+=1] = participant_registration.special_needs_details
 
