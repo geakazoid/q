@@ -92,6 +92,23 @@
     </tr>
     <tr>
       <td>
+        Filter By Gender:
+      </td>
+      <td>
+        <%= select_tag :filter_type,
+                       (session[:gender].blank? ? '<option>- Select -</option>' : '') +
+                        options_for_select({
+                          'Male' => 'male',
+                          'Female' => 'female'}.sort.map,
+                          session[:gender]),
+                        :onchange => "document.location='/participant_registrations/filter_housing/?gender=' + this.value;" %>
+        <% unless session[:gender].blank? %>
+          <a href='/participant_registrations/filter_housing/?gender=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
         <% if @filter_applied %>
           <a href='/participant_registrations/filter_housing/?clear=true'>Clear All Filters</a>
         <% end %>

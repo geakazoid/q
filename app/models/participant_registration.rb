@@ -172,6 +172,11 @@ class ParticipantRegistration < ActiveRecord::Base
     :conditions => "participant_registrations.airline_arrival_date is null or airline_departure_date is null"
   }
 
+  named_scope :by_gender, lambda { |gender| {
+      :conditions => "participant_registrations.gender = '#{gender}'"
+    }
+  }
+
   # strip out extra characters in mobile phone
   def before_validation
     self.home_phone = '' if self.home_phone.nil?

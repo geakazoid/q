@@ -410,6 +410,10 @@ class ParticipantRegistrationsController < ApplicationController
       @participant_registrations = @participant_registrations.by_group_leader(session[:group_leader])
       @filter_applied = true
     end
+    unless session[:gender].blank?
+      @participant_registrations = @participant_registrations.by_gender(session[:gender])
+      @filter_applied = true
+    end
     
     respond_to do |format|
       format.html {
@@ -454,6 +458,7 @@ class ParticipantRegistrationsController < ApplicationController
       session[:region_id] = nil
       session[:building_id] = nil
       session[:group_leader] = nil
+      session[:gender] = nil
  
       flash[:notice] = 'All filters have been cleared.'
     else
@@ -464,6 +469,7 @@ class ParticipantRegistrationsController < ApplicationController
       session[:region_id] = params[:region_id] unless params[:region_id].blank?
       session[:building_id] = params[:building_id] unless params[:building_id].blank?
       session[:group_leader] = params[:group_leader] unless params[:group_leader].blank?
+      session[:gender] = params[:gender] unless params[:gender].blank?
 
       # remove filters if none is passed
       session[:registration_type] = nil if params[:registration_type] == 'none'
@@ -472,6 +478,7 @@ class ParticipantRegistrationsController < ApplicationController
       session[:region_id] = nil if params[:region_id] == 'none'
       session[:building_id] = nil if params[:building_id] == 'none'
       session[:group_leader] = nil if params[:group_leader] == 'none'
+      session[:gender] = nil if params[:gender] == 'none'
     
       flash[:notice] = 'Filters updated successfully.'
     end
