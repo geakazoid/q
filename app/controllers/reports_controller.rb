@@ -207,7 +207,6 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant_registration.airline_arrival_date
       else
         sheet1[pos,column+=1] = ''
-        sheet1[pos,column+=1] = ''
       end
 
       sheet1[pos,column+=1] = participant_registration.arrival_airline
