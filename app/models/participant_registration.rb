@@ -168,6 +168,10 @@ class ParticipantRegistration < ActiveRecord::Base
     :conditions => "participant_registrations.airport_transportation = 1"
   }
   
+  named_scope :has_linens_or_pillow, {
+    :conditions => "participant_registrations.linens = 1 or participant_registrations.pillow = 1"
+  }
+  
   named_scope :no_flight_info, {
     :conditions => "participant_registrations.airline_arrival_date is null or airline_departure_date is null"
   }

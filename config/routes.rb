@@ -89,6 +89,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :housing_all => :get,
                                 :housing_pre => :get,
                                 :housing_offcampus => :get,
+                                :housing_snu => :get,
                                 :ministry_projects => [:get, :post],
                                 :ministry_projects_full => :get,
                                 :equipment_registrations => :get,

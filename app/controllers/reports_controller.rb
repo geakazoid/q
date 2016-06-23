@@ -2033,6 +2033,57 @@ class ReportsController < ApplicationController
     send_file "#{RAILS_ROOT}/public/download/housing_#{@filename}.xls", :filename => "housing_#{@filename}.xls"
   end
 
+  # create a downloadable excel file of housing for SNU (2016)
+  def housing_snu
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+
+    # formatting
+    header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify
+
+    # write out headers
+    column = 0
+    sheet1[0,column] = 'Participant'
+    sheet1[0,column+=1] = 'Building'
+    sheet1[0,column+=1] = 'Room'
+    sheet1[0,column+=1] = 'Linens'
+    sheet1[0,column+=1] = 'Pillow'
+    sheet1[0,column+=1] = 'June 25th'
+    sheet1[0,column+=1] = 'June 26th'
+
+    sheet1.row(0).default_format = header_format
+
+    participants = ParticipantRegistration.ordered_by_last_name
+    participants = participants.housing_complete.has_linens_or_pillow
+
+    pos = 1
+    participants.each do |participant|
+
+      column = 0
+      sheet1[pos,column] = participant.full_name_reversed
+      sheet1[pos,column+=1] = !participant.building.blank? ? participant.building.name : ''
+      sheet1[pos,column+=1] = !participant.room.blank? ? participant.room : ''
+      sheet1[pos,column+=1] = participant.linens ? 'Yes' : ''
+      sheet1[pos,column+=1] = participant.pillow ? 'Yes' : ''
+      sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
+      sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
+      pos += 1
+    end
+
+    # column widths
+    sheet1.column(0).width = 25
+    sheet1.column(1).width = 20 
+    sheet1.column(2).width = 10
+    sheet1.column(3).width = 15
+    sheet1.column(4).width = 15
+    sheet1.column(5).width = 15
+    sheet1.column(6).width = 15
+
+    book.write "#{RAILS_ROOT}/public/download/housing_snu.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/housing_snu.xls", :filename => "housing_snu.xls"
+  end
+
   # create a downloadable excel file of participant with special needs
   def special_needs
     book = Spreadsheet::Workbook.new
