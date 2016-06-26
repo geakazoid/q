@@ -23,6 +23,7 @@ Email: <%= h @equipment_registration.email %>
 <%= " Power Strips (" + @equipment_registration.power_strips.size.to_s + ")\n" unless @equipment_registration.power_strips.empty? -%>
 <%= " Extension Cords (" + @equipment_registration.extension_cords.size.to_s + ")\n" unless @equipment_registration.extension_cords.empty? -%>
 <%= " Microphones/Recorders (" + @equipment_registration.recorders.size.to_s + ")\n" unless @equipment_registration.recorders.empty? -%>
+<%= " Other Items (" + @equipment_registration.others.size.to_s + ")\n" unless @equipment_registration.others.empty? -%>
 
 Sincerely,
 Q2016 Staff

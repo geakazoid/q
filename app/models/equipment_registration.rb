@@ -10,6 +10,7 @@ class EquipmentRegistration < ActiveRecord::Base
   has_many :projectors, :class_name => 'Equipment', :conditions => 'equipment_type = "projector"'
   has_many :power_strips, :class_name => 'Equipment', :conditions => 'equipment_type = "power_strip"'
   has_many :extension_cords, :class_name => 'Equipment', :conditions => 'equipment_type = "extension_cord"'
+  has_many :others, :class_name => 'Equipment', :conditions => 'equipment_type = "other"'
   has_many :recorders, :class_name => 'Equipment', :conditions => 'equipment_type = "recorder"'
 
   accepts_nested_attributes_for :equipment, :allow_destroy => true
@@ -68,6 +69,7 @@ class EquipmentRegistration < ActiveRecord::Base
     list += "<li>Power Strips (" + self.power_strips.count.to_s + ")</li>" unless self.power_strips.count == 0
     list += "<li>Extension Cords (" + self.extension_cords.count.to_s + ")</li>" unless self.extension_cords.count == 0
     list += "<li>Microphones/Recorders (" + self.recorders.count.to_s + ")</li>" unless self.recorders.count == 0
+    list += "<li>Other Items (" + self.others.count.to_s + ")</li>" unless self.others.count == 0
     list += '</ul>'
     return list
   end
@@ -189,6 +191,7 @@ class EquipmentRegistration < ActiveRecord::Base
     @backup['power_strips'] = self.power_strips.count
     @backup['extension_cords'] = self.extension_cords.count
     @backup['recorders'] = self.recorders.count
+    @backup['others'] = self.others.count
   end
 
   # retrieve old information
