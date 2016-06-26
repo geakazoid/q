@@ -39,6 +39,7 @@
           <%= "Model: " + equipment.model + "<br/>" unless equipment.model.blank? %>
           <%= "Number of Plugs: " + equipment.number_of_plugs + "<br/>" unless equipment.number_of_plugs.blank? %>
           <%= "Length: " + equipment.length + "<br/>" unless equipment.length.blank? %>
+          <%= "Description: " + equipment.description + "<br/>" unless equipment.description.blank? %>
         </td>
         <td>
           <% if equipment.equipment_type == 'interface_box' %>
