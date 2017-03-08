@@ -364,7 +364,10 @@ class ParticipantRegistrationsController < ApplicationController
     @districts = District.all(:order => 'name')
     @regions = Region.all(:order => 'name')
 
-    @group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
+    @group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders = @group_leaders1 + @group_leaders2
+    @group_leaders = @group_leaders.uniq.sort_by { |user| user[0].downcase }
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])
     @group_leaders.push(['Volunteer', -6])
@@ -405,6 +408,10 @@ class ParticipantRegistrationsController < ApplicationController
     end
     unless session[:group_leader].blank?
       @participant_registrations = @participant_registrations.by_group_leader(session[:group_leader])
+      @filter_applied = true
+    end
+    unless session[:gender].blank?
+      @participant_registrations = @participant_registrations.by_gender(session[:gender])
       @filter_applied = true
     end
     
@@ -451,6 +458,7 @@ class ParticipantRegistrationsController < ApplicationController
       session[:region_id] = nil
       session[:building_id] = nil
       session[:group_leader] = nil
+      session[:gender] = nil
  
       flash[:notice] = 'All filters have been cleared.'
     else
@@ -461,6 +469,7 @@ class ParticipantRegistrationsController < ApplicationController
       session[:region_id] = params[:region_id] unless params[:region_id].blank?
       session[:building_id] = params[:building_id] unless params[:building_id].blank?
       session[:group_leader] = params[:group_leader] unless params[:group_leader].blank?
+      session[:gender] = params[:gender] unless params[:gender].blank?
 
       # remove filters if none is passed
       session[:registration_type] = nil if params[:registration_type] == 'none'
@@ -469,6 +478,7 @@ class ParticipantRegistrationsController < ApplicationController
       session[:region_id] = nil if params[:region_id] == 'none'
       session[:building_id] = nil if params[:building_id] == 'none'
       session[:group_leader] = nil if params[:group_leader] == 'none'
+      session[:gender] = nil if params[:gender] == 'none'
     
       flash[:notice] = 'Filters updated successfully.'
     end
@@ -490,7 +500,10 @@ class ParticipantRegistrationsController < ApplicationController
     @districts = District.all(:order => 'name')
     @regions = Region.all(:order => 'name')
 
-    @group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
+    @group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders = @group_leaders1 + @group_leaders2
+    @group_leaders = @group_leaders.uniq.sort_by { |user| user[0].downcase }
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])
     @group_leaders.push(['Volunteer', -6])
@@ -630,7 +643,10 @@ class ParticipantRegistrationsController < ApplicationController
     not_participating = MinistryProject.find_by_name('Not Participating')
     @ministry_projects.unshift(not_participating) unless not_participating.nil?
 
-    @group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
+    @group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders = @group_leaders1 + @group_leaders2
+    @group_leaders = @group_leaders.uniq.sort_by { |user| user[0].downcase }
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])
     @group_leaders.push(['Volunteer', -6])
@@ -781,7 +797,10 @@ class ParticipantRegistrationsController < ApplicationController
 
   # get all group leaders (someone who's registered a team)
   def get_group_leaders
-    @group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
+    @group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders = @group_leaders1 + @group_leaders2
+    @group_leaders = @group_leaders.uniq.sort_by { |user| user[0].downcase }
     @group_leaders.insert(0, ['- Select -', ''])
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])
@@ -928,16 +947,21 @@ class ParticipantRegistrationsController < ApplicationController
     if request.post?
       participant_registration = ParticipantRegistration.find_by_confirmation_number(params[:confirmation_number])
       unless participant_registration.nil?
-        participant_registration_user = ParticipantRegistrationUser.find(:first, :conditions => "user_id = #{current_user.id} and participant_registration_id = #{participant_registration.id}")
-        if participant_registration_user.nil?
-          participant_registration_user = ParticipantRegistrationUser.new
-          participant_registration_user.user = current_user
-          participant_registration_user.participant_registration = participant_registration
-          participant_registration_user.owner = true
-          participant_registration_user.save
-          claim_message = "Registration #{params[:confirmation_number]} (#{participant_registration.full_name}) claimed successfully!"
-        else
+        # check to see if it's already been claimed by someone else
+        owners = ParticipantRegistrationUser.find(:all, :conditions => "participant_registration_id = #{participant_registration.id} and owner = 1")
+        if owners.count == 1
           claim_message = "Registration #{params[:confirmation_number]} (#{participant_registration.full_name}) has already been claimed."
+        else
+
+          participant_registration_user = ParticipantRegistrationUser.find(:first, :conditions => "user_id = #{current_user.id} and participant_registration_id = #{participant_registration.id}")
+          if participant_registration_user.nil?
+            participant_registration_user = ParticipantRegistrationUser.new
+            participant_registration_user.user = current_user
+            participant_registration_user.participant_registration = participant_registration
+            participant_registration_user.owner = true
+            participant_registration_user.save
+            claim_message = "Registration #{params[:confirmation_number]} (#{participant_registration.full_name}) claimed successfully!"
+          end
         end
       end
       flash.now[:notice] = claim_message

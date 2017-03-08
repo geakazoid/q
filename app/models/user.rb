@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
   has_many :complete_participant_registrations, :through => :participant_registration_users, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => 'paid = true'
   has_many :incomplete_participant_registrations, :through => :participant_registration_users, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => 'paid = false'
   has_many :owned_participant_registrations, :through => :participant_registration_owners, :class_name => 'ParticipantRegistration', :source => :participant_registration
+  has_many :owned_participant_registrations_with_teams, :through => :participant_registration_owners, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => '(num_experienced_local_teams > 0 or num_novice_local_teams > 0 or num_experienced_district_teams > 0 or num_novice_district_teams > 0)'
   has_many :shared_participant_registrations, :through => :participant_registration_editors, :class_name => 'ParticipantRegistration', :source => :participant_registration
   has_many :family_participant_registrations, :through => :participant_registration_owners, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => 'registration_type = "family" and most_recent_grade != "Child Age 3 and Under" and paid = true'
   has_many :followers, :class_name => 'ParticipantRegistration', :foreign_key => 'group_leader', :order => 'last_name asc'
@@ -125,31 +126,76 @@ class User < ActiveRecord::Base
     complete_team_registrations.size > 0
   end
   
-  # return number of total district team registrations available
-  def num_district_teams_available
+  # return number of total experienced district team registrations available
+  def num_experienced_district_teams_available
     count = 0
     self.owned_participant_registrations.each do |pr|
-      count = count + pr.num_district_teams
+      count = count + pr.num_experienced_district_teams
     end
     # remove any registrations already used
     self.complete_team_registrations.each do |tr|
-      count = count - tr.district_count
+      count = count - tr.district_experienced_count
+    end
+    return count
+  end
+  
+  # return number of total novice district team registrations available
+  def num_novice_district_teams_available
+    count = 0
+    self.owned_participant_registrations.each do |pr|
+      count = count + pr.num_novice_district_teams
+    end
+    # remove any registrations already used
+    self.complete_team_registrations.each do |tr|
+      count = count - tr.district_novice_count
     end
     return count
   end
 
-  # return number of total local team registrations available
-  def num_local_teams_available
+  # return number of total experienced local team registrations available
+  def num_experienced_local_teams_available
     count = 0
     # count all paid registrations
     self.owned_participant_registrations.each do |pr|
-      count = count + pr.num_local_teams
+      count = count + pr.num_experienced_local_teams
     end
     # remove any registrations already used
     self.complete_team_registrations.each do |tr|
-      count = count - tr.local_count
+      count = count - tr.local_experienced_count
     end
     return count
+  end
+
+  # return number of total novice local team registrations available
+  def num_novice_local_teams_available
+    count = 0
+    # count all paid registrations
+    self.owned_participant_registrations.each do |pr|
+      count = count + pr.num_novice_local_teams
+    end
+    # remove any registrations already used
+    self.complete_team_registrations.each do |tr|
+      count = count - tr.local_novice_count
+    end
+    return count
+  end
+
+  # return total number of possible team registrations
+  def num_total_teams_possible
+    count = 0
+    self.owned_participant_registrations.each do |pr|
+      count = count + pr.num_novice_local_teams
+      count = count + pr.num_experienced_local_teams
+      count = count + pr.num_novice_district_teams
+      count = count + pr.num_experienced_district_teams
+    end
+    return count
+  end
+
+  # return total number of available team registrations
+  def num_total_teams_available
+    return self.num_novice_local_teams_available + self.num_experienced_local_teams_available + 
+           self.num_novice_district_teams_available + self.num_experienced_district_teams_available
   end
 
   protected

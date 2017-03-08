@@ -1,0 +1,26 @@
+<%= render :partial => "layouts/head" %>
+
+<div id="container">
+
+  <div id="content" style="width:99%">
+
+    <%= content_tag 'p', flash[:notice], :class => 'notice' if flash[:notice] %>
+    <%= content_tag 'p', flash[:error], :class => 'notice error' if flash[:error] %>
+
+    <%= yield %>
+  </div>
+</div>
+
+<div id="footer">
+  <!--
+  <p class="legal">
+  <a href="/legal/" style="color:#369;">Legal</a>
+  </p>
+  -->
+  <p class="disclaim">
+    <strong></strong>
+  </p>
+  <br style="clear:both;" />
+</div>
+</body>
+</html>

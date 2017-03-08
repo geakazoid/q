@@ -15,7 +15,7 @@ h1
 
 a
 {
-    color:#3cada9;
+    color:#39bdcc;
 }
 
 #content
@@ -29,6 +29,7 @@ a
     border-width:0 5px 5px 0;
     margin:1em 0;
     padding:20px;
+    overflow: auto;
 }
 
 #content_stats
@@ -468,12 +469,12 @@ div.upload input
 {
     display:block;
     float:left;
-    color:#ee5e61;
+    color:#d3599b;
 }
 
 #header ul#nav li.login a
 {
-    color:#3cada9;
+    color:#39bdcc;
     text-decoration:none;
 }
 

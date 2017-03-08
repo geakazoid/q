@@ -4,7 +4,7 @@ but is instead being sent to the currently logged in user.
 <% end %>
 Dear <%= h @user.first_name %>,
 
-The following equipment has been registered on http://www.q2012.org. Details are below.
+The following equipment has been registered on http://www.q2016.org. Details are below.
 
 Owner: <%= @equipment_registration.user.fullname %> (<%= @equipment_registration.user.email %>)
 <%- if @equipment_registration.user != @equipment_registration.creator -%>
@@ -25,6 +25,7 @@ Email: <%= h @equipment_registration.email %>
 <%= " Power Strips (" + @equipment_registration.power_strips.size.to_s + ")\n" unless @equipment_registration.power_strips.empty? -%>
 <%= " Extension Cords (" + @equipment_registration.extension_cords.size.to_s + ")\n" unless @equipment_registration.extension_cords.empty? -%>
 <%= " Microphones/Recorders (" + @equipment_registration.recorders.size.to_s + ")\n" unless @equipment_registration.recorders.empty? -%>
+<%= " Other Items (" + @equipment_registration.others.size.to_s + ")\n" unless @equipment_registration.others.empty? -%>
 
 Sincerely,
-Q2014 Staff
+Q2016 Staff

@@ -10,8 +10,10 @@
     <% end %>
     <p>Hello <%= h @evaluation.sent_to_name %>!</p>
     <p>
-      Please complete the following recommendation form for <%= h @evaluation.official.full_name %> for Q2014.
-      Please complete this request as soon as you can.
+      Please complete the following recommendation form for <%= h @evaluation.official.full_name %> for Q2016. In order to ensure the best officials in the right assignments, it is imperative for us to gather feedback from the district and regional directors.  Please take a few minutes to complete the recommendation as thoroughly as possible.
+    </p>
+    <p>
+      Please complete this request as soon as you can. Once recommendations are received for an official and the official is selected to serve, a final registration link will be sent to them to complete the process.
     </p>
     <p>
       <%= link_to "#{AppConfig.site_url}/evaluation/#{@evaluation.key}", "#{AppConfig.site_url}/evaluation/#{@evaluation.key}" %>
@@ -22,7 +24,8 @@
     <p>
       Thanks,<br/>
       Todd Olson<br/>
-      Q2014 Coordinator of Officials<br/>
+      Q2016 Coordinator of Officials<br/>
+      920-903-7575 mobile<br/>
       tolson27@gmail.com
     </p>
   </body>

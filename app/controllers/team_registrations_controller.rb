@@ -11,7 +11,7 @@ class TeamRegistrationsController < ApplicationController
     else
       # if we aren't an admin we shouldn't be here
       record_not_found and return if !admin?
-      @team_registrations = TeamRegistration.find(:all)
+      @team_registrations = TeamRegistration.find(:all, :order => "first_name asc, last_name asc")
     end
 
     respond_to do |format|
@@ -41,6 +41,11 @@ class TeamRegistrationsController < ApplicationController
     @team_registration = TeamRegistration.new
     @districts = District.find(:all, :order => "name")
     @divisions = Division.find(:all)
+    if (admin?)
+      @coaches = ParticipantRegistration.find(:all, :conditions => "registration_type = 'coach' OR planning_on_coaching = 1", :order => "first_name asc, last_name asc")
+    else
+      @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id}")
+    end
     
     # find our first page (which should be the new team registration text)
     @page = Page.find_by_label('Register Teams Text')
@@ -67,6 +72,11 @@ class TeamRegistrationsController < ApplicationController
 
     @districts = District.find(:all, :order => "name")
     @divisions = Division.find(:all)
+    if (admin?)
+      @coaches = ParticipantRegistration.find(:all, :conditions => "registration_type = 'coach' OR planning_on_coaching = 1", :order => "first_name asc, last_name asc")
+    else
+      @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id}")
+    end
 
     respond_to do |format|
       format.html {
@@ -241,11 +251,11 @@ class TeamRegistrationsController < ApplicationController
         team.discounted = false
         # if the current user is melody sidor (id:20) she doesn't get a discount
         # this is a hack and should be removed as soon as she pays
-        if team.district_team? and applied_discount_count < discounted_count and current_user.id != 20
-          team.discounted = true
-          applied_discount_count += 1
-          team.amount_in_cents -= 1500
-        end
+        #if team.district_team? and applied_discount_count < discounted_count and current_user.id != 20
+        #  team.discounted = true
+        #  applied_discount_count += 1
+        #  team.amount_in_cents -= 1500
+        #end
 
         total_amount = total_amount + team.amount_in_cents
       end

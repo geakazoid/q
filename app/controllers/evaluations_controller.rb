@@ -30,7 +30,7 @@ class EvaluationsController < ApplicationController
       if @evaluation.update_attributes(params[:evaluation])
         @evaluation.mark_complete
         # deliver evaluation completion notification to admins and official admins
-        EvaluationMailer.deliver_complete_evaluation(@evaluation, (admin_emails + official_admin_emails).uniq, current_user)
+        EvaluationMailer.deliver_complete_evaluation(@evaluation, ['tolson27@gmail.com'], current_user)
         format.html
       else
         @errors = true

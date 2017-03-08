@@ -78,7 +78,7 @@ class OfficialsController < ApplicationController
     respond_to do |format|
       if @official.save
         # deliver new official registration notification
-        OfficialMailer.deliver_new_registration(@official, (admin_emails + official_admin_emails).uniq, current_user)
+        OfficialMailer.deliver_new_registration(@official, ['tolson27@gmail.com','chad.lynn91@gmail.com'], current_user)
         OfficialMailer.deliver_new_confirmation(@official, current_user)
         # deliver default evaluations
         send_default_evaluations
@@ -187,8 +187,11 @@ class OfficialsController < ApplicationController
   # POST /officials/:id/send_evaluation
   # send an evaluation for this official to a third party
   def send_evaluation
-    # check and make sure this evaluation hasn't already been sent
-    return if Evaluation.find(:first, :conditions => "official_id = #{params[:id]} and sent_to_email = '#{params[:sent_to_email]}'")
+    
+    if (!params[:resend])
+      # check and make sure this evaluation hasn't already been sent
+      return if Evaluation.find(:first, :conditions => "official_id = #{params[:id]} and sent_to_email = '#{params[:sent_to_email]}'")
+    end
     
     # create a new evaluation
     @evaluation = Evaluation.new

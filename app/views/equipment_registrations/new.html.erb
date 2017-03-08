@@ -1,5 +1,5 @@
 <div id='page_title'>
-  <%= title('Q2014 Equipment Registration', :h1) %>
+  <%= title('Q2016 Equipment Registration', :h1) %>
 </div>
 <%= render :partial => 'pages/page', :locals => { :page => @page } if !@page.nil? %>
 
@@ -63,6 +63,7 @@
         &nbsp;&nbsp;&nbsp;<%= add_link(f,'power_strip','Power Strip') %>
         &nbsp;&nbsp;&nbsp;<%= add_link(f,'extension_cord','Extension Cord') %>
         &nbsp;&nbsp;&nbsp;<%= add_link(f,'recorder','Microphone/Recorder') %>
+        &nbsp;&nbsp;&nbsp;<%= add_link(f,'other','Other') %>
       </p>
       <% @equipment_registration.equipment.each do |item| %>
         <% if !item.first? %>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Q2014 :: Trevecca Nazarene University :: June 30 - July 5<%= " | #{h @page_title}" if @page_title %></title>
+    <title>Q2016 :: Southern Nazarene University :: June 27 - July 1<%= " | #{h @page_title}" if @page_title %></title>
     <%= stylesheet_link_tag 'display' %>
     <%= javascript_include_tag "prototype" %>
     <%= yield :tinymce %>
@@ -35,9 +35,17 @@
 
     <div id="header">
       <% if admin? %><div id='revision_info'><%= render :file => RAILS_ROOT + "/public/revision" %> (<a href='/history.txt'>history</a>)</div><% end %>
-      <h1><%= link_to(image_tag('q2014_header.jpg', :height => 200), root_path) %></h1>
+      <h1><%= link_to(image_tag('q2016_header.png', :height => 200), root_path) %></h1>
       <ul id="nav">
         <li><%= link_to 'Home', root_path %></li>
+        <li><a href="/registrations">Register for Q2016</a></li>
+        <% if logged_in? %>
+          <li><%= link_to 'Team Registrations', user_team_registrations_path(current_user) %></a></li>
+        <% end %>
+        <li><a href="/officials/new">Register As An Official</a></li>
+        <li><a href="/equipment_registrations/new">Register Your Equipment</a></li>
+        <li><a href="/participant_registrations/claim">Claim A CVent Registration</a></li>
+        <li><a href="/Q2016%20Event%20Schedule.pdf" target="_blank">Event Schedule</a></li>
         <%= extra_pages %>
         <% if logged_in? %>
           <li><%= link_to 'Update Account', account_path %></li>

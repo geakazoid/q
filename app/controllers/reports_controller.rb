@@ -6,7 +6,10 @@ class ReportsController < ApplicationController
   # lists all available reports
   def index
     # populate group leaders
-    @group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }.uniq
+    @group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders = @group_leaders1 + @group_leaders2
+    @group_leaders = @group_leaders.uniq.sort_by { |user| user[0].downcase }
     @group_leaders.push(['Staff', -4])
     @group_leaders.push(['Official', -5])
     @group_leaders.push(['Volunteer', -6])
@@ -72,6 +75,13 @@ class ReportsController < ApplicationController
     participant_registrations
   end
 
+  # generate a report participant registrationsa staying off campus
+  def participant_registrations_off_campus
+    @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc', :conditions => 'staying_off_campus = "YES"')
+    @report_type = 'staying_off_campus'
+    participant_registrations
+  end
+
   # create a downloadable excel file of participant registrations
   # this method should not be accessed directly
   def participant_registrations
@@ -103,7 +113,7 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Team 2'
     sheet1[0,column+=1] = 'Team 3'
     sheet1[0,column+=1] = 'Housing Assignment'
-    sheet1[0,column+=1] = 'Ministry Project'
+    sheet1[0,column+=1] = 'Staying Off Campus'
     sheet1[0,column+=1] = 'Special Needs?'
     sheet1[0,column+=1] = 'Special Needs Details'
     sheet1[0,column+=1] = 'Travel Type'
@@ -114,8 +124,8 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Departure Airline'
     sheet1[0,column+=1] = 'Departure Airline Flight Number'
     sheet1[0,column+=1] = 'Airport Shuttle'
-    sheet1[0,column+=1] = 'Housing June 28th'
-    sheet1[0,column+=1] = 'Housing June29th'
+    sheet1[0,column+=1] = 'Housing June 25th'
+    sheet1[0,column+=1] = 'Housing June26th'
     sheet1[0,column+=1] = 'Medical / Liability?'
     sheet1[0,column+=1] = 'Amount Ordered'
     sheet1[0,column+=1] = 'Amount Paid'
@@ -184,16 +194,7 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = ''
       end
 
-      # ministry project
-      if !participant_registration.ministry_project.nil? or !participant_registration.ministry_project_group.blank?
-        assignment = ''
-        assignment += participant_registration.ministry_project ? participant_registration.ministry_project.name : ''
-        assignment += !participant_registration.ministry_project_group.blank? ? ' - ' + participant_registration.ministry_project_group : ''
-        sheet1[pos,column+=1] = assignment
-      else
-        sheet1[pos,column+=1] = ''
-      end
-
+      sheet1[pos,column+=1] = !participant_registration.staying_off_campus.nil? ? participant_registration.staying_off_campus : '' 
       sheet1[pos,column+=1] = !participant_registration.special_needs.nil? ? participant_registration.special_needs.upcase : '' 
       sheet1[pos,column+=1] = participant_registration.special_needs_details
 
@@ -205,7 +206,6 @@ class ReportsController < ApplicationController
       elsif participant_registration.travel_type == 'I am flying to the event.'
         sheet1[pos,column+=1] = participant_registration.airline_arrival_date
       else
-        sheet1[pos,column+=1] = ''
         sheet1[pos,column+=1] = ''
       end
 
@@ -327,8 +327,13 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'District'
     sheet1[0,column+=1] = 'Region'
 
-    @ids = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| [user.id] }.uniq
+    @ids1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.id] }
+    @ids2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.id] }
+    @ids = @ids1 + @ids2
+    @ids.uniq!
+
     @group_leaders = User.find(@ids)
+    @group_leaders = @group_leaders.uniq.sort_by { |user| user.fullname.downcase }
 
     pos = 1
     @group_leaders.each do |group_leader|
@@ -409,12 +414,12 @@ class ReportsController < ApplicationController
       for i in 4..6
         sheet1.row(1).set_format(i,group_header_format)
       end
-      sheet1[1,8] = 'Housing'
-      for i in 8..12
+      sheet1[1,7] = 'Housing'
+      for i in 7..9
         sheet1.row(1).set_format(i,group_header_format)
       end
-      sheet1[1,13] = 'Airline Information'
-      for i in 13..19
+      sheet1[1,14] = 'Airline Information'
+      for i in 14..20
         sheet1.row(1).set_format(i,group_header_format)
       end
 
@@ -427,10 +432,11 @@ class ReportsController < ApplicationController
       sheet1[2,column+=1] = 'Team 1'
       sheet1[2,column+=1] = 'Team 2'
       sheet1[2,column+=1] = 'Team 3'
-      sheet1[2,column+=1] = 'Ministry Project'
       sheet1[2,column+=1] = 'Housing'
-      sheet1[2,column+=1] = 'Housing June 28th'
-      sheet1[2,column+=1] = 'Housing June 29th'
+      sheet1[2,column+=1] = 'Housing June 25th'
+      sheet1[2,column+=1] = 'Housing June 26th'
+      sheet1[2,column+=1] = 'Linens'
+      sheet1[2,column+=1] = 'Pillow'
       sheet1[2,column+=1] = 'Roommate Preference 1'
       sheet1[2,column+=1] = 'Roommate Preference 2'
       sheet1[2,column+=1] = 'Airline Arrival Date'
@@ -469,20 +475,12 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.teams[2].name_with_division
         end
 
-        # ministry project
-        if !participant.ministry_project.nil? or !participant.ministry_project_group.blank?
-          assignment = ''
-          assignment += participant.ministry_project ? participant.ministry_project.name : ''
-          assignment += !participant.ministry_project_group.blank? ? ' - ' + participant.ministry_project_group : ''
-          sheet1[pos,column+=1] = assignment
-        else
-          sheet1[pos,column+=1] = ''
-        end
-        
         # housing
         sheet1[pos,column+=1] = participant.housing
         sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
+        sheet1[pos,column+=1] = participant.linens? ? 'YES' : ''
+        sheet1[pos,column+=1] = participant.pillow? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.roommate_preference_1
         sheet1[pos,column+=1] = participant.roommate_preference_2
         
@@ -507,7 +505,7 @@ class ReportsController < ApplicationController
           end
           
           # set format
-          for i in 1..21
+          for i in 1..22
             sheet1.row(pos).set_format(i,data_format)
           end
           
@@ -525,20 +523,21 @@ class ReportsController < ApplicationController
       sheet1.column(5).width = 30
       sheet1.column(6).width = 30
       sheet1.column(7).width = 30
-      sheet1.column(8).width = 30
+      sheet1.column(8).width = 10
       sheet1.column(9).width = 10
       sheet1.column(10).width = 10
-      sheet1.column(11).width = 30
+      sheet1.column(11).width = 10
       sheet1.column(12).width = 30
-      sheet1.column(13).width = 20
+      sheet1.column(13).width = 30
       sheet1.column(14).width = 20
       sheet1.column(15).width = 20
       sheet1.column(16).width = 20
       sheet1.column(17).width = 20
       sheet1.column(18).width = 20
-      sheet1.column(19).width = 10
+      sheet1.column(19).width = 20
       sheet1.column(20).width = 10
       sheet1.column(21).width = 10
+      sheet1.column(22).width = 10
 
       book.write "#{RAILS_ROOT}/public/download/group_leader_summary_#{file_name}.xls"
 
@@ -547,7 +546,11 @@ class ReportsController < ApplicationController
       file_name = 'all'
 
       # loop through all group leaders
-      group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| user.id }.uniq
+      group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+      group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+      temp_group_leaders = group_leaders1 + group_leaders2
+      temp_group_leaders = temp_group_leaders.uniq.sort_by { |user| user[0].downcase }
+      group_leaders = temp_group_leaders.map { |user| user[1] }
       group_leaders.push(-1)
       group_leaders.push(-2)
       group_leaders.push(-3)
@@ -582,6 +585,7 @@ class ReportsController < ApplicationController
           participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-7)
         else
           user = User.find(leader)
+          logger.debug(user)
           group_leader_name = user.fullname
           participants = user.followers
         end
@@ -606,12 +610,12 @@ class ReportsController < ApplicationController
         for i in 4..6
           sheet1.row(1).set_format(i,group_header_format)
         end
-        sheet1[1,8] = 'Housing'
-        for i in 8..12
+        sheet1[1,7] = 'Housing'
+        for i in 7..9
           sheet1.row(1).set_format(i,group_header_format)
         end
-        sheet1[1,13] = 'Airline Information'
-        for i in 13..19
+        sheet1[1,14] = 'Airline Information'
+        for i in 14..20
           sheet1.row(1).set_format(i,group_header_format)
         end
   
@@ -624,10 +628,11 @@ class ReportsController < ApplicationController
         sheet1[2,column+=1] = 'Team 1'
         sheet1[2,column+=1] = 'Team 2'
         sheet1[2,column+=1] = 'Team 3'
-        sheet1[2,column+=1] = 'Ministry Project'
         sheet1[2,column+=1] = 'Housing'
-        sheet1[2,column+=1] = 'Housing June 28th'
-        sheet1[2,column+=1] = 'Housing June 29th'
+        sheet1[2,column+=1] = 'Housing June 25th'
+        sheet1[2,column+=1] = 'Housing June 26th'
+        sheet1[2,column+=1] = 'Linens'
+        sheet1[2,column+=1] = 'Pillow'
         sheet1[2,column+=1] = 'Roommate Preference 1'
         sheet1[2,column+=1] = 'Roommate Preference 2'
         sheet1[2,column+=1] = 'Airline Arrival Date'
@@ -680,20 +685,12 @@ class ReportsController < ApplicationController
             sheet1[pos,column+=1] = participant.teams[2].name_with_division
           end
   
-          # ministry project
-          if !participant.ministry_project.nil? or !participant.ministry_project_group.blank?
-            assignment = ''
-            assignment += participant.ministry_project ? participant.ministry_project.name : ''
-            assignment += !participant.ministry_project_group.blank? ? ' - ' + participant.ministry_project_group : ''
-            sheet1[pos,column+=1] = assignment
-          else
-            sheet1[pos,column+=1] = ''
-          end
-          
           # housing
           sheet1[pos,column+=1] = participant.housing
           sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
           sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
+          sheet1[pos,column+=1] = participant.linens? ? 'YES' : ''
+          sheet1[pos,column+=1] = participant.pillow? ? 'YES' : ''
           sheet1[pos,column+=1] = participant.roommate_preference_1
           sheet1[pos,column+=1] = participant.roommate_preference_2
           
@@ -764,10 +761,10 @@ class ReportsController < ApplicationController
         sheet1.column(5).width = 30
         sheet1.column(6).width = 30
         sheet1.column(7).width = 30
-        sheet1.column(8).width = 30
+        sheet1.column(8).width = 10
         sheet1.column(9).width = 10
         sheet1.column(10).width = 10
-        sheet1.column(11).width = 30
+        sheet1.column(11).width = 10
         sheet1.column(12).width = 30
         sheet1.column(13).width = 20
         sheet1.column(14).width = 20
@@ -1179,8 +1176,8 @@ class ReportsController < ApplicationController
       sheet1[1,column+=1] = 'District'
       sheet1[1,column+=1] = 'Region'
       sheet1[1,column+=1] = 'Group Leader'
-      sheet1[1,column+=1] = 'June 28th'
-      sheet1[1,column+=1] = 'June 29th'
+      sheet1[1,column+=1] = 'June 25th'
+      sheet1[1,column+=1] = 'June 26th'
       sheet1.row(1).default_format = header_format
 
       pos = 2
@@ -1262,8 +1259,8 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Region'
         sheet1[1,column+=1] = 'Group Leader'
-        sheet1[1,column+=1] = 'June 28th'
-        sheet1[1,column+=1] = 'June 29th'
+        sheet1[1,column+=1] = 'June 25th'
+        sheet1[1,column+=1] = 'June 26th'
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1386,8 +1383,8 @@ class ReportsController < ApplicationController
       sheet1[1,column+=1] = 'Age Group / Grade'
       sheet1[1,column+=1] = 'District'
       sheet1[1,column+=1] = 'Region'
-      sheet1[1,column+=1] = 'June 28th'
-      sheet1[1,column+=1] = 'June 29th'
+      sheet1[1,column+=1] = 'June 25th'
+      sheet1[1,column+=1] = 'June 26th'
       sheet1.row(1).default_format = header_format
 
       pos = 2
@@ -1421,7 +1418,11 @@ class ReportsController < ApplicationController
       file_name = 'all'
 
       # loop through all group leaders
-      group_leaders = User.find(:all, :joins => [:team_registrations], :conditions => "team_registrations.paid = 1", :order => "first_name,last_name").map { |user| user.id }.uniq
+      group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+      group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+      temp_group_leaders = group_leaders1 + group_leaders2
+      temp_group_leaders = temp_group_leaders.uniq.sort_by { |user| user[0].downcase }
+      group_leaders = temp_group_leaders.map { |user| user[1] }
       group_leaders.push(-1)
       group_leaders.push(-2)
       group_leaders.push(-3)
@@ -1479,8 +1480,8 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'Age Group / Grade'
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Region'
-        sheet1[1,column+=1] = 'June 28th'
-        sheet1[1,column+=1] = 'June 29th'
+        sheet1[1,column+=1] = 'June 25th'
+        sheet1[1,column+=1] = 'June 26th'
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1756,6 +1757,77 @@ class ReportsController < ApplicationController
     send_file "#{RAILS_ROOT}/public/download/participants_liability_#{file_name}.xls", :filename => "participants_liability_#{file_name}.xls"
   end
 
+  # create a downloadable excel of participants who are officials
+  def officials
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+
+    # find only officials
+    @participants = ParticipantRegistration.find(:all, :conditions => "registration_type = 'official'")
+
+    # formatting
+    header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify
+
+    # write out headers
+    column = 0
+    sheet1[0,column] = 'Name'
+    sheet1[0,column+=1] = 'Home Phone'
+    sheet1[0,column+=1] = 'Mobile Phone'
+    sheet1[0,column+=1] = 'Email'
+    sheet1[0,column+=1] = 'District'
+    sheet1[0,column+=1] = 'Region'
+    sheet1[0,column+=1] = 'Group Leader'
+    sheet1[0,column+=1] = 'Planning on Coaching'
+    sheet1.row(0).default_format = header_format
+
+    pos = 1
+    @participants.each do |participant|
+      column = 0
+      sheet1[pos,column] = participant.full_name_reversed
+      sheet1[pos,column+=1] = participant.home_phone
+      sheet1[pos,column+=1] = participant.mobile_phone
+      sheet1[pos,column+=1] = participant.email
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
+      sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
+
+      # group leader
+      if (participant.group_leader == '-1')
+        group_leader_name = 'Group Leader Not Listed'
+      elsif (participant.group_leader == '-2')
+        group_leader_name = 'Group Leader Not Known'
+      elsif (participant.group_leader == '-3')
+        group_leader_name = 'No Group Leader'
+      elsif (participant.group_leader == '-4')
+        group_leader_name = 'Staff'
+      elsif (participant.group_leader == '-5')
+        group_leader_name = 'Official'
+      elsif (participant.group_leader == '-6')
+        group_leader_name = 'Volunteer'
+      elsif (participant.group_leader == '-7')
+        group_leader_name = 'Representative'
+      else
+        if !participant.group_leader.nil? and !participant.group_leader.empty?
+          user = User.find(participant.group_leader)
+          group_leader_name = user.fullname
+        end
+      end
+      sheet1[pos,column+=1] = group_leader_name
+
+      sheet1[pos,column+=1] = participant.planning_on_coaching ? "Yes" : "No"
+
+      pos += 1
+    end
+
+    for i in 0..7
+      sheet1.column(i).width = 20
+    end
+    sheet1.column(3).width = 30
+
+    book.write "#{RAILS_ROOT}/public/download/officials.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/officials.xls", :filename => "officials.xls"
+  end
+
   # create a downloadable excel of quizzers and coaches that don't have a team
   def no_team
     book = Spreadsheet::Workbook.new
@@ -1916,8 +1988,8 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Participant'
     sheet1[0,column+=1] = 'Group Leader'
     sheet1[0,column+=1] = 'District'
-    sheet1[0,column+=1] = 'June 28th'
-    sheet1[0,column+=1] = 'June 29th'
+    sheet1[0,column+=1] = 'June 25th'
+    sheet1[0,column+=1] = 'June 26th'
 
     sheet1.row(0).default_format = header_format
 
@@ -1958,6 +2030,57 @@ class ReportsController < ApplicationController
     book.write "#{RAILS_ROOT}/public/download/housing_#{@filename}.xls"
 
     send_file "#{RAILS_ROOT}/public/download/housing_#{@filename}.xls", :filename => "housing_#{@filename}.xls"
+  end
+
+  # create a downloadable excel file of housing for SNU (2016)
+  def housing_snu
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+
+    # formatting
+    header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify
+
+    # write out headers
+    column = 0
+    sheet1[0,column] = 'Participant'
+    sheet1[0,column+=1] = 'Building'
+    sheet1[0,column+=1] = 'Room'
+    sheet1[0,column+=1] = 'Linens'
+    sheet1[0,column+=1] = 'Pillow'
+    sheet1[0,column+=1] = 'June 25th'
+    sheet1[0,column+=1] = 'June 26th'
+
+    sheet1.row(0).default_format = header_format
+
+    participants = ParticipantRegistration.ordered_by_last_name
+    participants = participants.housing_complete.has_linens_or_pillow
+
+    pos = 1
+    participants.each do |participant|
+
+      column = 0
+      sheet1[pos,column] = participant.full_name_reversed
+      sheet1[pos,column+=1] = !participant.building.blank? ? participant.building.name : ''
+      sheet1[pos,column+=1] = !participant.room.blank? ? participant.room : ''
+      sheet1[pos,column+=1] = participant.linens ? 'Yes' : ''
+      sheet1[pos,column+=1] = participant.pillow ? 'Yes' : ''
+      sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
+      sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
+      pos += 1
+    end
+
+    # column widths
+    sheet1.column(0).width = 25
+    sheet1.column(1).width = 20 
+    sheet1.column(2).width = 10
+    sheet1.column(3).width = 15
+    sheet1.column(4).width = 15
+    sheet1.column(5).width = 15
+    sheet1.column(6).width = 15
+
+    book.write "#{RAILS_ROOT}/public/download/housing_snu.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/housing_snu.xls", :filename => "housing_snu.xls"
   end
 
   # create a downloadable excel file of participant with special needs
@@ -2140,5 +2263,87 @@ class ReportsController < ApplicationController
     book.write "#{RAILS_ROOT}/public/download/shuttle_#{filename}.xls"
 
     send_file "#{RAILS_ROOT}/public/download/shuttle_#{filename}.xls", :filename => "shuttle_#{filename}.xls"
+  end
+
+  # create a downloadable excel file of available and used team registrations
+  def claimed_teams
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+    # write out headers
+    sheet1[0,0] = 'First Name'
+    sheet1[0,1] = 'Last Name'
+    sheet1[0,2] = 'Phone'
+    sheet1[0,3] = 'Email'
+    sheet1[0,4] = 'District'
+    sheet1[0,5] = 'Region'
+    sheet1[0,6] = 'Confirmation Numbers'
+    sheet1[0,7] = 'Local Experienced'
+    sheet1[0,8] = 'Local Novice'
+    sheet1[0,9] = 'District Experienced'
+    sheet1[0,10] = 'District Novice'
+
+    pos = 1
+    #@participant_registrations = ParticipantRegistration.find(:all, :conditions => '(num_experienced_local_teams > 0 or num_novice_local_teams > 0 or num_experienced_district_teams > 0 or num_novice_district_teams > 0)'
+    @users = User.all
+
+    total_num_experienced_local_teams = 0
+    total_num_novice_local_teams = 0
+    total_num_experienced_district_teams = 0
+    total_num_novice_district_teams = 0
+    total = 0
+
+    @users.each do |user|
+      if user.owned_participant_registrations_with_teams.count > 0
+        sheet1[pos,0] = user.first_name
+        sheet1[pos,1] = user.last_name
+        sheet1[pos,2] = user.phone
+        sheet1[pos,3] = user.email
+        sheet1[pos,4] = user.district.name
+        sheet1[pos,5] = user.district.region.name
+        confirmation_numbers = ''
+        num_experienced_local_teams = 0
+        num_novice_local_teams = 0
+        num_experienced_district_teams = 0
+        num_novice_district_teams = 0
+        user.owned_participant_registrations_with_teams.each do |pr|
+          confirmation_numbers += pr.confirmation_number + ', '
+          num_experienced_local_teams += pr.num_experienced_local_teams
+          num_novice_local_teams += pr.num_novice_local_teams
+          num_experienced_district_teams += pr.num_experienced_district_teams
+          num_novice_district_teams += pr.num_novice_district_teams
+          total_num_experienced_local_teams += pr.num_experienced_local_teams
+          total_num_novice_local_teams += pr.num_novice_local_teams
+          total_num_experienced_district_teams += pr.num_experienced_district_teams
+          total_num_novice_district_teams += pr.num_novice_district_teams
+          total += pr.num_experienced_local_teams
+          total += pr.num_novice_local_teams
+          total += pr.num_experienced_district_teams
+          total += pr.num_novice_district_teams
+        end
+        confirmation_numbers.chomp!(', ')
+        sheet1[pos,6] = confirmation_numbers
+        sheet1[pos,7] = num_experienced_local_teams
+        sheet1[pos,8] = num_novice_local_teams
+        sheet1[pos,9] = num_experienced_district_teams
+        sheet1[pos,10] = num_novice_district_teams
+        pos = pos + 1
+      end
+    end
+    sheet1[pos,0] = ''
+    sheet1[pos,1] = ''
+    sheet1[pos,2] = ''
+    sheet1[pos,3] = ''
+    sheet1[pos,4] = ''
+    sheet1[pos,5] = ''
+    sheet1[pos,6] = 'Totals'
+    sheet1[pos,7] = total_num_experienced_local_teams
+    sheet1[pos,8] = total_num_novice_local_teams
+    sheet1[pos,9] = total_num_experienced_district_teams
+    sheet1[pos,10] = total_num_novice_district_teams
+    sheet1[pos,11] = total
+
+    book.write "#{RAILS_ROOT}/public/download/claimed_teams.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/claimed_teams.xls", :filename => "claimed_teams.xls"
   end
 end

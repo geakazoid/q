@@ -101,12 +101,18 @@ class TeamRegistration < ActiveRecord::Base
   
   # validate that the current user had available team registrations
   # this validation adds an error if a user attempts to register a
-  # team(s) and doesn't have the enough registrations to do so.
+  # team or teams and doesn't have enough registrations to do so.
   def current_user_has_registrations
-    if (district_count > @audit_user.num_district_teams_available)
+    if (district_experienced_count > @audit_user.num_experienced_district_teams_available)
       errors.add_to_base('You do not have enough district team registrations.')
     end
-    if (local_count > @audit_user.num_local_teams_available)
+    if (district_novice_count > @audit_user.num_novice_district_teams_available)
+      errors.add_to_base('You do not have enough district team registrations.')
+    end
+    if (local_experienced_count > @audit_user.num_experienced_local_teams_available)
+      errors.add_to_base('You do not have enough local team registrations.')
+    end
+    if (local_novice_count > @audit_user.num_novice_local_teams_available)
       errors.add_to_base('You do not have enough local team registrations.')
     end
   end

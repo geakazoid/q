@@ -1,0 +1,10 @@
+<div class='equipment'>
+  <p>
+    <span class='removal_link'><%= remove_link( form ) %></span>
+    <span class='title'>Other</span>
+    <%= form.hidden_field :equipment_type, :value => 'other' %>
+  </p>
+  <p>
+    <%= form.label :description, 'Description: ' %><%= form.text_field :description, :size => 50 %>
+  </p>
+</div>

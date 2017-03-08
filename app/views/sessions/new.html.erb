@@ -5,8 +5,8 @@
 <p>
 In order to interact with certain parts of the site you need to login. You can do that below.
 If you don't have a login you can <%= link_to 'register', register_path %>. Please note that
-this site only allows editing of information before the event. Registration and payment to
-attend Q2014 must be done through <%= link_to 'CVent', AppConfig.cvent_url, :target => '_blank' %>.
+this site only allows editing of information before the event. If you are registering as a
+quizzer, coach, or spectator you may not need to login and can simply <a href='/registrations'>register for the event</a>.
 </p>
 
 <% form_tag session_path do -%>

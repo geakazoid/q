@@ -19,6 +19,7 @@ class Equipment < ActiveRecord::Base
                      :model => '',
                      :number_of_plugs => '',
                      :monitor_size => false,
+                     :description => '',
                      :username => '',
                      :password => '',
                      :first => false,

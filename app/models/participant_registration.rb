@@ -119,7 +119,7 @@ class ParticipantRegistration < ActiveRecord::Base
   }
   
   named_scope :needs_housing, {
-    :conditions => "registration_type != 'Guest (Lodging off-campus)'"
+    :conditions => "registration_type != 'Guest (Lodging off-campus)' and staying_off_campus is null"
   }
 
   named_scope :ordered_by_building_room_last_name, {
@@ -168,8 +168,17 @@ class ParticipantRegistration < ActiveRecord::Base
     :conditions => "participant_registrations.airport_transportation = 1"
   }
   
+  named_scope :has_linens_or_pillow, {
+    :conditions => "participant_registrations.linens = 1 or participant_registrations.pillow = 1"
+  }
+  
   named_scope :no_flight_info, {
     :conditions => "participant_registrations.airline_arrival_date is null or airline_departure_date is null"
+  }
+
+  named_scope :by_gender, lambda { |gender| {
+      :conditions => "participant_registrations.gender = '#{gender}'"
+    }
   }
 
   # strip out extra characters in mobile phone

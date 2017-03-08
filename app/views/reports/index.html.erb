@@ -5,12 +5,16 @@
 <% if admin? %>
   <%= link_to 'Team Registrations', :controller => 'reports', :action => 'team_registrations_all' %>
   <br/>
+  <%= link_to 'Claimed Teams', :controller => 'reports', :action => 'claimed_teams' %>
+  <br/>
   <%= link_to 'Participant Registrations', :controller => 'reports', :action => 'participant_registrations_all' %>
   <br/>
   Participants and Teams :
   <%= link_to 'All', :controller => 'reports', :action => 'coaches_quizzers_teams' %> :
   <%= link_to 'Coaches', :controller => 'reports', :action => 'coaches_teams' %> :
   <%= link_to 'Quizzers', :controller => 'reports', :action => 'quizzers_teams' %>
+  <br/>
+  <%= link_to 'Officials', :controller => 'reports', :action => 'officials' %>
   <br/>
   <%= link_to 'Equipment Registrations', :controller => 'reports', :action => 'equipment_registrations' %><br/>
 <% end %>
@@ -33,7 +37,8 @@
   Housing :
   <%= link_to 'All', :controller => 'reports', :action => 'housing_all'  %> :
   <%= link_to 'Pre', :controller => 'reports', :action => 'housing_pre' %> :
-  <%= link_to 'Off Campus', :controller => 'reports', :action => 'housing_offcampus' %>
+  <%= link_to 'Off Campus', :controller => 'reports', :action => 'housing_offcampus' %> : 
+  <%= link_to 'SNU', :controller => 'reports', :action => 'housing_snu' %>
   <h3>Group Leader Summary</h3>
   <% form_tag '/reports/group_leader_summary' do %>
     Select Group Leader:
@@ -52,7 +57,8 @@
     Select Building:
     <%= select_tag :building_id, '<option>- Select -</option>' + options_from_collection_for_select(@buildings, 'id', 'name') %>
     <%= submit_tag 'Submit' %><br/>
-    <%= link_to 'All Buildings', :controller => 'reports', :action => 'housing_by_building' %>
+    <%= link_to 'All Buildings', :controller => 'reports', :action => 'housing_by_building' %><br/>
+    <%= link_to 'Staying Off Campus', :controller => 'reports', :action => 'participant_registrations_off_campus' %>
   <% end %>
   <h3>Housing By Group Leader</h3>
   <% form_tag '/reports/housing_by_group_leader' do %>

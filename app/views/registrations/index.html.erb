@@ -1,0 +1,27 @@
+<div id='page_title'>
+  <%= title('Register for Q2016', :h1) %>
+</div>
+
+<p>
+<span style='font-weight:bold;'>Quizzers, Spectators, Officials and Coaches (Anyone not registering a team).</span><br/><br/>
+
+<a href="/registrations/cvent">Register here</a>
+</p>
+<p>
+<span style='font-weight:bold;'>Anyone needing to register a team (Please login or create an account first).</span><br/><br/>
+
+<% if logged_in? %>
+<a href="/registrations/cvent">Register here</a>
+<% else %>
+You'll need to <a href="/login">login</a> first before you can register.
+<% end -%>
+</p>
+<p>
+<span style='font-weight:bold;'>Officials</span><br/><br/>
+
+<% if logged_in? %>
+<a href="/officials/new">Submit an application</a> before registering for the event as a participant.
+<% else %>
+You'll need to <a href="/login">login</a> first before you can submit an application.
+<% end -%>
+</p>

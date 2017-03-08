@@ -10,7 +10,7 @@
     <% end %>
     <p>Dear <%= @user.first_name %>,</p>
     <p>
-      This email is to confirm cancelation of the following equipment registration. You can submit a new equipment registration by visiting <a href='http://www.q2012.org'>Q2014.org</a>.
+      This email is to confirm cancelation of the following equipment registration. You can submit a new equipment registration by visiting <a href='http://www.q2016.org'>Q2016.org</a>.
       Details are below.
     </p>
     <div style='border: 1px solid #999; background: #ddd; padding: 0px 10px;'>
@@ -34,11 +34,12 @@
         <%= " Power Strips (" + @equipment_registration.power_strips.size.to_s + ")<br/>\n" unless @equipment_registration.power_strips.empty? -%>
         <%= " Extension Cords (" + @equipment_registration.extension_cords.size.to_s + ")<br/>\n" unless @equipment_registration.extension_cords.empty? -%>
         <%= " Microphones/Recorders (" + @equipment_registration.recorders.size.to_s + ")\n" unless @equipment_registration.recorders.empty? -%>
+        <%= " Other Items (" + @equipment_registration.others.size.to_s + ")\n" unless @equipment_registration.others.empty? -%>
       </p>
     </div>
     <p>
       Sincerely,<br/>
-      Q2014 Staff
+      Q2016 Staff
     </p>
   </body>
 </html>
