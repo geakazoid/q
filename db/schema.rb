@@ -9,7 +9,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 51) do
+ActiveRecord::Schema.define(:version => 60) do
+
+  create_table "Officials", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "creator_id"
+    t.integer  "district_id"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "phone"
+    t.string   "email"
+    t.text     "roles"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "actions", :force => true do |t|
     t.integer  "round_id",                     :null => false
@@ -50,6 +63,10 @@ ActiveRecord::Schema.define(:version => 51) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "air_conditioned", :default => false
+  end
+
+  create_table "cvent_corrections", :id => false, :force => true do |t|
+    t.text "correction_list"
   end
 
   create_table "districts", :force => true do |t|
@@ -194,7 +211,7 @@ ActiveRecord::Schema.define(:version => 51) do
     t.string   "past_events_attended"
     t.boolean  "reminder"
     t.integer  "reminder_days"
-    t.boolean  "paid",                          :default => false
+    t.boolean  "paid",                           :default => false
     t.text     "audit"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -203,11 +220,11 @@ ActiveRecord::Schema.define(:version => 51) do
     t.string   "airline_arrival_date"
     t.string   "airline_arrival_time"
     t.string   "airline_arrival_from"
-    t.boolean  "need_arrival_shuttle",          :default => false
+    t.boolean  "need_arrival_shuttle",           :default => false
     t.string   "departure_airline"
     t.string   "airline_departure_date"
     t.string   "airline_departure_time"
-    t.boolean  "need_departure_shuttle",        :default => false
+    t.boolean  "need_departure_shuttle",         :default => false
     t.string   "driving_arrival_date"
     t.string   "driving_arrival_time"
     t.string   "registration_code"
@@ -234,7 +251,7 @@ ActiveRecord::Schema.define(:version => 51) do
     t.string   "participant_housing"
     t.string   "arrival_flight_number"
     t.string   "departure_flight_number"
-    t.integer  "registration_fee",              :default => 0
+    t.integer  "registration_fee",               :default => 0
     t.string   "family_registrations"
     t.integer  "num_extra_youth_small_shirts"
     t.integer  "num_extra_youth_medium_shirts"
@@ -242,18 +259,37 @@ ActiveRecord::Schema.define(:version => 51) do
     t.string   "country"
     t.integer  "discount_in_cents"
     t.text     "discount_description"
-    t.integer  "extras_fee",                    :default => 0
+    t.integer  "extras_fee",                     :default => 0
     t.integer  "building_id"
     t.string   "room"
-    t.boolean  "medical_liability",             :default => false
-    t.boolean  "background_check",              :default => false
+    t.boolean  "medical_liability",              :default => false
+    t.boolean  "background_check",               :default => false
     t.integer  "ministry_project_id"
     t.string   "ministry_project_group"
     t.string   "arrival_airport"
     t.string   "departure_airport"
     t.integer  "num_sv_tickets"
     t.boolean  "sv_transportation"
-    t.boolean  "nazsafe",                       :default => false
+    t.boolean  "nazsafe",                        :default => false
+    t.string   "confirmation_number"
+    t.integer  "age"
+    t.boolean  "understand_form_completion"
+    t.boolean  "over_18"
+    t.string   "group_leader_import"
+    t.integer  "num_district_teams"
+    t.integer  "num_local_teams"
+    t.integer  "amount_ordered"
+    t.integer  "amount_paid"
+    t.integer  "amount_due"
+    t.string   "emergency_contact_name"
+    t.string   "emergency_contact_number"
+    t.string   "emergency_contact_relationship"
+    t.boolean  "airport_transportation"
+  end
+
+  create_table "participant_registrations_teams", :id => false, :force => true do |t|
+    t.integer "participant_registration_id"
+    t.integer "team_id"
   end
 
   create_table "participants", :force => true do |t|
@@ -454,7 +490,7 @@ ActiveRecord::Schema.define(:version => 51) do
   create_table "statistics", :force => true do |t|
     t.string   "name"
     t.string   "title"
-    t.text     "body"
+    t.text     "body",       :limit => 2147483647
     t.datetime "created_at"
     t.datetime "updated_at"
   end

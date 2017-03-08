@@ -91,8 +91,8 @@ class EquipmentRegistrationsController < ApplicationController
           format.html { redirect_to(new_equipment_registration_url({:admin => 'true'})) }
         else
           # deliver new official registration notification
-          EquipmentRegistrationMailer.deliver_new_registration(@equipment_registration, (admin_emails + equipment_admin_emails).uniq, current_user)
-          EquipmentRegistrationMailer.deliver_new_confirmation(@equipment_registration, current_user)
+          #EquipmentRegistrationMailer.deliver_new_registration(@equipment_registration, (admin_emails + equipment_admin_emails).uniq, current_user)
+          #EquipmentRegistrationMailer.deliver_new_confirmation(@equipment_registration, current_user)
           flash[:notice] = 'Your equipment has been successfully registered. Thanks for letting us borrow it!'
           format.html { redirect_to(root_url) }
         end
@@ -124,8 +124,8 @@ class EquipmentRegistrationsController < ApplicationController
 
     respond_to do |format|
       if @equipment_registration.save
-        EquipmentRegistrationMailer.deliver_update_registration(@equipment_registration, (admin_emails + equipment_admin_emails).uniq, current_user)
-        EquipmentRegistrationMailer.deliver_update_confirmation(@equipment_registration, current_user)
+        #EquipmentRegistrationMailer.deliver_update_registration(@equipment_registration, (admin_emails + equipment_admin_emails).uniq, current_user)
+        #EquipmentRegistrationMailer.deliver_update_confirmation(@equipment_registration, current_user)
         format.js
       else
         format.js { render :action => 'edit' }
@@ -136,8 +136,8 @@ class EquipmentRegistrationsController < ApplicationController
   def destroy
     @equipment_registration = EquipmentRegistration.find(params[:id])
     # deliver canceled registration notification
-    EquipmentRegistrationMailer.deliver_cancel_registration(@equipment_registration, (admin_emails + equipment_admin_emails).uniq, current_user)
-    EquipmentRegistrationMailer.deliver_cancel_confirmation(@equipment_registration, current_user)
+    #EquipmentRegistrationMailer.deliver_cancel_registration(@equipment_registration, (admin_emails + equipment_admin_emails).uniq, current_user)
+    #EquipmentRegistrationMailer.deliver_cancel_confirmation(@equipment_registration, current_user)
     @equipment_registration.destroy
 
     respond_to do |format|
