@@ -18,7 +18,8 @@
 
     <% if @refresh  %>
       <META HTTP-EQUIV=REFRESH CONTENT=30>
-      <% end %>
+    <% end %>
+    <%= csrf_meta_tag %>
   </head>
   <script type="text/javascript">
   var _gaq = _gaq || [];
