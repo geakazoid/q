@@ -7,12 +7,7 @@
     <%= pform.select :registration_type,
       {'Quizzer' => 'quizzer',
       'Coach' => 'coach',
-      'Official' => 'official',
-      'Volunteer' => 'volunteer',
-      'Family' => 'family',
-      'Guest' => 'guest',
-      'Event Staff' => 'core_staff',
-      'Exhibitor' => 'exhibitor'},
+      'Official' => 'official'},
       {:prompt => "- Select -"} %>
   </p>
   <div id='registration_info'></div>
@@ -85,10 +80,6 @@
       :display_with_region,
       {:prompt => '- Select -'},
       {:id => 'district'} %>
-  </p>
-  <p>
-    <%= pform.label :shirt_size, 'T-shirt Size (one size for both genders)' %><br/>
-    <%= pform.select :shirt_size, ['Youth Small','Youth Medium','Youth Large','Small','Medium','Large','X-Large','2X-Large','3X-Large','4X-Large','5X-Large'], :prompt => "- Select -" %>
   </p>
   <p>
     <%= pform.label :special_needs, 'Do you have any special physical needs (such as prescription medication, wheelchair needs, etc.)?' %><br/>
