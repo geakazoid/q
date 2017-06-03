@@ -3,11 +3,12 @@ require 'digest/sha1'
 class User < ActiveRecord::Base
 
   has_and_belongs_to_many :roles
-  has_many :team_registrations
-  has_many :equipment_registrations
+  has_many :event_roles
+  has_many :team_registrations, :conditions => "event_id = #{Event.active_event.id}"
+  has_many :equipment_registrations, :conditions => "event_id = #{Event.active_event.id}"
   belongs_to :district
-  has_many :complete_team_registrations, :class_name => 'TeamRegistration', :conditions => 'paid = true'
-  has_many :incomplete_team_registrations, :class_name => 'TeamRegistration', :conditions => 'paid = false'
+  has_many :complete_team_registrations, :class_name => 'TeamRegistration', :conditions => "paid = true and event_id = #{Event.active_event.id}"
+  has_many :incomplete_team_registrations, :class_name => 'TeamRegistration', :conditions => "paid = false and event_id = #{Event.active_event.id}"
   has_many :participant_registration_users
   has_many :participant_registration_owners, :class_name => 'ParticipantRegistrationUser', :conditions => 'owner = true'
   has_many :participant_registration_editors, :class_name => 'ParticipantRegistrationUser', :conditions => 'owner = false'
@@ -79,7 +80,12 @@ class User < ActiveRecord::Base
   
   def has_role?(role_in_question)
     logger.info("Role In Question: " + role_in_question)
-    @_list ||= self.roles.collect(&:name)
+    active_event = Event.active_event
+    roles = Array.new
+    self.event_roles.by_active_or_admin(active_event.id).each do |er|
+      roles << er.role
+    end
+    @_list ||= roles.collect(&:name)
     return true if @_list.include?("admin")
     (@_list.include?(role_in_question.to_s) )
   end

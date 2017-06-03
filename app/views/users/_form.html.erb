@@ -4,7 +4,6 @@
   <% else %>
     <%= error_messages_for :user, :header_message => "There were errors updating your account.", :message => "We encountered the following problems:" %>
   <% end %>
-  <h3>Basics</h3>
   <p>
     <%= user_form.label :first_name, 'First Name*' %><br />
     <%= user_form.text_field :first_name %>
@@ -43,6 +42,6 @@
     <%= user_form.label :communicate_by_email, 'I would like to be able to receive future communication by email.' %><br />
   </p>
   <p>
-    <%= user_form.submit @user.new_record? ? 'Register' : 'Update Account' %>
+    <%= user_form.submit @user.new_record? ? 'Register' : 'Update Account', {:class => 'btn btn-primary'} %>
   </p>
 <% end %>

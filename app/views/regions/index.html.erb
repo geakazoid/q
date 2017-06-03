@@ -1,33 +1,40 @@
 <% content_for :admin do %>
-<p>
-  <%= link_to 'Add new regions', new_region_path %>
-</p>
+	<h4>Actions</h4>
+	<ul>
+		<li><%= link_to 'Add new regions', new_region_path %></li>
+	</ul>
 <% end %>
 
 <div id='page_title'>
   <%= title('Regions', :h1) %>
 </div>
 
-<table>
-  <tr>
-    <th>Region</th>
-	<th>Director</th>
-	<th>Phone</th>
-	<th>Mobile Phone</th>
-	<th>Email</th>
-	<th colspan='2'>Actions</th>
-  </tr>
-
-<% @regions.each do |region| %>
-  <tr>
-    <td><%= region.name %></td>
-	<td><%= region.director unless region.director.blank? %></td>
-	<td><%= region.phone unless region.phone.blank? %></td>
-	<td><%= region.mobile_phone unless region.mobile_phone.blank? %></td>
-	<td><%= region.email unless region.email.blank? %></td>
-	<td><%= link_to 'Edit', edit_region_path(region) %><br/></td>
-    <td><%= link_to 'Delete', region, :confirm => 'Are you sure?', :method => :delete %></td>
-	</td>
-  </tr>
-<% end %>
-</table>
+<div class="table-responsive"> 
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Region</th>
+				<th>Director</th>
+				<th>Phone</th>
+				<th>Mobile Phone</th>
+				<th>Email</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @regions.each do |region| %>
+				<tr>
+					<td><%= region.name %></td>
+					<td><%= region.director unless region.director.blank? %></td>
+					<td><%= region.phone unless region.phone.blank? %></td>
+					<td><%= region.mobile_phone unless region.mobile_phone.blank? %></td>
+					<td><%= region.email unless region.email.blank? %></td>
+					<td>
+						<%= link_to 'Edit', edit_region_path(region) %> ::
+						<%= link_to 'Delete', region, :confirm => 'Are you sure?', :method => :delete %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+</div>

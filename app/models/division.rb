@@ -1,5 +1,6 @@
 class Division < ActiveRecord::Base
   has_many :teams, :order => 'name asc'
+  belongs_to :event
 
   validates_presence_of :name
   validates_presence_of :price_in_cents

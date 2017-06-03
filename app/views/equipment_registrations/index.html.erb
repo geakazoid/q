@@ -4,9 +4,20 @@
 <% if (@equipment_registrations.empty?) %>
 <p>No equipment registrations found.</p>
 <% else %>
-<p>
-  Below you can see all the equipment registrations you have submitted ordered by creation date.
-  Any registrations that are editable can be modified directly from this screen.
-</p>
+  <% if !@user.nil? %>
+    <p>
+      Below you can see all the equipment registrations you have submitted ordered by creation date.
+      Any registrations that are editable can be modified directly from this screen.
+    </p>
+  <% else %>
+    <p>
+      Below you can see all equipment registrations that have been submitted ordered by creation date.
+      Any registrations that are editable can be modified directly from this screen. Registrations will default to the current active event, unless another event is chosen.
+    </p>
+    <p>
+      Selected Event: <%= select_tag 'event_select', options_from_collection_for_select(@events, "id", "name", @selected_event.to_i) %>
+    </p>
+  <% end %>
+  </p>
 <%= render :partial => "equipment_registration", :collection => @equipment_registrations %>
 <% end %>

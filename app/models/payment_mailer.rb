@@ -4,7 +4,7 @@ class PaymentMailer < ActionMailer::Base
   def receipt(payment,session)
     @recipients = "#{payment.first_name} #{payment.last_name} <#{payment.email}>"
     @from = AppConfig.admin_email
-    @subject = "[Q2016] Thank You for your payment!"
+    @subject = "Thank You for your payment!"
     @sent_on = Time.now
     @body[:payment] = payment
     @body[:session] = session
@@ -14,7 +14,7 @@ class PaymentMailer < ActionMailer::Base
   def zero_receipt(payment,session)
     @recipients = "#{payment.first_name} #{payment.last_name} <#{payment.email}>"
     @from = AppConfig.admin_email
-    @subject = "[Q2016] Thank You for your submission!"
+    @subject = "Thank You for your submission!"
     @sent_on = Time.now
     @body[:payment] = payment
     @body[:session] = session

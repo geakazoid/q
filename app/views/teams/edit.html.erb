@@ -52,6 +52,6 @@
     <% if params[:show_all] && admin? %>
       <input type='hidden' name='show_all' value='true'>
     <% end %>
-    <%= f.submit 'Save Selections' %>
+    <%= f.submit 'Save Selections', {:class => 'btn btn-primary'} %>
 </div>
 <% end %>

@@ -3,7 +3,9 @@ class DivisionsController < ApplicationController
 
   # GET /divisions
   def index
-    @divisions = Division.find(:all)
+    @selected_event = params[:event_id] ? params[:event_id] : Event.active_event.id
+    @divisions = Division.find(:all, :conditions => "event_id = #{@selected_event}" )
+    @events = Event.get_events
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,6 +15,8 @@ class DivisionsController < ApplicationController
   # GET /divisions/new
   def new
     @division = Division.new
+    @events = Event.get_events
+    @selected_event = Event.active_event.id
 
     respond_to do |format|
       format.html # new.html.erb
@@ -32,6 +36,7 @@ class DivisionsController < ApplicationController
       # either find the division or create it
       division = Division.find_or_create_by_name(details[0])
       division.price = details[1]
+      division.event_id = params[:event_id]
       division.save
     end
 

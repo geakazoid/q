@@ -35,7 +35,7 @@
             <%= hidden_field_tag 'sent_to_name', official.district.director %>
             <%= hidden_field_tag 'sent_to_email', official.district.email %>
             <%= hidden_field_tag 'id_to_update', "evaluation_district_#{official.id.to_s}" %>
-            <%= submit_tag 'Send Evaluation', :id => "send_evaluation_district_#{official.id.to_s}", :autocomplete => 'off' %>
+            <%= submit_tag 'Send Evaluation', {:id => "send_evaluation_district_#{official.id.to_s}", :autocomplete => 'off', :class => 'btn btn-primary'} %>
             <span id='send_evaluation_spinner_district_<%= official.id.to_s %>' style='display:none;'>
               &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
             </span>
@@ -49,7 +49,7 @@
             <%= hidden_field_tag 'sent_to_email', official.district.email %>
             <%= hidden_field_tag 'resend', 'true' %>
             <%= hidden_field_tag 'id_to_update', "evaluation_district_#{official.id.to_s}" %>
-            <%= submit_tag 'Resend Evaluation', :id => "send_evaluation_district_#{official.id.to_s}", :autocomplete => 'off' %>
+            <%= submit_tag 'Resend Evaluation', {:id => "send_evaluation_district_#{official.id.to_s}", :autocomplete => 'off', :class => 'btn btn-primary'} %>
             <span id='send_evaluation_spinner_district_<%= official.id.to_s %>' style='display:none;'>
               &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
             </span>
@@ -67,7 +67,7 @@
             <%= hidden_field_tag 'sent_to_name', official.district.region.director %>
             <%= hidden_field_tag 'sent_to_email', official.district.region.email %>
             <%= hidden_field_tag 'id_to_update', "evaluation_region_#{official.id.to_s}" %>
-            <%= submit_tag 'Send Evaluation', :id => "send_evaluation_region_#{official.id.to_s}", :autocomplete => 'off' %>
+            <%= submit_tag 'Send Evaluation', {:id => "send_evaluation_region_#{official.id.to_s}", :autocomplete => 'off', :class => 'btn btn-primary'} %>
             <span id='send_evaluation_spinner_region_<%= official.id.to_s %>' style='display:none;'>
               &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
             </span>
@@ -81,7 +81,7 @@
             <%= hidden_field_tag 'sent_to_email', official.district.region.email %>
             <%= hidden_field_tag 'resend', 'true' %>
             <%= hidden_field_tag 'id_to_update', "evaluation_region_#{official.id.to_s}" %>
-            <%= submit_tag 'Resend Evaluation', :id => "send_evaluation_region_#{official.id.to_s}", :autocomplete => 'off' %>
+            <%= submit_tag 'Resend Evaluation', {:id => "send_evaluation_region_#{official.id.to_s}", :autocomplete => 'off', :class => 'btn btn-primary'} %>
             <span id='send_evaluation_spinner_region_<%= official.id.to_s %>' style='display:none;'>
               &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
             </span>
@@ -117,7 +117,7 @@
       </div>
       <div class='right' id='evaluation_other_<%= official.id.to_s %>'>
         <%= hidden_field_tag 'id_to_update', "evaluation_other_#{official.id.to_s}" %>
-	      <%= submit_tag 'Send Evaluation', :id => "send_evaluation_other_#{official.id.to_s}", :autocomplete => 'off', :onclick => "javascript:validate_evaluation('sent_to_email_#{official.id.to_s}')" %>
+	      <%= submit_tag 'Send Evaluation', {:id => "send_evaluation_other_#{official.id.to_s}", :autocomplete => 'off', :class => 'btn btn-primary', :onclick => "javascript:validate_evaluation('sent_to_email_#{official.id.to_s}')"} %>
 	      <span id='send_evaluation_spinner_other_<%= official.id.to_s %>' style='display:none;'>
 	        &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
 	      </span>

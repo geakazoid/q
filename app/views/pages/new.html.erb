@@ -19,10 +19,27 @@
 	(If link is filled in body will not be displayed.)
   </p>
   <p>
+    <%= f.label :parent %><br/>
+    <%= f.collection_select :event_id,
+        @events,
+        :id,
+        :name %>
+  </p>
+  <p>
+    <%= f.label :parent %><br/>
+    <%= f.collection_select :parent_id,
+        Page.all(:order => 'label asc', :conditions => 'menu = true'),
+        :id,
+        :label,
+        {:include_blank => "None"} %>
+  </p>
+  <p>
   	<%= f.check_box :published %>
-    <%= f.label :published %>
-	<%= f.check_box :show_on_menu %>
-	<%= f.label :show_on_menu %><br/>
+    <%= f.label :published %>&nbsp;&nbsp;
+    <%= f.check_box :show_on_menu %>
+    <%= f.label :show_on_menu %>&nbsp;&nbsp;
+    <%= f.check_box :menu %>
+    <%= f.label :menu, "Top Level Menu" %><br/>
   </p>
   <p>
     <%= f.label :body %><br/>
@@ -30,6 +47,6 @@
   	<%= f.text_area :body, :class => "mce-editor" %>
   </p>
   <p>
-    <%= f.submit 'Create' %> or <%= link_to 'Cancel', pages_path %>
+    <%= f.submit 'Create', {:class => 'btn btn-primary'} %> or <%= link_to 'Cancel', pages_path %>
   </p>
 <% end %>

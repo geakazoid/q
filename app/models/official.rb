@@ -3,6 +3,7 @@ class Official < ActiveRecord::Base
   belongs_to :user
   belongs_to :district
   has_many :evaluations
+  belongs_to :event
   belongs_to :creator, :class_name => 'User'
 
   # serialize / unserialize roles hash when saving / loading from the database

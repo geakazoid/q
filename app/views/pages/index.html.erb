@@ -1,41 +1,59 @@
 <% content_for :admin do %>
-<p>
-  <%= link_to 'Create new page', new_page_path %>
-</p>
+  <h4>Actions</h4>
+  <ul>
+    <li><%= link_to 'Create new page', new_page_path %></li>
+  </ul>
 <% end %>
 
 <div id='page_title'>
   <%= title('Pages', :h1) %>
 </div>
 
-<% if !@pages.empty? %>
-<table>
-  <tr>
-    <th>Title</th>
-    <th>Label</th>
-	<th>Link</th>
-	<th>Published</th>
-	<th>Show On Menu</th>
-	<th colspan='3'>Actions</th>
-  </tr>
-
-<% @pages.each do |page| %>
-  <tr>
-    <td><%=h page.title %></td>
-    <td><%=h page.label %></td>
-	<td><%=h page.link %></td>
-	<td><%=h page.published? %></td>
-	<td><%=h page.show_on_menu? %></td>
-    <td><%= link_to 'Show', page %></td>
-    <td><%= link_to 'Edit', edit_page_path(page) %></td>
-    <td><%= link_to 'Delete', page, :confirm => 'Are you sure you want to delete this page?', :method => :delete %></td>
-  </tr>
-<% end %>
-</table>
-<% else %>
-<% if current_user && admin? %>
 <p>
-  You don't have any pages. Would you like to <%= link_to 'create one', new_page_path %>?
+  Selected Event: <%= select_tag 'event_select', options_from_collection_for_select(@events, "id", "name", @selected_event.to_i) %>
 </p>
-<% end %>
+
+<% if !@pages.empty? %>
+  <div class="table-responsive"> 
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Information</th>
+          <th>Published</th>
+          <th>Top Level Menu</th>
+          <th>Show On Menu</th>
+          <th colspan='3'>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @pages.each do |page| %>
+          <tr>
+            <td>
+              <% if page.title == page.label %>
+                <strong><%= h(page.title)  + "<br/>" unless page.title.nil? %></strong>
+              <% else %>
+                <strong><%= h(page.title)  + "<br/>" unless page.title.nil? %></strong>
+                <span class="meta"><%= "<strong>Menu Label:</strong> " + h(page.label)  + "<br/>" unless page.label.nil? %></span>
+              <% end %>
+              <span class="meta"><%= "<strong>Link:</strong> " + h(page.link)  + "<br/>" unless page.link.empty? %></span>
+            </td>
+            <td><%= page.published? ? '<span class="label label-success">True</span>' : '<span class="label label-default">False</span>' %></td>
+            <td><%= page.menu? ? '<span class="label label-success">True</span>' : '<span class="label label-default">False</span>' %></td>
+            <td><%= page.show_on_menu? ? '<span class="label label-success">True</span>' : '<span class="label label-default">False</span>' %></td>
+            <td>
+              <%= link_to 'Show', page %> :: 
+              <%= link_to 'Edit', edit_page_path(page) %> :: 
+              <%= link_to 'Delete', page, :confirm => 'Are you sure you want to delete this page?', :method => :delete %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <% if current_user && admin? %>
+    <p>
+      You don't have any pages. Would you like to <%= link_to 'create one', new_page_path %>?
+    </p>
+  <% end %>
 <% end %>

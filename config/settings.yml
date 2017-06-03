@@ -21,6 +21,6 @@ production:
   site_url: http://www.q2016.org
   site_name: Q2016
   admin_email: Q2016 <q2016@nazquizzing.org>
-  test_mode: false
+  test_mode: true
   regional_code: regionals2016
   cvent_url: http://www.cvent.com/d/nrqtzj/4W

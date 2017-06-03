@@ -3,12 +3,7 @@
 </div>
 <%= render :partial => 'pages/page', :locals => { :page => @page } if !@page.nil? %>
 <p>
-    Please use the form below to register a new team or teams. You may only register a team if you have purchased teams
-    through a <%= link_to 'Cvent', '/registrations/cvent', :target => '_blank' %> registration. 
-</p>
-<p>
-  You have <%= current_user.num_experienced_district_teams_available %> experienced and <%= current_user.num_novice_district_teams_available %> novice district team registrations available.<br/>
-  You have <%= current_user.num_experienced_local_teams_available %> experienced and <%= current_user.num_novice_local_teams_available %> novice local team registrations available.<br/>
+    Please use the form below to register a new team or teams.
 </p>
 <% form_for @team_registration do |f| %>
   <%= error_messages_for :team_registration, :header_message => "There were errors with your registration.", :message => "We encountered the following problems:" %>
@@ -50,16 +45,16 @@
       <%= render :partial => 'team', :locals => { :form => team_form } %>
     <% end %>
   </div>
-  <%= add_team_link(f) %>
-  <p id='regional_code' style='display:none'>
+  <%= add_team_link(f) %><br/><br/>
+  <!-- <p id='regional_code' style='display:none'>
     <%= f.label :regional_code, 'Regional Code' %><br />
     <%= f.text_field :regional_code, {:id => "regional_code"} %>
-    <%= test_output("Regional Code: " + AppConfig.regional_code + "</label>") if AppConfig.test_mode %>
-  </p>
+    <% test_output("Regional Code: " + AppConfig.regional_code + "</label>") if AppConfig.test_mode %>
+  </p> -->
   <p>
     <%= hidden_field_tag :commit_action, 'registration_action' %>
-    <%= f.submit 'Register Teams', :id => 'submit_register', :onclick => "$('spinner').show(); $('submit_register').disabled = true; $('submit_save').disabled = true; $('submit_register').value = 'Submitting Team Registration...'; submit(); return false;", :autocomplete => 'off' %>
-    <%= f.submit 'Save For Later', :id => 'submit_save', :onclick => "$('spinner').show(); $('submit_register').disabled = true; $('submit_save').disabled = true; $('submit_save').value = 'Saving Team Registration...'; $('commit_action').value = 'save_action'; submit(); return false;", :autocomplete => 'off' %>
+    <%= f.submit 'Register Teams', {:id => 'submit_register', :class => 'btn btn-primary', :onclick => "$('#spinner').show(); $('#submit_register').prop('disabled', 'disabled'); $('#submit_save').prop('disabled', 'disabled'); $('#submit_register').val('Submitting Team Registration...'); submit(); return false;", :autocomplete => 'off'} %>
+    <%= f.submit 'Save For Later', {:id => 'submit_save', :class => 'btn btn-primary', :onclick => "$('#spinner').show(); $('#submit_register').prop('disabled', 'disabled'); $('#submit_save').prop('disabled', 'disabled'); $('#submit_save').val('Saving Team Registration...'); $('#commit_action').val('save_action'); submit(); return false;", :autocomplete => 'off'} %>
     <span id='spinner' style='display:none;'>
       &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
     </span>
@@ -73,5 +68,5 @@
 	var user_district = '<%= current_user.district_id %>';
 </script>
 <script>
-  check_regional_selection();
+  //check_regional_selection();
 </script>

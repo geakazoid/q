@@ -1,6 +1,6 @@
 <div id='page_title'>
   <%= title("Team Registration for #{@team_registration.full_name}", :h1) %>
-  Registration created on <%= @team_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %>
+  <p>Registration created on <%= @team_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %>.</p>
 </div>
 
 <% form_for [@user, @team_registration] do |f| %>
@@ -69,8 +69,8 @@
   <% if !@team_registration.complete? %>
   <p>
     <%= hidden_field_tag :commit_action, 'payment_action' %>
-    <%= f.submit 'Submit And Pay', :id => 'submit_register', :onclick => "$('spinner').show(); $('submit_register').disabled = true; $('submit_save').disabled = true; $('submit_register').value = 'Submitting Team Registration...'; submit(); return false;", :autocomplete => 'off' %>
-    <%= f.submit 'Save For Later', :id => 'submit_save', :onclick => "$('spinner').show(); $('submit_register').disabled = true; $('submit_save').disabled = true; $('submit_save').value = 'Saving Team Registration...'; $('commit_action').value = 'save_action'; submit(); return false;", :autocomplete => 'off' %>
+    <%= f.submit 'Submit And Pay', {:id => 'submit_register', :class => 'btn btn-primary', :onclick => "$('#spinner').show(); $('#submit_register').prop('disabled', 'disabled'); $('#submit_save').prop('disabled', 'disabled'); $('#submit_register').val('Submitting Team Registration...'); submit(); return false;", :autocomplete => 'off'} %>
+    <%= f.submit 'Save For Later', {:id => 'submit_save', :class => 'btn btn-primary', :onclick => "$('#spinner').show(); $('#submit_register').prop('disabled', 'disabled'); $('#submit_save').prop('disabled', 'disabled'); $('#submit_save').val('Saving Team Registration...'); $('#commit_action').val('save_action'); submit(); return false;", :autocomplete => 'off'} %>
     <span id='spinner' style='display:none;'>
       &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
     </span>
@@ -78,7 +78,7 @@
   <% else %>
   <p>
     <%= hidden_field_tag :commit_action, 'update_action' %>
-    <%= f.submit 'Update Registration', :id => 'submit_update', :onclick => "$('spinner').show(); $('submit_update').disabled = true; $('submit_update').value = 'Updating Team Registration...'; submit(); return false;", :autocomplete => 'off' %>
+    <%= f.submit 'Update Registration', {:id => 'submit_update', :class => 'btn btn-primary', :onclick => "$('#spinner').show(); $('#submit_update').prop('disabled', 'disabled'); $('#submit_update').val('Updating Team Registration...'); submit(); return false;", :autocomplete => 'off'} %>
     <span id='spinner' style='display:none;'>
       &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
     </span>
@@ -121,7 +121,7 @@
                         :with => "'id='+selected.value",
                         :complete => 'update_team_total()') %>
   }
-  update_district_teams();
-  check_regional_selection();
+  //update_district_teams();
+  //check_regional_selection();
 </script>
 <% end %>

@@ -9,9 +9,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 63) do
+ActiveRecord::Schema.define(:version => 68) do
 
-  create_table "Officials", :force => true do |t|
+  create_table "Officials", :id => false, :force => true do |t|
+    t.integer  "id",          :default => 0, :null => false
     t.integer  "user_id"
     t.integer  "creator_id"
     t.integer  "district_id"
@@ -63,6 +64,7 @@ ActiveRecord::Schema.define(:version => 63) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "air_conditioned", :default => false
+    t.integer  "event_id"
   end
 
   create_table "cvent_corrections", :id => false, :force => true do |t|
@@ -81,6 +83,7 @@ ActiveRecord::Schema.define(:version => 63) do
   create_table "divisions", :force => true do |t|
     t.string  "name"
     t.integer "price_in_cents"
+    t.integer "event_id"
   end
 
   create_table "equipment", :force => true do |t|
@@ -103,6 +106,7 @@ ActiveRecord::Schema.define(:version => 63) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "creator_id"
+    t.integer  "event_id"
   end
 
   create_table "evaluations", :force => true do |t|
@@ -132,6 +136,27 @@ ActiveRecord::Schema.define(:version => 63) do
     t.text     "handles_conflict"
     t.text     "content_judge_utilization"
     t.text     "additional_comments"
+    t.integer  "event_id"
+  end
+
+  create_table "event_roles", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "role_id"
+    t.integer  "event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "events", :force => true do |t|
+    t.string   "name"
+    t.boolean  "active",            :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "title"
+    t.string   "logo_file_name"
+    t.string   "logo_content_type"
+    t.integer  "logo_file_size"
+    t.datetime "logo_updated_at"
   end
 
   create_table "housing_rooms", :force => true do |t|
@@ -146,6 +171,7 @@ ActiveRecord::Schema.define(:version => 63) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_id"
   end
 
   create_table "officials", :force => true do |t|
@@ -159,6 +185,7 @@ ActiveRecord::Schema.define(:version => 63) do
     t.text     "roles"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_id"
   end
 
   create_table "pages", :force => true do |t|
@@ -170,6 +197,9 @@ ActiveRecord::Schema.define(:version => 63) do
     t.boolean  "show_on_menu", :default => true
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_id"
+    t.integer  "parent_id"
+    t.boolean  "menu"
   end
 
   create_table "participant_registration_users", :force => true do |t|
@@ -301,6 +331,7 @@ ActiveRecord::Schema.define(:version => 63) do
     t.boolean  "coaching_team"
     t.boolean  "coaching_team_2"
     t.string   "staying_off_campus"
+    t.integer  "event_id"
   end
 
   create_table "participant_registrations_teams", :id => false, :force => true do |t|
@@ -416,6 +447,7 @@ ActiveRecord::Schema.define(:version => 63) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "event_id"
   end
 
   create_table "round_quizzers", :force => true do |t|
@@ -524,6 +556,7 @@ ActiveRecord::Schema.define(:version => 63) do
     t.datetime "updated_at"
     t.text     "audit"
     t.string   "regional_code"
+    t.integer  "event_id"
   end
 
   create_table "teams", :force => true do |t|

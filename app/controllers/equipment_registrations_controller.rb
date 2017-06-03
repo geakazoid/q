@@ -4,13 +4,17 @@ class EquipmentRegistrationsController < ApplicationController
 
   # GET /equipment_registrations
   def index
+    @selected_event = params[:event_id] ? params[:event_id] : Event.active_event.id
+    @pages = Page.find(:all, :conditions => "event_id = #{@selected_event}" )
+    @events = Event.get_events
+
     if params[:user_id]
-      @equipment_registrations = EquipmentRegistration.find(:all, :conditions => "user_id = #{params[:user_id]}")
+      @equipment_registrations = EquipmentRegistration.find(:all, :conditions => "user_id = #{params[:user_id]} and event_id = #{Event.active_event.id}")
       @user = User.find(params[:user_id])
     else
       # if we aren't an admin or equipment_admin we shouldn't be here
       record_not_found and return if !admin? and !equipment_admin?
-      @equipment_registrations = EquipmentRegistration.find(:all)
+      @equipment_registrations = EquipmentRegistration.find(:all, :conditions => "event_id = #{@selected_event}")
     end
     
     if @user.nil?
@@ -71,6 +75,7 @@ class EquipmentRegistrationsController < ApplicationController
   def create
     @equipment_registration = EquipmentRegistration.new
     @equipment_registration.attributes = params[:equipment_registration]
+    @equipment_registration.event = Event.active_event
     if (params[:equipment_registration][:user_id].nil?)
       @user = @equipment_registration.user = current_user
     else

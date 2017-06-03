@@ -6,12 +6,14 @@ class TeamRegistrationsController < ApplicationController
   # GET /team_registrations
   def index
     if params[:user_id]
-      @team_registrations = TeamRegistration.find(:all, :conditions => "user_id = #{params[:user_id]}")
+      @team_registrations = TeamRegistration.find(:all, :conditions => "user_id = #{params[:user_id]} and event_id = #{Event.active_event.id}")
       @user = User.find(params[:user_id])
     else
       # if we aren't an admin we shouldn't be here
       record_not_found and return if !admin?
-      @team_registrations = TeamRegistration.find(:all, :order => "first_name asc, last_name asc")
+      @selected_event = params[:event_id] ? params[:event_id] : Event.active_event.id
+      @events = Event.get_events
+      @team_registrations = TeamRegistration.find(:all, :conditions => "event_id = #{@selected_event}", :order => "first_name asc, last_name asc")
     end
 
     respond_to do |format|
@@ -40,11 +42,12 @@ class TeamRegistrationsController < ApplicationController
 
     @team_registration = TeamRegistration.new
     @districts = District.find(:all, :order => "name")
-    @divisions = Division.find(:all)
+    @active_event = Event.active_event.id
+    @divisions = Division.find(:all, :conditions => "event_id = #{@active_event}" )
     if (admin?)
-      @coaches = ParticipantRegistration.find(:all, :conditions => "registration_type = 'coach' OR planning_on_coaching = 1", :order => "first_name asc, last_name asc")
+      @coaches = ParticipantRegistration.find(:all, :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and event_id = #{@active_event}", :order => "first_name asc, last_name asc")
     else
-      @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id}")
+      @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id} and event_id = #{@active_event}")
     end
     
     # find our first page (which should be the new team registration text)
@@ -71,11 +74,12 @@ class TeamRegistrationsController < ApplicationController
     end
 
     @districts = District.find(:all, :order => "name")
-    @divisions = Division.find(:all)
+    @active_event = Event.active_event.id
+    @divisions = Division.find(:all, :conditions => "event_id = #{@active_event}" )
     if (admin?)
-      @coaches = ParticipantRegistration.find(:all, :conditions => "registration_type = 'coach' OR planning_on_coaching = 1", :order => "first_name asc, last_name asc")
+      @coaches = ParticipantRegistration.find(:all, :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and event_id = #{@active_event}", :order => "first_name asc, last_name asc")
     else
-      @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id}")
+      @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id} and event_id = #{@active_event}")
     end
 
     respond_to do |format|
@@ -91,6 +95,7 @@ class TeamRegistrationsController < ApplicationController
     @team_registration.user = current_user
     @team_registration.audit_user = current_user
     @team_registration.attributes = params[:team_registration]
+    @team_registration.event = Event.active_event
 
     # update our amounts
     update_amounts
@@ -111,7 +116,13 @@ class TeamRegistrationsController < ApplicationController
         end
       else
         @districts = District.find(:all)
-        @divisions = Division.find(:all)
+        @active_event = Event.active_event.id
+        @divisions = Division.find(:all, :conditions => "event_id = #{@active_event}" )
+        if (admin?)
+          @coaches = ParticipantRegistration.find(:all, :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and event_id = #{@active_event}", :order => "first_name asc, last_name asc")
+        else
+          @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id} and event_id = #{@active_event}")
+        end
         format.html { render :action => "new" }
       end
     end
@@ -176,7 +187,8 @@ class TeamRegistrationsController < ApplicationController
         if !@user.nil?
           if (!@team_registration.complete?)
             @districts = District.find(:all, :order => "name")
-            @divisions = Division.find(:all)
+            @active_event = Event.active_event.id
+            @divisions = Division.find(:all, :conditions => "event_id = #{@active_event}" )
           end
           format.html { render :action => "edit" }
         else

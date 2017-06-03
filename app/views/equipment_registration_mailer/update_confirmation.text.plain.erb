@@ -44,4 +44,4 @@ Equipment:
 <%= " Other Items (" + @equipment_registration.others.count.to_s + ")\n" unless @equipment_registration.others.count == 0 -%>
 
 Sincerely,
-Q2016 Staff
+<%= Event.active_event.name %> Staff

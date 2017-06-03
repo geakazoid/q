@@ -1,0 +1,53 @@
+<div id='page_title'>
+  <%= title("Roles for #{@user.fullname}", :h1) %>
+</div>
+
+<div class="table-responsive"> 
+  <table class="table table-striped">
+    <thead>
+			<tr>
+				<th>Event</th>
+				<th>Role</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<% @event_roles.each do |event_role| %>
+				<tr>
+					<td><%= event_role.event.name %></td>
+					<td><%= event_role.role.name %></td>
+					<td>
+					  <%= link_to 'Delete', [@user,event_role], :confirm => 'Are you sure?', :method => :delete %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+  </table>
+</div>
+
+<% form_for [@user,@new_event_role] do |event_role_form| %>
+  <%= error_messages_for :event_role, :header_message => "There were errors adding a new role.", :message => "We encountered the following problems:" %>
+<p>
+  Add new role for <%= @user.fullname %>
+</p>
+<p>
+	<%= event_role_form.label :event, 'Event' %><br/>
+	<%= event_role_form.collection_select :event_id,
+			Event.all(:order => 'name asc'),
+			:id,
+			:name,
+			{:prompt => '- Select -'} %>
+</p>
+<p>
+	<%= event_role_form.label :role, 'Role' %><br/>
+	<%= event_role_form.collection_select :role_id,
+			Role.all(:order => 'name asc'),
+			:id,
+			:name,
+			{:prompt => '- Select -'} %>
+</p>
+<p>
+  <%= submit_tag 'Add New Role', {:class => 'btn btn-primary'} %>
+</p>
+<% end %>

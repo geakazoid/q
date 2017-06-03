@@ -49,7 +49,7 @@
       <% end %>
     </div>
     <p style='line-height: 5px;'>
-      <%= f.submit 'Submit Registration', :id => 'submit_registration', :autocomplete => 'off' %>
+      <%= f.submit 'Submit Registration', {:id => 'submit_registration', :autocomplete => 'off', :class => 'btn btn-primary'} %>
       <span id='new_registration_spinner' style='display:none;'>
         &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
       </span>

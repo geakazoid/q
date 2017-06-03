@@ -2,6 +2,7 @@ class EquipmentRegistration < ActiveRecord::Base
   belongs_to :user
   belongs_to :district
   belongs_to :creator, :class_name => 'User'
+  belongs_to :event
   has_many :equipment, :dependent => :destroy
   has_many :laptops, :class_name => 'Equipment', :conditions => 'equipment_type = "laptop"'
   has_many :interface_boxes, :class_name => 'Equipment', :conditions => 'equipment_type = "interface_box"'

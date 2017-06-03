@@ -1,6 +1,6 @@
 development: &non_production_settings
   :address: mail.realnets.com
-  :port: 25
+  :port: 587
   :domain: nazquizzing.org
   :authentication: plain
   :user_name: website@nazquizzing.org

@@ -1,0 +1,29 @@
+<% form_for @event, :html => { :multipart => true } do |event_form| %>
+  <% if @event.new_record? %>
+    <%= error_messages_for :event, :header_message => "There were errors creating the event.", :message => "We encountered the following problems:" %>
+  <% else %>
+    <%= error_messages_for :event, :header_message => "There were errors updating this event.", :message => "We encountered the following problems:" %>
+  <% end %>
+  <p>
+    <%= event_form.label :name, 'Name*' %><br />
+    <%= event_form.text_field :name, :size => 50 %>
+  </p>
+  <p>
+    <%= event_form.label :title, 'Title*' %><br />
+    <%= event_form.text_field :title, :size => 50 %>
+  </p>
+  <p>
+    <%= event_form.check_box :active, :size => 50 %>
+    <%= event_form.label :active, 'Active? (Note: Only one event may be active at a time.)' %>
+  </p>
+  <p>
+    <%= event_form.label :title, 'Logo' %><br />
+    <% if !@event.new_record? and @event.logo_file_name != false %>
+      <%= image_tag(@event.logo.url(:original), :id => 'logo') %><br/><br/>
+    <% end %>
+    <%= event_form.file_field :logo %>
+  </p>
+  <p>
+    <%= event_form.submit @event.new_record? ? 'Create' : 'Update', {:class => "btn btn-primary"} %> or <%= link_to 'Cancel', events_path %>
+  </p>
+<% end %>

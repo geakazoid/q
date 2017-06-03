@@ -3,6 +3,7 @@ class ParticipantRegistration < ActiveRecord::Base
   belongs_to :school
   belongs_to :building
   belongs_to :ministry_project
+  belongs_to :event
   has_many :participant_registration_users
   has_many :registration_items
   has_many :payments
@@ -179,6 +180,10 @@ class ParticipantRegistration < ActiveRecord::Base
   named_scope :by_gender, lambda { |gender| {
       :conditions => "participant_registrations.gender = '#{gender}'"
     }
+  }
+
+  named_scope :by_event, lambda { |event_id|
+    { :conditions => ["event_id = ?", event_id] }
   }
 
   # strip out extra characters in mobile phone

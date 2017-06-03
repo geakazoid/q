@@ -5,9 +5,13 @@ class ReportsController < ApplicationController
   # GET /reports
   # lists all available reports
   def index
+    # populate events list for selecting an event
+    @selected_event = params[:event_id] ? params[:event_id] : Event.active_event.id
+    @events = Event.get_events
+
     # populate group leaders
-    @group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
-    @group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "event_id = #{@selected_event} and (num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0)", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    @group_leaders2 = User.find(:all, :joins => [:team_registrations], :conditions => "event_id = #{@selected_event}", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
     @group_leaders = @group_leaders1 + @group_leaders2
     @group_leaders = @group_leaders.uniq.sort_by { |user| user[0].downcase }
     @group_leaders.push(['Staff', -4])
@@ -19,15 +23,15 @@ class ReportsController < ApplicationController
     @group_leaders.push(['No Group Leader', -3])
 
     # populate buildings
-    @buildings = Building.all
+    @buildings = Building.all(:conditions => "event_id = #{@selected_event}")
 
     # populate ministry projects
-    @ministry_projects = MinistryProject.all
+    @ministry_projects = MinistryProject.all(:conditions => "event_id = #{@selected_event}")
   end
   
   # generate a report of all team registrations
   def team_registrations_all
-    @team_registrations = TeamRegistration.all
+    @team_registrations = TeamRegistration.all(:conditions => "event_id = #{params['event_id']}")
     @report_type = 'all'
     team_registrations
   end
@@ -70,14 +74,14 @@ class ReportsController < ApplicationController
 
   # generate a report of all participant registrations
   def participant_registrations_all
-    @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc')
+    @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc', :conditions => "event_id = #{params['event_id']}")
     @report_type = 'all'
     participant_registrations
   end
 
   # generate a report participant registrationsa staying off campus
   def participant_registrations_off_campus
-    @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc', :conditions => 'staying_off_campus = "YES"')
+    @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc', :conditions => "staying_off_campus = 'YES' and event_id = #{params['event_id']}")
     @report_type = 'staying_off_campus'
     participant_registrations
   end
@@ -232,21 +236,21 @@ class ReportsController < ApplicationController
 
   # generate a report of coaches and teams (this only grabs coaches with a complete registration)
   def coaches_teams
-    @participant_registrations = ParticipantRegistration.all(:conditions => 'registration_type = "Coach"', :order => 'last_name asc, first_name asc')
+    @participant_registrations = ParticipantRegistration.all(:conditions => "registration_type = 'Coach' and event_id = #{params['event_id']}", :order => 'last_name asc, first_name asc')
     @report_type = 'coaches'
     participants_teams
   end
 
   # generate a report of quizzers and teams (this only grabs quizzers with a complete registration)
   def quizzers_teams
-    @participant_registrations = ParticipantRegistration.all(:conditions => 'registration_type = "Quizzer"', :order => 'last_name asc, first_name asc')
+    @participant_registrations = ParticipantRegistration.all(:conditions => "registration_type = 'Quizzer' and event_id = #{params['event_id']}", :order => 'last_name asc, first_name asc')
     @report_type = 'quizzers'
     participants_teams
   end
 
   # generate a report of coaches, quizzers and teams (this only grabs coaches and quizzers with a complete registration)
   def coaches_quizzers_teams
-    @participant_registrations = ParticipantRegistration.all(:conditions => 'registration_type = "Quizzer" or registration_type = "Coach"', :order => 'first_name asc, last_name asc')
+    @participant_registrations = ParticipantRegistration.all(:conditions => "registration_type = 'Quizzer' or registration_type = 'Coach' and event_id = #{params['event_id']}", :order => 'first_name asc, last_name asc')
     @report_type = 'coaches_quizzers'
     participants_teams
   end
@@ -327,8 +331,8 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'District'
     sheet1[0,column+=1] = 'Region'
 
-    @ids1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.id] }
-    @ids2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.id] }
+    @ids1 = User.find(:all, :joins => [:participant_registrations], :conditions => "event_id = #{params['event_id']} and (num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0)", :order => "first_name,last_name").map { |user| [user.id] }
+    @ids2 = User.find(:all, :joins => [:team_registrations], :conditions => "event_id = #{params['event_id']}", :order => "first_name,last_name").map { |user| [user.id] }
     @ids = @ids1 + @ids2
     @ids.uniq!
 
@@ -362,36 +366,36 @@ class ReportsController < ApplicationController
       if (params['group_leader'] == '-1')
         group_leader_name = 'Group Leader Not Listed'
         file_name = 'group_leader_not_listed'
-        participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-1)
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-1).ordered_by_last_name
       elsif (params['group_leader'] == '-2')
         group_leader_name = 'Group Leader Not Known'
         file_name = 'group_leader_not_known'
-        participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-2)
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-2).ordered_by_last_name
       elsif (params['group_leader'] == '-3')
         group_leader_name = 'No Group Leader'
         file_name = 'no_group_leader'
-        participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-3)
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-3).ordered_by_last_name
       elsif (params['group_leader'] == '-4')
         group_leader_name = 'Staff'
         file_name = 'staff'
-        participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-4)
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-4).ordered_by_last_name
       elsif (params['group_leader'] == '-5')
         group_leader_name = 'Official'
         file_name = 'official'
-        participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-5)
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-5).ordered_by_last_name
       elsif (params['group_leader'] == '-6')
         group_leader_name = 'Volunteer'
         file_name = 'volunteer'
-        participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-6)
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-6).ordered_by_last_name
       elsif (params['group_leader'] == '-7')
         group_leader_name = 'Representative'
         file_name = 'representative'
-        participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-7)
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-7).ordered_by_last_name
       else
         group_leader = User.find(params['group_leader'])
         group_leader_name = group_leader.fullname
         file_name = (group_leader.first_name + '_' + group_leader.last_name).downcase
-        participants = group_leader.followers
+        participants = group_leader.followers.by_event(params['event_id'])
       end
 
       # formatting
@@ -564,30 +568,30 @@ class ReportsController < ApplicationController
 
         if (leader == -1)
           group_leader_name = 'Group Leader Not Listed'
-          participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-1)
+          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-1)
         elsif (leader == -2)
           group_leader_name = 'Group Leader Not Known'
-          participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-2)
+          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-2)
         elsif (leader == -3)
           group_leader_name = 'No Group Leader'
-          participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-3)
+          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-3)
         elsif (leader == -4)
           group_leader_name = 'Staff'
-          participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-4)
+          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-4)
         elsif (leader == -5)
           group_leader_name = 'Official'
-          participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-5)
+          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-5)
         elsif (leader == -6)
           group_leader_name = 'Volunteer'
-          participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-6)
+          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-6)
         elsif (leader == -7)
           group_leader_name = 'Representative'
-          participants = ParticipantRegistration.ordered_by_last_name.by_group_leader(-7)
+          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-7)
         else
           user = User.find(leader)
           logger.debug(user)
           group_leader_name = user.fullname
-          participants = user.followers
+          participants = user.followers.by_event(params['event_id'])
         end
 
         # formatting
@@ -845,7 +849,7 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Monitor Details'
     sheet1.row(0).default_format = header_format
 
-    @equipment_registrations = EquipmentRegistration.all(:order => 'last_name asc')
+    @equipment_registrations = EquipmentRegistration.all(:conditions => "event_id = #{params['event_id']}", :order => 'last_name asc')
 
     pos = 1
     @equipment_registrations.each do |equipment_registration|
@@ -1155,7 +1159,7 @@ class ReportsController < ApplicationController
       sheet1 = book.create_worksheet
 
       building = Building.find(params[:building_id])
-      participants = ParticipantRegistration.by_building(params[:building_id]).ordered_by_room
+      participants = ParticipantRegistration.by_building(params[:building_id]).by_event(params['event_id']).ordered_by_room
 
       # formatting
       title_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
@@ -1238,7 +1242,7 @@ class ReportsController < ApplicationController
 
       buildings.each do |building|
         sheet1 = book.create_worksheet
-        participants = ParticipantRegistration.by_building(building.id).ordered_by_room
+        participants = ParticipantRegistration.by_building(building.id).by_event(params['event_id']).ordered_by_room
 
         # formatting
         title_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
@@ -1332,36 +1336,36 @@ class ReportsController < ApplicationController
       if (params['group_leader'] == '-1')
         group_leader_name = 'Group Leader Not Listed'
         file_name = 'group_leader_not_listed'
-        participants = ParticipantRegistration.by_group_leader(-1).ordered_by_building_room_last_name
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-1).ordered_by_building_room_last_name
       elsif (params['group_leader'] == '-2')
         group_leader_name = 'Group Leader Not Known'
         file_name = 'group_leader_not_known'
-        participants = ParticipantRegistration.by_group_leader(-2).ordered_by_building_room_last_name
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-2).ordered_by_building_room_last_name
       elsif (params['group_leader'] == '-3')
         group_leader_name = 'No Group Leader'
         file_name = 'no_group_leader'
-        participants = ParticipantRegistration.by_group_leader(-3).ordered_by_building_room_last_name
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-3).ordered_by_building_room_last_name
       elsif (params['group_leader'] == '-4')
         group_leader_name = 'Staff'
         file_name = 'staff'
-        participants = ParticipantRegistration.by_group_leader(-4).ordered_by_building_room_last_name
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-4).ordered_by_building_room_last_name
       elsif (params['group_leader'] == '-5')
         group_leader_name = 'Official'
         file_name = 'official'
-        participants = ParticipantRegistration.by_group_leader(-5).ordered_by_building_room_last_name
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-5).ordered_by_building_room_last_name
       elsif (params['group_leader'] == '-6')
         group_leader_name = 'Volunteer'
         file_name = 'volunteer'
-        participants = ParticipantRegistration.by_group_leader(-6).ordered_by_building_room_last_name
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-6).ordered_by_building_room_last_name
       elsif (params['group_leader'] == '-7')
         group_leader_name = 'Representative'
         file_name = 'representative'
-        participants = ParticipantRegistration.by_group_leader(-7).ordered_by_building_room_last_name
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-7).ordered_by_building_room_last_name
       else
         group_leader = User.find(params['group_leader'])
         group_leader_name = group_leader.fullname
         file_name = (group_leader.first_name + '_' + group_leader.last_name).downcase
-        participants = ParticipantRegistration.by_group_leader(params['group_leader']).ordered_by_building_room_last_name
+        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(params['group_leader']).ordered_by_building_room_last_name
       end
 
       # formatting
@@ -1418,8 +1422,8 @@ class ReportsController < ApplicationController
       file_name = 'all'
 
       # loop through all group leaders
-      group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
-      group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+      group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "event_id = #{params['event_id']} and (num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0)", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+      group_leaders2 = User.find(:all, :joins => [:team_registrations], :conditions => "event_id = #{params['event_id']}", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
       temp_group_leaders = group_leaders1 + group_leaders2
       temp_group_leaders = temp_group_leaders.uniq.sort_by { |user| user[0].downcase }
       group_leaders = temp_group_leaders.map { |user| user[1] }
@@ -1436,29 +1440,29 @@ class ReportsController < ApplicationController
 
         if (leader == -1)
           group_leader_name = 'Group Leader Not Listed'
-          participants = ParticipantRegistration.by_group_leader(-1).ordered_by_building_room_last_name
+          participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-1).ordered_by_building_room_last_name
         elsif (leader == -2)
           group_leader_name = 'Group Leader Not Known'
-          participants = ParticipantRegistration.by_group_leader(-2).ordered_by_building_room_last_name
+          participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-2).ordered_by_building_room_last_name
         elsif (leader == -3)
           group_leader_name = 'No Group Leader'
-          participants = ParticipantRegistration.by_group_leader(-3).ordered_by_building_room_last_name
+          participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-3).ordered_by_building_room_last_name
         elsif (leader == -4)
           group_leader_name = 'Staff'
-          participants = ParticipantRegistration.by_group_leader(-4).ordered_by_building_room_last_name
+          participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-4).ordered_by_building_room_last_name
         elsif (leader == -5)
           group_leader_name = 'Official'
-          participants = ParticipantRegistration.by_group_leader(-5).ordered_by_building_room_last_name
+          participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-5).ordered_by_building_room_last_name
         elsif (leader == -6)
           group_leader_name = 'Volunteer'
-          participants = ParticipantRegistration.by_group_leader(-6).ordered_by_building_room_last_name
+          participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-6).ordered_by_building_room_last_name
         elsif (leader == -7)
           group_leader_name = 'Representative'
-          participants = ParticipantRegistration.by_group_leader(-7).ordered_by_building_room_last_name
+          participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-7).ordered_by_building_room_last_name
         else
           user = User.find(leader)
           group_leader_name = user.fullname
-          participants = ParticipantRegistration.by_group_leader(leader).ordered_by_building_room_last_name
+          participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(leader).ordered_by_building_room_last_name
         end
 
         # formatting
@@ -1528,14 +1532,14 @@ class ReportsController < ApplicationController
       sheet1 = book.create_worksheet
 
       ministry_project = MinistryProject.find(params[:ministry_project_id])
-      participants = ParticipantRegistration.by_ministry_project(params[:ministry_project_id]).ordered_by_last_name
+      participants = ParticipantRegistration.by_event(params['event_id']).by_ministry_project(params[:ministry_project_id]).ordered_by_last_name
 
       # formatting
       title_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
       header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify
 
       # write out title
-      sheet1[0,0] = 'MInistry Project: ' + ministry_project.name
+      sheet1[0,0] = 'Ministry Project: ' + ministry_project.name
       sheet1.row(0).set_format(0,title_format)
 
       # write out headers
@@ -1604,7 +1608,7 @@ class ReportsController < ApplicationController
 
       ministry_projects.each do |ministry_project|
         sheet1 = book.create_worksheet
-        participants = ParticipantRegistration.by_ministry_project(ministry_project.id).ordered_by_last_name
+        participants = ParticipantRegistration.by_event(params['event_id']).by_ministry_project(ministry_project.id).ordered_by_last_name
 
         # formatting
         title_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
@@ -1699,13 +1703,13 @@ class ReportsController < ApplicationController
     sheet1.row(0).default_format = header_format
 
     if params[:received]
-      @participants = ParticipantRegistration.medical_liability_complete.ordered_by_last_name
+      @participants = ParticipantRegistration.medical_liability_complete.by_event(params['event_id']).ordered_by_last_name
       file_name = 'received'
     elsif params[:not_received]
-      @participants = ParticipantRegistration.medical_liability_incomplete.ordered_by_last_name
+      @participants = ParticipantRegistration.medical_liability_incomplete.by_event(params['event_id']).ordered_by_last_name
       file_name = 'not_received'
     else
-      @participants = ParticipantRegistration.ordered_by_last_name
+      @participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name
       file_name = 'all'
     end
 
@@ -1763,7 +1767,7 @@ class ReportsController < ApplicationController
     sheet1 = book.create_worksheet
 
     # find only officials
-    @participants = ParticipantRegistration.find(:all, :conditions => "registration_type = 'official'")
+    @participants = ParticipantRegistration.find(:all, :conditions => "registration_type = 'official' and event_id = #{params['event_id']}")
 
     # formatting
     header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify
@@ -1848,7 +1852,7 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Group Leader'
     sheet1.row(0).default_format = header_format
        
-    @participants = ParticipantRegistration.no_team
+    @participants = ParticipantRegistration.no_team.by_event(params['event_id'])
                          
     pos = 1
     @participants.each do |participant|
@@ -1919,7 +1923,7 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Group Leader'
     sheet1.row(0).default_format = header_format
 
-    participants = ParticipantRegistration.ordered_by_last_name
+    participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name
 
     pos = 1
     participants.each do |participant|
@@ -1993,7 +1997,7 @@ class ReportsController < ApplicationController
 
     sheet1.row(0).default_format = header_format
 
-    participants = ParticipantRegistration.ordered_by_last_name
+    participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name
 
     pos = 1
     participants.each do |participant|
@@ -2032,6 +2036,7 @@ class ReportsController < ApplicationController
     send_file "#{RAILS_ROOT}/public/download/housing_#{@filename}.xls", :filename => "housing_#{@filename}.xls"
   end
 
+  # only used in 2016 - should be removed
   # create a downloadable excel file of housing for SNU (2016)
   def housing_snu
     book = Spreadsheet::Workbook.new
@@ -2103,7 +2108,7 @@ class ReportsController < ApplicationController
 
     sheet1.row(0).default_format = header_format
 
-    participants = ParticipantRegistration.has_special_needs.ordered_by_last_name
+    participants = ParticipantRegistration.has_special_needs.by_event(params['event_id']).ordered_by_last_name
 
     pos = 1
     participants.each do |participant|
@@ -2149,7 +2154,7 @@ class ReportsController < ApplicationController
 
     sheet1.row(0).default_format = header_format
 
-    participants = ParticipantRegistration.by_registration_type('Event Staff').ordered_by_last_name
+    participants = ParticipantRegistration.by_registration_type('Event Staff').by_event(params['event_id']).ordered_by_last_name
 
     pos = 1
     participants.each do |participant|
@@ -2174,16 +2179,16 @@ class ReportsController < ApplicationController
   
   # create a downloadable excel of participants who requested a shuttle, but don't have flight info
   def shuttle_no_flight_info
-    self.shuttle ParticipantRegistration.needs_shuttle.no_flight_info, 'no_flight'
+    self.shuttle ParticipantRegistration.needs_shuttle.no_flight_info.by_event(params['event_id']), 'no_flight'
   end
   
   # create a downloadable excel of participants who requested a shuttle
   def shuttle_all
-    self.shuttle ParticipantRegistration.needs_shuttle
+    self.shuttle ParticipantRegistration.needs_shuttle.by_event(params['event_id'])
   end
   
   # create a downloadable excel of participants who requested a shuttle
-  def shuttle(participants=ParticipantRegistration.all,filename='all')
+  def shuttle(participants=ParticipantRegistration.all.by_event(params['event_id']),filename='all')
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
 
@@ -2265,6 +2270,7 @@ class ReportsController < ApplicationController
     send_file "#{RAILS_ROOT}/public/download/shuttle_#{filename}.xls", :filename => "shuttle_#{filename}.xls"
   end
 
+  # used with cvent registrations - should be removed
   # create a downloadable excel file of available and used team registrations
   def claimed_teams
     book = Spreadsheet::Workbook.new

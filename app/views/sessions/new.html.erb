@@ -3,10 +3,8 @@
 </div>
 
 <p>
-In order to interact with certain parts of the site you need to login. You can do that below.
-If you don't have a login you can <%= link_to 'register', register_path %>. Please note that
-this site only allows editing of information before the event. If you are registering as a
-quizzer, coach, or spectator you may not need to login and can simply <a href='/registrations'>register for the event</a>.
+In order to interact with certain parts of the site you will need to log in. You can do that below.
+If you don't have a login you can <%= link_to 'register', register_path %>.
 </p>
 
 <% form_tag session_path do -%>
@@ -19,7 +17,7 @@ quizzer, coach, or spectator you may not need to login and can simply <a href='/
 <p><label for="remember_me">Remember me:</label>
 <%= check_box_tag 'remember_me', '1', @remember_me %></p>
 
-<p><%= submit_tag 'Log in' %></p>
+<p><%= submit_tag 'Log in', {:class => 'btn btn-primary'} %></p>
 
-<%= link_to 'Forget your password?', forgot_password_path %>
+<%= link_to 'Forgot your password?', forgot_password_path %>
 <% end -%>

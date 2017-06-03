@@ -11,7 +11,10 @@ class ParticipantRegistrationsController < ApplicationController
     else
       # if we aren't an admin we shouldn't be here
       record_not_found and return if !admin?
-      @participant_registrations = ParticipantRegistration.find(:all, :order => "first_name asc, last_name asc")
+
+      @selected_event = params[:event_id] ? params[:event_id] : Event.active_event.id
+      @events = Event.get_events
+      @participant_registrations = ParticipantRegistration.find(:all, :conditions => "event_id = #{@selected_event}", :order => "first_name asc, last_name asc")
     end
 
     respond_to do |format|
@@ -106,6 +109,7 @@ class ParticipantRegistrationsController < ApplicationController
     @participant_registration = ParticipantRegistration.new
     @participant_registration.audit_user = current_user
     @participant_registration.attributes = params[:participant_registration]
+    @participant_registration.event = Event.active_event
 
     # create ParticipantRegistrationUser
     @participant_registration_user = ParticipantRegistrationUser.new(:user => current_user, :participant_registration => @participant_registration, :owner => true)
@@ -124,21 +128,10 @@ class ParticipantRegistrationsController < ApplicationController
         @shared_users.each do |shared_user|
           participant_registration_user = ParticipantRegistrationUser.new(:user => shared_user, :participant_registration => @participant_registration)
           participant_registration_user.save
-          ParticipantRegistrationMailer.deliver_registration_shared(current_user, shared_user)
+          #ParticipantRegistrationMailer.deliver_registration_shared(current_user, shared_user)
         end
-        case params[:commit]
-        when "Submit Payment"
-          # add participant_registration to the session
-          prepare_session
-          format.html { redirect_to(new_payment_url) }
-        when "Submit Registration"
-          # add participant_registration to the session
-          prepare_session
-          format.html { redirect_to(confirm_participant_registrations_url) }
-        when "Save For Later"
-          flash[:notice] = 'Participant Registration saved successfully. It can be edited later on the participant registrations page. This can be accessed by using the right sidebar.'
-          format.html { redirect_to(root_url) }
-        end
+        flash[:notice] = "Participant registered successfully! You can see the participants you've registered on your registrations page. This can be accessed by using the right sidebar."
+        format.html { redirect_to(root_url) }
       else
         @districts = District.find(:all, :order => "name")
         @family_participant_registrations = current_user.family_participant_registrations
@@ -193,7 +186,7 @@ class ParticipantRegistrationsController < ApplicationController
           if participant_registration_user.nil?
             participant_registration_user = ParticipantRegistrationUser.new(:user => shared_user, :participant_registration => @participant_registration)
             participant_registration_user.save
-            ParticipantRegistrationMailer.deliver_registration_shared(current_user, shared_user)
+            #ParticipantRegistrationMailer.deliver_registration_shared(current_user, shared_user)
           end
         end
         # deleted any shared users that have been removed

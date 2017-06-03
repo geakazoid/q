@@ -10,7 +10,7 @@ class OfficialMailer < ActionMailer::Base
       @recipients = recipients
     end
     do_not_deliver! if @recipients.empty?
-    @subject = '[Q2016] New Official Registration'
+    @subject = 'New Official Registration'
     @from = AppConfig.admin_email
     @sent_on = Time.now
     @body[:official] = official
@@ -27,7 +27,7 @@ class OfficialMailer < ActionMailer::Base
     end
     
     @from = AppConfig.admin_email
-    @subject = '[Q2016] Official Registration Confirmation'
+    @subject = 'Official Registration Confirmation'
     @sent_on = Time.now
     @body[:official] = official
     @body[:user] = user

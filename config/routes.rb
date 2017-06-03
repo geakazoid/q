@@ -33,9 +33,12 @@ ActionController::Routing::Routes.draw do |map|
     users.resources :participant_registrations
     users.resources :equipment_registrations
     users.resources :officials
+    users.resources :event_roles
   end
+  map.resources :event_roles
   map.resources :divisions
   map.resources :districts, :collection => ['num_teams']
+  map.resources :events
   map.resources :regions
   map.resources :passwords
   map.resource :session
@@ -64,8 +67,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :officials,
                 :member => {:send_evaluation => :post}
   map.resources :evaluations
-  map.resources :seminar_registrations,
-                :collection => {:schedule => :get}
   map.resources :registerable_items
   map.resources :pages,
                 :collection => {:video => :get, :auditorium => :get}
@@ -108,12 +109,6 @@ ActionController::Routing::Routes.draw do |map|
                 :collection => {:save => :post,
                                 :filter => :get,
                                 :regenerate => :get}
-  map.resources :rounds,
-                :member => {:actions => :get},
-                :collection => {:recent => :get}
-  map.resources :stats,
-                :member => {:team => :get,
-                            :individual => :get}
   map.resources :teams
   map.resources :payments, :collection => {:receipt => :get}
 

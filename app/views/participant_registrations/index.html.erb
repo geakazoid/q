@@ -3,58 +3,30 @@
 </div>
 
 <% if @user.participant_registrations.size > 0 %>
-  From here you can view your participant registrations. If you'd like to make changes to your registrations, you can do so through <%= link_to 'CVent', 'http://cvent' %>.<br/><br/>
+  From here you can view your participant registrations. If you would like to submit another participant registration please visit the <a href="/participant_registrations/new">registration page</a>.<br/><br/>
 <% else %>
-  You do not have any participant registrations. If you would like to start the registration process please visit <%= link_to 'CVent', 'http://cvent' %>.
+  You do not have any participant registrations. If you would like to submit a participant registration please visit the <a href="/participant_registrations/new">registration page</a>.
 <% end  %>
 
 <% if @user.owned_participant_registrations.size > 0 %>
   <h2>My Registrations</h2>
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Status</th>
-      <th>Amount Ordered</th>
-      <th>Amount Paid</th>
-      <th>Amount Due</th>
-    </tr>
-    <% @user.owned_participant_registrations.each do |participant_registration| %>
-      <tr>
-        <td><%= participant_registration.full_name %></td>
-        <td><%= participant_registration.complete? ? "Complete" : "Incomplete" %></td>
-        <td>$<%= participant_registration.amount_ordered %>.00</td>
-        <td>$<%= participant_registration.amount_paid %>.00</td>
-        <td>$<%= participant_registration.amount_due %>.00</td>
-      </tr>
-    <% end %>
-  </table>
-  <br/>
-<% end  %>
-
-<% if @user.shared_participant_registrations.size > 0 %>
-  <h2>Shared Registrations</h2>
-  <table>
-    <tr>
-      <th>Name</th>
-      <th>Created On</th>
-      <th>Status</th>
-      <th>Registration Amount Due</th>
-      <th>Extras Amount Due</th>
-      <th>Total Amount Due</th>
-      <th>Total Paid Amount</th>
-      <th>Shared By</th>
-    </tr>
-    <% @user.shared_participant_registrations.each do |participant_registration| %>
-      <tr>
-        <td><%= participant_registration.full_name %></td>
-        <td><%= participant_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
-        <td><%= participant_registration.complete? ? "Complete" : "Incomplete" %></td>
-        <td>$<%= participant_registration.amount_ordered %>.00</td>
-        <td>$<%= participant_registration.amount_paid %>.00</td>
-        <td>$<%= participant_registration.amount_due %>.00</td>
-        <td><%= participant_registration.owner.fullname %></td>
-      </tr>
-    <% end %>
-  </table>
+  <div class="table-responsive"> 
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Registration Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @user.owned_participant_registrations.each do |participant_registration| %>
+          <tr>
+            <td><%= participant_registration.full_name %></td>
+            <td><%= participant_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
   <br/>
 <% end  %>

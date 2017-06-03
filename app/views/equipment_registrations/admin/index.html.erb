@@ -2,6 +2,10 @@
   <%= title('Equipment Registrations', :h1) %>
 </div>
 
+<p>
+  Selected Event: <%= select_tag 'event_select', options_from_collection_for_select(@events, "id", "name", @selected_event.to_i) %>
+</p>
+
 <%= pluralize(@laptops.size, 'Total Laptop') + '<br/>' if @laptops.size > 0 %>
 <%= pluralize(@interface_boxes.size, 'Total Interface Box') + '<br/>' if @interface_boxes.size > 0 %>
 <%= pluralize(@pads.size, 'Total Pad Set') + '<br/>' if @pads.size > 0 %>

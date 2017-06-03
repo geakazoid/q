@@ -9,5 +9,5 @@
 </p>
 <% form_tag request.path, :method => 'post' do %>
   <%= text_field_tag :confirmation_number, nil, :size => 25 %><br/>
-  <%= submit_tag 'Claim' %>
+  <%= submit_tag 'Claim', {:class => 'btn btn-primary'} %>
 <% end %>

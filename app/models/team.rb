@@ -17,6 +17,14 @@ class Team < ActiveRecord::Base
 
   after_initialize :merge_teams
 
+  HUMANIZED_ATTRIBUTES = {
+    :name => "Team name"
+  }
+
+  def self.human_attribute_name(attr)
+    HUMANIZED_ATTRIBUTES[attr.to_sym] || super
+  end
+
   def merge_teams
     @quizzer_list = quizzers1
     puts @quizzers.inspect

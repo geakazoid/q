@@ -1,35 +1,43 @@
 <% content_for :admin do %>
-<p>
-  <%= link_to 'Add new districts', new_district_path %>
-</p>
+	<h4>Actions</h4>
+	<ul>
+		<li><%= link_to 'Add new districts', new_district_path %></li>
+	</ul>
 <% end %>
 
 <div id='page_title'>
   <%= title('Districts', :h1) %>
 </div>
 
-<table>
-  <tr>
-    <th>District</th>
-	<th>Region</th>
-	<th>Director</th>
-	<th>Phone(s)</th>
-	<th>Email</th>
-	<th colspan='2'>Actions</th>
-  </tr>
+<div class="table-responsive"> 
+  <table class="table table-striped">
+    <thead>
+			<tr>
+				<th>District</th>
+				<th>Region</th>
+				<th>Director</th>
+				<th>Phone(s)</th>
+				<th>Email</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
 
-<% @districts.each do |district| %>
-  <tr>
-    <td><%= district.name %></td>
-	<td><%= district.region.name if district.region %></td>
-	<td><%= district.director unless district.director.blank? %></td>
-	<td>
-	  <%= "Main: " + district.phone unless district.phone.blank? %><br/>
-	  <%= "Mobile: " + district.mobile_phone unless district.mobile_phone.blank? %></td>
-	<td><%= district.email %></td>
-	<td><%= link_to 'Edit', edit_district_path(district) %><br/></td>
-    <td><%= link_to 'Delete', district, :confirm => 'Are you sure?', :method => :delete %></td>
-	</td>
-  </tr>
-<% end %>
-</table>
+			<% @districts.each do |district| %>
+				<tr>
+					<td><%= district.name %></td>
+					<td><%= district.region.name if district.region %></td>
+					<td><%= district.director unless district.director.blank? %></td>
+					<td>
+						<%= "Main: " + district.phone unless district.phone.blank? %><br/>
+						<%= "Mobile: " + district.mobile_phone unless district.mobile_phone.blank? %></td>
+					<td><%= district.email %></td>
+					<td>
+					  <%= link_to 'Edit', edit_district_path(district) %> :: 
+					  <%= link_to 'Delete', district, :confirm => 'Are you sure?', :method => :delete %>
+					</td>
+				</tr>
+			<% end %>
+		</tbody>
+  </table>
+</div>

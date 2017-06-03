@@ -64,9 +64,9 @@ class PaymentsController < ApplicationController
       
       # deliver payment receipt to the entered email address
       if @payment.zero_amount?
-        PaymentMailer.deliver_zero_receipt(@payment,session)
+        #PaymentMailer.deliver_zero_receipt(@payment,session)
       else
-        PaymentMailer.deliver_receipt(@payment,session)
+        #PaymentMailer.deliver_receipt(@payment,session)
       end
     end
 
@@ -220,9 +220,9 @@ class PaymentsController < ApplicationController
       
     # deliver payment receipt to the entered email address
     if @payment.zero_amount?
-      PaymentMailer.deliver_zero_receipt(@payment,session)
+      #PaymentMailer.deliver_zero_receipt(@payment,session)
     else
-      PaymentMailer.deliver_receipt(@payment,session)
+      #PaymentMailer.deliver_receipt(@payment,session)
     end
     
     # add the payment to the session

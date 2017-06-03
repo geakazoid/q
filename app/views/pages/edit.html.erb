@@ -16,20 +16,30 @@
   <p>
     <%= f.label :link %><br/>
     <%= f.text_field :link %>
-	(If link is filled in body will not be displayed.)
+	  (If link is filled in body will not be displayed.)
+  </p>
+  <p>
+    <%= f.label :parent %><br/>
+    <%= f.collection_select :parent_id,
+        Page.all(:order => 'label asc', :conditions => 'menu = true'),
+        :id,
+        :label,
+        {:include_blank => "None"} %>
   </p>
   <p>
   	<%= f.check_box :published %>
-    <%= f.label :published %>
-	<%= f.check_box :show_on_menu %>
-	<%= f.label :show_on_menu %><br/>
+    <%= f.label :published %>&nbsp;&nbsp;
+    <%= f.check_box :show_on_menu %>
+    <%= f.label :show_on_menu %>&nbsp;&nbsp;
+    <%= f.check_box :menu %>
+    <%= f.label :menu, "Top Level Menu" %><br/>
   </p>
   <p>
     <%= f.label :body %><br/>
-	<% use_tinymce -%>
+	  <% use_tinymce -%>
   	<%= f.text_area :body, :class => "mce-editor" %>
   </p>
   <p>
-    <%= f.submit 'Update' %> or <%= link_to 'Cancel', @page %>
+    <%= f.submit 'Update', {:class => 'btn btn-primary'} %> or <%= link_to 'Cancel', @page %>
   </p>
 <% end %>

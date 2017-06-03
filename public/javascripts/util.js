@@ -505,11 +505,11 @@ function formatAsMoney(mnt) {
 
 /* fill in information from users account on official and team registration pages */
 function fill_information() {
-    $('first_name').value = user_first_name;
-    $('last_name').value = user_last_name;
-    $('phone').value = user_phone;
-    $('email').value = user_email;
-    change_select_by_value('district',user_district);
+    $('#first_name').val(user_first_name);
+    $('#last_name').val(user_last_name);
+    $('#phone').val(user_phone);
+    $('#email').val(user_email);
+    change_select_by_value('#district',user_district);
 }
 
 /* show a specific travel detail section */
@@ -803,24 +803,14 @@ function extras_discount() {
 }
 
 function change_select_by_value(dom_id, value) {
-    var sb = $(dom_id);
-    if (sb != null) {
-    	for (var i = 0; i < sb.options.length; i++) {
-    		if (sb.options[i].value == value) {
-    			if (sb.selectedIndex != i) {
-    				sb.selectedIndex = i;
-    			}
-    			break;
-    		}
-    	}
-    }
+    $(dom_id).val(value);
 }
 
 /* check the division being selected on the team registration page.
  * if it's the regional team selection we show a required code text field */
 function check_regional_selection() {
 	found = false;
-	allNodes = $$("select.division");
+	allNodes = $("select.division");
 	for(i = 0; i < allNodes.length; i++) {
 	    division = allNodes[i];
 	    if (division.options[division.selectedIndex].value == 5) {
@@ -832,8 +822,8 @@ function check_regional_selection() {
 	}
 
 	if (found) {
-		$('regional_code').show();
+		$('#regional_code').show();
 	} else {
-		$('regional_code').hide();
+		$('#regional_code').hide();
 	}
 }

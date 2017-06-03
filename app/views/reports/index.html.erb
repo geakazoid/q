@@ -1,80 +1,93 @@
 <div id='page_title'>
   <%= title('Reports', :h1) %>
 </div>
+<p>
+  Various reports for events can be downloaded from this page. Reports will default to the current active event, unless another event is chosen.
+</p>
+<p>
+  Selected Event: <%= select_tag 'event_select', options_from_collection_for_select(@events, "id", "name", @selected_event.to_i) %>
+</p>
 <h3>Standard Reports</h3>
+<p>
 <% if admin? %>
-  <%= link_to 'Team Registrations', :controller => 'reports', :action => 'team_registrations_all' %>
+  <%= link_to 'Team Registrations', :controller => 'reports', :action => 'team_registrations_all', :event_id => @selected_event %>
   <br/>
-  <%= link_to 'Claimed Teams', :controller => 'reports', :action => 'claimed_teams' %>
-  <br/>
-  <%= link_to 'Participant Registrations', :controller => 'reports', :action => 'participant_registrations_all' %>
+  <%= link_to 'Participant Registrations', :controller => 'reports', :action => 'participant_registrations_all', :event_id => @selected_event %>
   <br/>
   Participants and Teams :
-  <%= link_to 'All', :controller => 'reports', :action => 'coaches_quizzers_teams' %> :
-  <%= link_to 'Coaches', :controller => 'reports', :action => 'coaches_teams' %> :
-  <%= link_to 'Quizzers', :controller => 'reports', :action => 'quizzers_teams' %>
+  <%= link_to 'All', :controller => 'reports', :action => 'coaches_quizzers_teams', :event_id => @selected_event %> :
+  <%= link_to 'Coaches', :controller => 'reports', :action => 'coaches_teams', :event_id => @selected_event %> :
+  <%= link_to 'Quizzers', :controller => 'reports', :action => 'quizzers_teams', :event_id => @selected_event %>
   <br/>
-  <%= link_to 'Officials', :controller => 'reports', :action => 'officials' %>
+  <%= link_to 'Officials', :controller => 'reports', :action => 'officials', :event_id => @selected_event %>
   <br/>
-  <%= link_to 'Equipment Registrations', :controller => 'reports', :action => 'equipment_registrations' %><br/>
-<% end %>
-<% if admin? or seminar_admin? %>
-  <%= link_to 'Seminar Registrations', :controller => 'reports', :action => 'seminar_registrations' %><br/>
+  <%= link_to 'Equipment Registrations', :controller => 'reports', :action => 'equipment_registrations', :event_id => @selected_event %><br/>
 <% end %>
 <% if admin? or housing_admin? or ministry_project_admin? %>
-  <%= link_to 'Event Staff', :controller => 'reports', :action => 'core_staff' %><br/>
-  <%= link_to 'Group Leaders', :controller => 'reports', :action => 'group_leaders' %><br/>
-  <%= link_to 'No Team', :controller => 'reports', :action => 'no_team' %><br/>
+  <%= link_to 'Event Staff', :controller => 'reports', :action => 'core_staff', :event_id => @selected_event %><br/>
+  <%= link_to 'Group Leaders', :controller => 'reports', :action => 'group_leaders', :event_id => @selected_event %><br/>
+  <%= link_to 'No Team', :controller => 'reports', :action => 'no_team', :event_id => @selected_event %><br/>
   Airports Shuttles : 
-  <%= link_to 'All', :controller => 'reports', :action => 'shuttle_all' %> : 
-  <%= link_to 'Incomplete Flight Info', :controller => 'reports', :action => 'shuttle_no_flight_info' %><br/>
+  <%= link_to 'All', :controller => 'reports', :action => 'shuttle_all', :event_id => @selected_event %> : 
+  <%= link_to 'Incomplete Flight Info', :controller => 'reports', :action => 'shuttle_no_flight_info', :event_id => @selected_event %><br/>
   Liability Forms :
-  <%= link_to 'All', :controller => 'reports', :action => 'participants_liability'  %> :
-  <%= link_to 'Received', :controller => 'reports', :action => 'participants_liability', :params => {:received => 'true'} %> :
-  <%= link_to 'Not Received', :controller => 'reports', :action => 'participants_liability', :params => {:not_received => 'true'} %>
+  <%= link_to 'All', :controller => 'reports', :action => 'participants_liability', :event_id => @selected_event  %> :
+  <%= link_to 'Received', :controller => 'reports', :action => 'participants_liability', :params => {:received => 'true', :event_id => @selected_event} %> :
+  <%= link_to 'Not Received', :controller => 'reports', :action => 'participants_liability', :params => {:not_received => 'true', :event_id => @selected_event} %>
   <br/>
-  <%= link_to 'Special Needs', :controller => 'reports', :action => 'special_needs' %><br/>
+  <%= link_to 'Special Needs', :controller => 'reports', :action => 'special_needs', :event_id => @selected_event %><br/>
   Housing :
-  <%= link_to 'All', :controller => 'reports', :action => 'housing_all'  %> :
-  <%= link_to 'Pre', :controller => 'reports', :action => 'housing_pre' %> :
-  <%= link_to 'Off Campus', :controller => 'reports', :action => 'housing_offcampus' %> : 
-  <%= link_to 'SNU', :controller => 'reports', :action => 'housing_snu' %>
-  <h3>Group Leader Summary</h3>
+  <%= link_to 'All', :controller => 'reports', :action => 'housing_all', :event_id => @selected_event  %> :
+  <%= link_to 'Pre', :controller => 'reports', :action => 'housing_pre', :event_id => @selected_event %> :
+  <%= link_to 'Off Campus', :controller => 'reports', :action => 'housing_offcampus', :event_id => @selected_event %>
+</p>
+<h3>Group Leader Summary</h3>
+<p>
   <% form_tag '/reports/group_leader_summary' do %>
     Select Group Leader:
     <%= select_tag :group_leader, '<option>- Select -</option>' + options_for_select(@group_leaders) %>
-    <%= submit_tag 'Submit' %><br/>
-    <%= link_to 'All Group Leaders', :controller => 'reports', :action => 'group_leader_summary' %>
+    <%= hidden_field_tag :event_id, @selected_event %>
+    <%= submit_tag 'Submit', {:class => 'btn btn-primary'} %><br/>
+    <%= link_to 'All Group Leaders', :controller => 'reports', :action => 'group_leader_summary', :event_id => @selected_event %>
   <% end %>
 <% end %>
 <% if admin? or housing_admin? %>
-  <h3>Housing</h3>
+</p>
+<h3>Housing</h3>
+<p>
   Housing Assignments :
-  <%= link_to 'All', :controller => 'reports', :action => 'housing_all' %> :
-  <%= link_to 'Pre', :controller => 'reports', :action => 'housing_pre' %>
+  <%= link_to 'All', :controller => 'reports', :action => 'housing_all', :event_id => @selected_event %> :
+  <%= link_to 'Pre', :controller => 'reports', :action => 'housing_pre', :event_id => @selected_event %>
   <h3>Housing By Building</h3>
   <% form_tag '/reports/housing_by_building' do %>
     Select Building:
     <%= select_tag :building_id, '<option>- Select -</option>' + options_from_collection_for_select(@buildings, 'id', 'name') %>
-    <%= submit_tag 'Submit' %><br/>
-    <%= link_to 'All Buildings', :controller => 'reports', :action => 'housing_by_building' %><br/>
-    <%= link_to 'Staying Off Campus', :controller => 'reports', :action => 'participant_registrations_off_campus' %>
+    <%= hidden_field_tag :event_id, @selected_event %>
+    <%= submit_tag 'Submit', {:class => 'btn btn-primary'} %><br/>
+    <%= link_to 'All Buildings', :controller => 'reports', :action => 'housing_by_building', :event_id => @selected_event %><br/>
+    <%= link_to 'Staying Off Campus', :controller => 'reports', :action => 'participant_registrations_off_campus', :event_id => @selected_event %>
   <% end %>
-  <h3>Housing By Group Leader</h3>
+</p>
+<h3>Housing By Group Leader</h3>
+<p>
   <% form_tag '/reports/housing_by_group_leader' do %>
     Select Group Leader:
     <%= select_tag :group_leader, '<option>- Select -</option>' + options_for_select(@group_leaders) %>
-    <%= submit_tag 'Submit' %><br/>
-    <%= link_to 'All Group Leaders', :controller => 'reports', :action => 'housing_by_group_leader' %>
+    <%= hidden_field_tag :event_id, @selected_event %>
+    <%= submit_tag 'Submit', {:class => 'btn btn-primary'} %><br/>
+    <%= link_to 'All Group Leaders', :controller => 'reports', :action => 'housing_by_group_leader', :event_id => @selected_event %>
   <% end %>
 <% end %>
 <% if admin? or ministry_project_admin? %>
-  <h3>Ministry Projects</h3>
+</p>
+<h3>Ministry Projects</h3>
+</p>
   <% form_tag '/reports/ministry_projects' do %>
     Select Ministry Project:
     <%= select_tag :ministry_project_id, '<option>- Select -</option>' + options_from_collection_for_select(@ministry_projects, 'id', 'name') %>
-    <%= submit_tag 'Submit' %><br/>
-    <%= link_to 'All Ministry Projects (Tabbed)', :controller => 'reports', :action => 'ministry_projects' %><br/>
-    <%= link_to 'All Ministry Projects (Full)', :controller => 'reports', :action => 'ministry_projects_full' %>
+    <%= hidden_field_tag :event_id, @selected_event %>
+    <%= submit_tag 'Submit', {:class => 'btn btn-primary'} %><br/>
+    <%= link_to 'All Ministry Projects (Tabbed)', :controller => 'reports', :action => 'ministry_projects', :event_id => @selected_event %><br/>
+    <%= link_to 'All Ministry Projects (Full)', :controller => 'reports', :action => 'ministry_projects_full', :event_id => @selected_event %>
   <% end %>
 <% end %>

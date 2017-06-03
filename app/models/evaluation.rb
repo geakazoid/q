@@ -1,6 +1,7 @@
 class Evaluation < ActiveRecord::Base
   belongs_to :official
   belongs_to :district
+  belongs_to :event
   
   before_create :create_key
   

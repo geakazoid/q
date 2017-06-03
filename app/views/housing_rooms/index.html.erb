@@ -40,31 +40,37 @@
   </table>
   <br/>
   <% if @housing_rooms.size > 0 %>
-    <table>
-      <tr>
-        <td style='border: 0;'><%= @housing_rooms.size %> Rooms Found</td>
-        <td style='border: 0; text-align: right;' colspan='3'><%= submit_tag 'Save All Records' %></td>
-      </tr>
-      <tr>
-        <th>Building</th>
-        <th>Number</th>
-        <th>Key Code</th>
-      </tr>
-      <% @housing_rooms.each do |housing_room| %>
-        <% fields_for "housing_room[]", housing_room do |hr_fields| %>
+    <div class="table-responsive"> 
+      <table class="table table-striped">
+        <thead>
           <tr>
-            <td><%= housing_room.building.name %></td>
-            <td><%= housing_room.number %></td>
-            <td>
-              <%= hr_fields.text_field :keycode, :size => 15 %>
-            </td>
+            <td style='border: 0;'><%= @housing_rooms.size %> Rooms Found</td>
+            <td style='border: 0; text-align: right;' colspan='3'><%= submit_tag 'Save All Records', {:class => 'btn btn-primary'} %></td>
           </tr>
-        <% end %>
-      <% end %>
-      <tr>
-        <td style='border: 0; text-align: right;' colspan='4'><%= submit_tag 'Save All Records' %></td>
-      </tr>
-    </table>
+          <tr>
+            <th>Building</th>
+            <th>Number</th>
+            <th>Key Code</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @housing_rooms.each do |housing_room| %>
+            <% fields_for "housing_room[]", housing_room do |hr_fields| %>
+              <tr>
+                <td><%= housing_room.building.name %></td>
+                <td><%= housing_room.number %></td>
+                <td>
+                  <%= hr_fields.text_field :keycode, :size => 15 %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+          <tr>
+            <td style='border: 0; text-align: right;' colspan='4'><%= submit_tag 'Save All Records' %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   <% else %>
     No records match the specified query.
   <% end %>

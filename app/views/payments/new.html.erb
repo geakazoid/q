@@ -415,9 +415,9 @@
         <input type="hidden" name="error_redirect" value="<%= AppConfig.site_url %>/convio/fail?first_name=${billing.name.first}&last_name=${billing.name.last}&address=${billing.address.street1}&city=${billing.address.city}&state=${billing.address.state}&country=${billing.address.country}&zip=${billing.address.zip}&email=${donor.email}&phone=${donor.phone}&reason=${donationResponse/errors/reason}&pageError=${donationResponse/errors/pageError}">
         <input type="hidden" name="success_redirect" value="<%= AppConfig.site_url %>/convio/success?first_name=${billing.name.first}&last_name=${billing.name.last}&address=${billing.address.street1}&city=${billing.address.city}&state=${billing.address.state}&country=${billing.address.country}&zip=${billing.address.zip}&phone=${donor.phone}&email=${donor.email}&confim_cd=${donationResponse/donation/confirmation_code}&txn_id=${donationResponse/donation/transaction_id}&total_amount=${donationResponse/donation/amount/decimal}&amount_in_cents=<%= @amount_in_cents %>">
         <% if @amount_in_cents != 0 %>
-          <%= submit_tag 'Submit Payment', :id => 'submit_payment', :onclick => "$('payment_spinner').show(); $('submit_payment').disabled = true; $('submit_payment').value = 'Submitting Payment...'; submit(); return false;", :autocomplete => 'off' %>
+          <%= submit_tag 'Submit Payment', {:id => 'submit_payment', :class => 'btn btn-primary', :onclick => "$('payment_spinner').show(); $('submit_payment').disabled = true; $('submit_payment').value = 'Submitting Payment...'; submit(); return false;", :autocomplete => 'off'} %>
         <% else %>
-          <%= submit_tag 'Submit', :id => 'submit_information', :onclick => "$('payment_spinner').show(); $('submit_information').disabled = true; $('submit_information').value = 'Submitting Information...'; submit(); return false;", :autocomplete => 'off' %>
+          <%= submit_tag 'Submit', {:id => 'submit_information', :class => 'btn btn-primary', :onclick => "$('payment_spinner').show(); $('submit_information').disabled = true; $('submit_information').value = 'Submitting Information...'; submit(); return false;", :autocomplete => 'off'} %>
         <% end %>
         <span id='payment_spinner' style='display:none;'>
           &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>

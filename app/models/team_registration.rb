@@ -1,6 +1,7 @@
 class TeamRegistration < ActiveRecord::Base
   belongs_to :user
   belongs_to :district
+  belongs_to :event
   has_one :payment
   has_many :teams, :dependent => :destroy
 
@@ -27,12 +28,19 @@ class TeamRegistration < ActiveRecord::Base
   validates_format_of :email, :with => RE_EMAIL_OK, :message => MSG_EMAIL_BAD
 
   # custom validations
-  validate_on_create :only_two_regional_teams
-  validate_on_create :has_regional_code
-  validate_on_create :current_user_has_registrations
+  #validate_on_create :only_two_regional_teams
+  #validate_on_create :has_regional_code
 
   # before save to store out audit information
   before_save :prepare_audit
+
+  HUMANIZED_ATTRIBUTES = {
+    "Teams.name" => "Team name"
+  }
+
+  def self.human_attribute_name(attr)
+    HUMANIZED_ATTRIBUTES[attr.to_sym] || super
+  end
 
   # strip out extra characters in phone
   def before_validation

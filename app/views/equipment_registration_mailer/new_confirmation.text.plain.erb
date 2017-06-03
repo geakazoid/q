@@ -28,4 +28,4 @@ Email: <%= h @equipment_registration.email %>
 <%= " Other Items (" + @equipment_registration.others.size.to_s + ")\n" unless @equipment_registration.others.empty? -%>
 
 Sincerely,
-Q2016 Staff
+<%= Event.active_event.name %> Staff

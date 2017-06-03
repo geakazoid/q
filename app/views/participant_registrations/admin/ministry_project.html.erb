@@ -6,7 +6,7 @@
 <p>
   Search for a participant:
   <% form_tag request.path, :method => 'get' do %>
-    <%= text_field_tag :q, params[:q], :size => 25 %>
+    <%= text_field_tag :q, params[:q], :size => 30 %>
   <% end %>
 </p>
 <% end %>
@@ -140,48 +140,54 @@
   </table>
   <br/>
   <% if @participant_registrations.size > 0 %>
-    <table>
-      <tr>
-        <td style='border: 0;'><%= @participant_registrations.size %> Participants Found</td>
-        <td style='border: 0; text-align: right;' colspan='3'><%= submit_tag 'Save All Records' %></td>
-      </tr>
-      <tr>
-        <th>Participant</th>
-        <th>Ministry Project</th>
-        <th>Group</th>
-      </tr>
-      <% @participant_registrations.each do |participant_registration| %>
-        <% fields_for "participant_registration[]", participant_registration do |pr_fields| %>
+    <div class="table-responsive"> 
+      <table class="table table-striped">
+        <thead>
           <tr>
-            <td width='400'>
-              <strong><%= participant_registration.full_name %></strong><br/>
-              <div style='font-size: 0.8em'>
-              <%= participant_registration.formatted_registration_type %><br/>
-              <%= participant_registration.district.display_with_region unless participant_registration.district.nil? %><br/>
-              Age / Grade: <%= participant_registration.most_recent_grade %><br/>
-              Group Leader: <%= participant_registration.group_leader_name %>
-              <% if participant_registration.quizzer? or participant_registration.coach? %>
-                <br/>Divisions: <%= participant_registration.division_list %>
-              <% end %>
-              </div>
-            </td>
-            <td>
-              <%= pr_fields.select :ministry_project_id, @ministry_projects.map {|mp| [mp.name,mp.id]}, {:prompt => "- Select -", :include_blank => true}, {:onchange => "$('participant_registration_#{participant_registration.id.to_s}_ministry_project_group').value = '';"} %>
-            </td>
-            <td>
-              <%= pr_fields.text_field :ministry_project_group, :size => 10 %>
-              <div class='autocomplete' id='ministry_project_group_auto_complete_<%= participant_registration.id.to_s %>'></div>
-              <script type='text/javascript'>
-                new Ajax.Autocompleter('participant_registration_<%= participant_registration.id.to_s %>_ministry_project_group', 'ministry_project_group_auto_complete_<%= participant_registration.id.to_s %>', '/ministry_projects/auto_complete_for_ministry_project_group', {callback: function (element, entry) {return entry + "&ministry_project_id=" + $F('participant_registration_<%= participant_registration.id.to_s %>_ministry_project_id')}});
-              </script>
-            </td>
+            <td style='border: 0;'><%= @participant_registrations.size %> Participants Found</td>
+            <td style='border: 0; text-align: right;' colspan='3'><%= submit_tag 'Save All Records', {:class => 'btn btn-primary'} %></td>
           </tr>
-        <% end %>
-      <% end %>
-      <tr>
-        <td style='border: 0; text-align: right;' colspan='4'><%= submit_tag 'Save All Records' %></td>
-      </tr>
-    </table>
+          <tr>
+            <th>Participant</th>
+            <th>Ministry Project</th>
+            <th>Group</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @participant_registrations.each do |participant_registration| %>
+            <% fields_for "participant_registration[]", participant_registration do |pr_fields| %>
+              <tr>
+                <td width='400'>
+                  <strong><%= participant_registration.full_name %></strong><br/>
+                  <div style='font-size: 0.8em'>
+                  <%= participant_registration.formatted_registration_type %><br/>
+                  <%= participant_registration.district.display_with_region unless participant_registration.district.nil? %><br/>
+                  Age / Grade: <%= participant_registration.most_recent_grade %><br/>
+                  Group Leader: <%= participant_registration.group_leader_name %>
+                  <% if participant_registration.quizzer? or participant_registration.coach? %>
+                    <br/>Divisions: <%= participant_registration.division_list %>
+                  <% end %>
+                  </div>
+                </td>
+                <td>
+                  <%= pr_fields.select :ministry_project_id, @ministry_projects.map {|mp| [mp.name,mp.id]}, {:prompt => "- Select -", :include_blank => true}, {:onchange => "$('participant_registration_#{participant_registration.id.to_s}_ministry_project_group').value = '';"} %>
+                </td>
+                <td>
+                  <%= pr_fields.text_field :ministry_project_group, :size => 10 %>
+                  <div class='autocomplete' id='ministry_project_group_auto_complete_<%= participant_registration.id.to_s %>'></div>
+                  <script type='text/javascript'>
+                    new Ajax.Autocompleter('participant_registration_<%= participant_registration.id.to_s %>_ministry_project_group', 'ministry_project_group_auto_complete_<%= participant_registration.id.to_s %>', '/ministry_projects/auto_complete_for_ministry_project_group', {callback: function (element, entry) {return entry + "&ministry_project_id=" + $F('participant_registration_<%= participant_registration.id.to_s %>_ministry_project_id')}});
+                  </script>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+          <tr>
+            <td style='border: 0; text-align: right;' colspan='4'><%= submit_tag 'Save All Records' %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   <% else %>
     No records match the specified query.
   <% end %>

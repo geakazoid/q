@@ -1,7 +1,7 @@
 page[@equipment_registration].replace :partial => 'equipment_registration'
-page[@equipment_registration].visual_effect :scroll_to, :offset => -10
+page << "$('html, body').animate({ scrollTop: $('#equipment_registration_#{@equipment_registration.id.to_s}').offset().top}, 1000);"
 page['status_' + @equipment_registration.id.to_s].replace_html 'Equipment registration updated successfully!'
-page['status_' + @equipment_registration.id.to_s].visual_effect :appear
+page << "jQuery('#status_#{@equipment_registration.id.to_s}').show();"
 page.delay(10.0) do
-  page['status_' + @equipment_registration.id.to_s].visual_effect :fade
+  page << "jQuery('#status_#{@equipment_registration.id.to_s}').hide();"
 end

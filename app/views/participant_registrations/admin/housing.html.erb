@@ -117,44 +117,53 @@
   </table>
   <br/>
   <% if @participant_registrations.size > 0 %>
-    <table>
-      <tr>
-        <td style='border: 0;'><%= @participant_registrations.size %> Participants Found</td>
-        <td style='border: 0; text-align: right;' colspan='3'><%= submit_tag 'Save All Records' %></td>
-      </tr>
-      <tr>
-        <th>Name</th>
-        <th>Building</th>
-        <th>Room</th>
-      </tr>
-      <% @participant_registrations.each do |participant_registration| %>
-        <% fields_for "participant_registration[]", participant_registration do |pr_fields| %>
+    <div class="table-responsive"> 
+      <table class="table table-striped">
+        <thead>
           <tr>
-            <td width='400'>
-              <strong><%= participant_registration.full_name %></strong><br/>
-              <div style='font-size: 0.8em'>
-              <%= participant_registration.formatted_registration_type %><br/>
-              <%= participant_registration.district.display_with_region unless participant_registration.district.nil? %><br/>
-              Group Leader: <%= participant_registration.group_leader_name %>
-              <%= '<br/>Preference 1: ' + participant_registration.roommate_preference_1 unless participant_registration.roommate_preference_1.blank? %>
-              <%= '<br/>Preference 2: ' + participant_registration.roommate_preference_2 unless participant_registration.roommate_preference_2.blank? %>
-              </div>
-            </td>
-            <td><%= pr_fields.select :building_id, @buildings.map {|b| [b.name,b.id]}, {:prompt => "- Select -"}, {:onchange => "$('participant_registration_#{participant_registration.id.to_s}_room').value = '';"} %></td>
-            <td>
-              <%= pr_fields.text_field :room, :size => 10 %>
-              <div class='autocomplete' id='room_auto_complete_<%= participant_registration.id.to_s %>'></div>
-              <script type='text/javascript'>
-                new Ajax.Autocompleter('participant_registration_<%= participant_registration.id.to_s %>_room', 'room_auto_complete_<%= participant_registration.id.to_s %>', '/rooms/auto_complete_for_room', {callback: function (element, entry) {return entry + "&building_id=" + $F('participant_registration_<%= participant_registration.id.to_s %>_building_id')}});
-              </script>
-            </td>
+            <td style='border: 0;'><%= @participant_registrations.size %> Participants Found</td>
+            <td style='border: 0; text-align: right;' colspan='3'><%= submit_tag 'Save All Records', {:class => 'btn btn-primary'} %></td>
           </tr>
-        <% end %>
-      <% end %>
-      <tr>
-        <td style='border: 0; text-align: right;' colspan='4'><%= submit_tag 'Save All Records' %></td>
-      </tr>
-    </table>
+          <tr>
+            <th>Name</th>
+            <th>Building</th>
+            <th>Room</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @participant_registrations.each do |participant_registration| %>
+            <% fields_for "participant_registration[]", participant_registration do |pr_fields| %>
+              <tr>
+                <td width='400'>
+                  <strong><%= participant_registration.full_name %></strong><br/>
+                  <div style='font-size: 0.8em'>
+                  <%= participant_registration.formatted_registration_type %><br/>
+                  <%= participant_registration.district.display_with_region unless participant_registration.district.nil? %><br/>
+                  Group Leader: <%= participant_registration.group_leader_name %>
+                  <%= '<br/>Preference 1: ' + participant_registration.roommate_preference_1 unless participant_registration.roommate_preference_1.blank? %>
+                  <%= '<br/>Preference 2: ' + participant_registration.roommate_preference_2 unless participant_registration.roommate_preference_2.blank? %>
+                  </div>
+                </td>
+                <td><%= pr_fields.select :building_id, @buildings.map {|b| [b.name,b.id]}, {:prompt => "- Select -"}, {:onchange => "$('participant_registration_#{participant_registration.id.to_s}_room').value = '';"} %></td>
+                <td>
+                  <%= pr_fields.text_field :room, :size => 10 %>
+                  <div class='autocomplete' id='room_auto_complete_<%= participant_registration.id.to_s %>'></div>
+                  <script type='text/javascript'>
+                    $( '#participant_registration_<%= participant_registration.id.to_s %>_room' ).autocomplete({
+      source: availableTags
+    });
+                    new Ajax.Autocompleter('participant_registration_<%= participant_registration.id.to_s %>_room', 'room_auto_complete_<%= participant_registration.id.to_s %>', '/rooms/auto_complete_for_room', {callback: function (element, entry) {return entry + "&building_id=" + $F('participant_registration_<%= participant_registration.id.to_s %>_building_id')}});
+                  </script>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+          <tr>
+            <td style='border: 0; text-align: right;' colspan='4'><%= submit_tag 'Save All Records' %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   <% else %>
     No records match the specified query.
   <% end %>

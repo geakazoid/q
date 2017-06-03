@@ -78,10 +78,10 @@ class OfficialsController < ApplicationController
     respond_to do |format|
       if @official.save
         # deliver new official registration notification
-        OfficialMailer.deliver_new_registration(@official, ['tolson27@gmail.com','chad.lynn91@gmail.com'], current_user)
-        OfficialMailer.deliver_new_confirmation(@official, current_user)
+        #OfficialMailer.deliver_new_registration(@official, ['tolson27@gmail.com','chad.lynn91@gmail.com'], current_user)
+        #OfficialMailer.deliver_new_confirmation(@official, current_user)
         # deliver default evaluations
-        send_default_evaluations
+        #send_default_evaluations
         format.js {
           flash[:notice] = 'You have successfully registered "' + @official.full_name + '" as an official. '
           flash[:notice] << 'You will receive confirmation of this via email and someone will contact you shortly regarding your registration.'
@@ -201,7 +201,7 @@ class OfficialsController < ApplicationController
     @evaluation.save
     
     # send our evaluation email
-    EvaluationMailer.deliver_new_evaluation(@evaluation, current_user)
+    #EvaluationMailer.deliver_new_evaluation(@evaluation, current_user)
     
     @id_to_update = params[:id_to_update]
     
@@ -225,7 +225,7 @@ class OfficialsController < ApplicationController
       @district_evaluation.save
       
       # send our evaluation email
-      EvaluationMailer.deliver_new_evaluation(@district_evaluation, current_user)
+      #EvaluationMailer.deliver_new_evaluation(@district_evaluation, current_user)
     end
     
     # create a new evaluation for the regional director
@@ -238,7 +238,7 @@ class OfficialsController < ApplicationController
       @region_evaluation.save
       
       # send our evaluation email
-      EvaluationMailer.deliver_new_evaluation(@region_evaluation, current_user)
+      #EvaluationMailer.deliver_new_evaluation(@region_evaluation, current_user)
     end
   end
 end

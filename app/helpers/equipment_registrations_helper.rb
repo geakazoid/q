@@ -8,13 +8,13 @@ module EquipmentRegistrationsHelper
       content += link_to_remote 'Modify',
                                 :url => edit_equipment_registration_path(equipment_registration),
                                 :method => :get,
-                                :loading => "$('spinner_" + equipment_registration.id.to_s + "').show(); $('menu_text_" + equipment_registration.id.to_s + "').innerHTML = 'Loading...';"
+                                :loading => "$('#spinner_" + equipment_registration.id.to_s + "').show(); $('#menu_text_" + equipment_registration.id.to_s + "').innerHTML = 'Loading...';"
       content += "&nbsp;::&nbsp;"
       content += link_to_remote 'Delete',
                                 :url => equipment_registration,
                                 :method => :delete,
                                 :confirm => 'Are you sure you want to delete this equipment registration?',
-                                :loading => "$('spinner_" + equipment_registration.id.to_s + "').show(); $('menu_text_" + equipment_registration.id.to_s + "').innerHTML = 'Deleting...';"
+                                :loading => "$('#spinner_" + equipment_registration.id.to_s + "').show(); $('#menu_text_" + equipment_registration.id.to_s + "').innerHTML = 'Deleting...';"
       content += '</span>'
     end
     content += "</div>"
@@ -25,7 +25,7 @@ module EquipmentRegistrationsHelper
     link_to_function equipment_label do |page|
       form_builder.fields_for :equipment, Equipment.new, :child_index => 'NEW_RECORD' do |f|
         html = render(:partial => equipment_type, :locals => { :form => f })
-        page << "$('equipment_list').insert({ bottom: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()) });"
+        page << "$('#equipment_list').append('#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()));"
       end
     end
   end
@@ -35,15 +35,15 @@ module EquipmentRegistrationsHelper
     link_to_function 'Extra Full Set' do |page|
       form_builder.fields_for :equipment, Equipment.new, :child_index => 'NEW_RECORD' do |f|
         html = render(:partial => 'laptop', :locals => { :form => f })
-        page << "$('equipment_list').insert({ bottom: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()) });"
+        page << "$('#equipment_list').append('#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()));"
       end
       form_builder.fields_for :equipment, Equipment.new, :child_index => 'NEW_RECORD' do |f|
         html = render(:partial => 'interface_box', :locals => { :form => f })
-        page << "$('equipment_list').insert({ bottom: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()) });"
+        page << "$('#equipment_list').append('#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()));"
       end
       form_builder.fields_for :equipment, Equipment.new, :child_index => 'NEW_RECORD' do |f|
         html = render(:partial => 'pads', :locals => { :form => f })
-        page << "$('equipment_list').insert({ bottom: '#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()) });"
+        page << "$('#equipment_list').append('#{escape_javascript(html)}'.replace(/NEW_RECORD/g, new Date().getTime()));"
       end
     end
   end
@@ -52,13 +52,13 @@ module EquipmentRegistrationsHelper
   def remove_link(form_builder)
     if form_builder.object.new_record?
       # If the equipment is a new record, we can just remove the div from the dom
-      link_to_function("remove", "$(this).up('.equipment').remove();");
+      link_to_function("Remove", "$(this).closest('.equipment').remove();");
     else
       # However if it's a "real" record it has to be deleted from the database,
       # for this reason the new fields_for, accept_nested_attributes helpers give us _delete,
       # a virtual attribute that tells rails to delete the child record.
-      form_builder.hidden_field(:_delete) +
-      link_to_function("remove", "$(this).up('.equipment').hide(); $(this).previous().value = '1'")
+      form_builder.hidden_field(:_destroy) +
+      link_to_function("Remove", "$(this).closest('.equipment').hide(); $(this).prev().val('1')")
     end
   end
 end

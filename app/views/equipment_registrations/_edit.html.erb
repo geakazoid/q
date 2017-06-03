@@ -60,7 +60,7 @@
   </div>
   <div>
     <%= f.submit 'Update Registration', :id => 'update_' + @equipment_registration.id.to_s, :autocomplete => 'off' %>
-    <span id='cancel_<%= @equipment_registration.id.to_s %>'> or <%= link_to_remote 'Cancel', :url => @equipment_registration, :method => :get, :loading  => "$('spinner_" + @equipment_registration.id.to_s + "').show(); $('update_" + @equipment_registration.id.to_s + "').hide(); $('cancel_" + @equipment_registration.id.to_s + "').innerHTML = 'Canceling...';" %></span>
+    <span id='cancel_<%= @equipment_registration.id.to_s %>'> or <%= link_to_remote 'Cancel', :url => @equipment_registration, :method => :get, :loading  => "$('#spinner_" + @equipment_registration.id.to_s + "').show(); $('#update_" + @equipment_registration.id.to_s + "').hide(); $('#cancel_" + @equipment_registration.id.to_s + "').innerHTML = 'Canceling...';" %></span>
     <span id='spinner_<%= @equipment_registration.id.to_s %>' style='display:none;'>
       &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_grey.gif'/>
     </span>

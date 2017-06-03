@@ -1,0 +1,311 @@
+body {
+  padding-top: 20px;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.navbar {
+  margin-bottom: 0px;
+}
+
+.navbar-default {
+  border: initial;
+  border-bottom: 1px solid #000;
+  border-radius: 0px;
+  background-color: #fff;
+}
+
+#header {
+  background-color: #fff;
+  padding: 0px;
+}
+
+#logos {
+  padding-bottom: 20px;
+}
+
+#body {
+  background-color: #f5f5f5;
+  padding: 0px 10px 0px 10px;
+}
+
+#left-column {
+  padding: 20px 20px 0px 20px;
+}
+
+#right-column {
+  padding: 0px 20px 20px 20px;
+}
+
+@media (min-width: 992px) {
+  #left-column {
+    padding: 20px;
+  }
+
+  #right-column {
+    padding: 0px 20px 20px 0px;
+  }
+}
+
+#content, #sidebar {
+  background-color: #fff;
+  padding: 10px;
+}
+
+#sidebar {
+    margin-top: 20px;
+}
+
+#footer {
+  background-color: #000;
+  padding: 10px;
+  color: #fff;
+}
+
+.footer-text {
+  width: 50%;
+  margin: 20px auto;
+  text-align: center;
+}
+
+#sidebar ul {
+  -webkit-padding-start: 0px;
+}
+
+#sidebar ul:last-child, #sidebar p:last-child {
+  margin-bottom: 0;
+}
+
+#sidebar ul li {
+  list-style: none;
+}
+
+h1, h2, h3, h4, h5 {
+  margin-top: 0px;
+}
+
+.meta {
+  font-size: 0.8em;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #003865;
+  border-color: #003764;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #3f4a66;
+    border-color: #003764;
+}
+
+a {
+  color: #BF0D3E;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #003865;
+}
+
+.dropdown-menu>li>a {
+    color: #003865;
+}
+
+a:focus, a:hover {
+    color: #BF0D3E;
+    text-decoration: underline;
+}
+
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
+    color: #3f4a66;
+    background-color: transparent;
+}
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+    color: #3f4a66;
+    text-decoration: none;
+    background-color: #f5f5f5;
+}
+
+.alert-wrapper {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.alert {
+    padding: 15px;
+    margin: 10px 0px -10px 0px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+@media (min-width: 700px) {
+  .alert-wrapper {
+      width: 70%;
+  }
+}
+
+@media (min-width: 900px) {
+  .alert-wrapper {
+      width: 50%;
+  }
+}
+
+.pagination {
+    margin: 0;
+}
+
+div.registration {
+    border: solid 1px #ccc;
+    background: #eee;
+    padding: 5px;
+    margin: 0px 0px 10px 0px;
+    font-size: 1em;
+}
+
+div.registration div {
+  padding: 10px 0px 10px 0px;
+}
+
+div.registration div.footer {
+  margin: 0px;
+  padding: 0px;
+  clear: both;
+}
+
+div.registration div.time {
+  font-size: 8pt;
+  margin: 0px;
+  padding: 0px;
+}
+
+div.registration div.update {
+  text-align: center;
+  margin-bottom: -12px;
+  padding: 0px 15px 0px 15px;
+}
+
+div.registration div.notice {
+  text-align: center;
+  margin-bottom: -12px;
+  padding: 0px 15px 0px 15px;
+}
+
+div.registration div.status {
+  text-align: center;
+  background: #df9;
+  padding:7px 15px;
+  margin: 10px 0px 5px 0px;
+  border:1px solid #bd7;
+  font-size:0.8em;
+}
+
+div.registration div.menu {
+  float: right;
+  padding: 0px;
+}
+
+div.registration div.header {
+  padding: 0px;
+}
+
+div.registration div.left {
+  float:left;
+  width: 50%;
+  padding: 0px;
+}
+
+div.registration div.left ul {
+  list-style-type: none;
+}
+
+div.registration div.right {
+  float:left;
+  width: 50%;
+  padding: 0px;
+}
+
+div.registration div.errorExplanation {
+  font-size:0.8em;
+  background:#c00;
+  color:white;
+  padding:7px 15px;
+  border:1px solid #bd7;
+}
+
+div.evaluations div.left {
+	float: left;
+	width: 60%;
+}
+
+div.evaluations div.right {
+	float: right;
+	width: 39%;
+}
+
+div.evaluations div.separator {
+	clear: both;
+	padding: 4px 0;
+}
+
+div.evaluations div.bottom {
+	clear: both;
+	padding: 0;
+}
+
+div.registration span.team, div.registration span.fullname {
+  font-weight: bold;
+}
+
+#logo {
+  width: 100%;
+  max-width: 800px;
+}
+
+#nyi-logo {
+  max-width: 200px;
+}
+
+#nyi-logo-wrapper {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  #nyi-logo-wrapper {
+    text-align: right;
+  }
+}
+
+div.equipment, div.registration div.equipment {
+  border: 1px solid #000000;
+  background: #cccccc;
+  padding: 10px 10px 0px 10px;
+  margin: 0px 0px 10px 0px;
+}
+
+div.equipment span.removal_link {
+  float: right;
+}
+
+.h1, h1 {
+  margin-bottom: 20px;
+}
+
+table.filters td {
+  padding: 5px;
+}
+
+.errorExplanation {
+  background-color: #f2dede;
+  border-color: #ebcccc;
+  color: #a94442;
+  padding: .75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+}
+
+.errorExplanation h2 {
+  font-size: 24px;
+}

@@ -77,7 +77,8 @@
     <%= f.submit 'Submit Registration',
                  :id => 'submit_registration',
                  :onclick => "$('spinner').show(); $('submit_registration').disabled = true; $('submit_registration').value = 'Submitting Equipment Registration...'; submit(); return false;",
-                 :autocomplete => 'off' %>
+                 :autocomplete => 'off',
+                 :class => 'btn btn-primary' %>
     <span id='spinner' style='display:none;'>
       &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
     </span>

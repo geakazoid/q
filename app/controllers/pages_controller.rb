@@ -4,7 +4,9 @@ class PagesController < ApplicationController
 
   # GET /pages
   def index
-    @pages = Page.all
+    @selected_event = params[:event_id] ? params[:event_id] : Event.active_event.id
+    @pages = Page.find(:all, :conditions => "event_id = #{@selected_event}" )
+    @events = Event.get_events
 
     respond_to do |format|
       format.html # index.html.erb
@@ -28,6 +30,9 @@ class PagesController < ApplicationController
   # GET /pages/new
   def new
     @page = Page.new
+    @events = Event.get_events
+    @page.event_id = Event.active_event.id
+    @pages = Page.find(:all, :conditions => "menu = true" )
 
     respond_to do |format|
       format.html # new.html.erb
@@ -37,6 +42,7 @@ class PagesController < ApplicationController
   # GET /pages/:id/edit
   def edit
     @page = Page.find(params[:id])
+    @pages = Page.find(:all, :conditions => "menu = true" )
   end
 
   # POST /pages
@@ -45,8 +51,13 @@ class PagesController < ApplicationController
 
     respond_to do |format|
       if @page.save
-        flash[:notice] = 'Page was successfully created.'
-        format.html { redirect_to(@page) }
+        if @page.menu?
+          flash[:notice] = 'Top Level Menu was successfully created.'
+          format.html { redirect_to(pages_path) }
+        else
+          flash[:notice] = 'Page was successfully created.'
+          format.html { redirect_to(@page) }
+        end
       else
         format.html { render :action => 'new' }
       end

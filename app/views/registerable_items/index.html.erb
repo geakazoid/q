@@ -1,7 +1,8 @@
 <% content_for :admin do %>
-<p>
-  <%= link_to 'Add new registerable item', new_registerable_item_path %>
-</p>
+  <h4>Actions</h4>
+  <ul>
+    <li><%= link_to 'Add new registerable item', new_registerable_item_path %></li>
+  </ul>
 <% end %>
 
 <%= title('Registerable Items', :h1) %>

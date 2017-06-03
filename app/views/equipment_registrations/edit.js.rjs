@@ -1,2 +1,2 @@
 page[@equipment_registration].replace_html :partial => 'edit'
-page[@equipment_registration].visual_effect :scroll_to, :offset => -10
+page << "$('html, body').animate({ scrollTop: $('#equipment_registration_#{@equipment_registration.id.to_s}').offset().top}, 1000);"

@@ -16,6 +16,10 @@
     <%= text_area_tag :division_info, nil, :size => "60x15" %>
   </p>
   <p>
-    <%= submit_tag 'Add Divisions' %> or <%= link_to 'Cancel', divisions_path %>
+    <label>Event</label><br />
+    <%= select_tag :event_id, options_from_collection_for_select(@events, "id", "name", @selected_event.to_i) %>
+  </p>
+  <p>
+    <%= submit_tag 'Add Divisions', {:class => 'btn btn-primary'} %> or <%= link_to 'Cancel', divisions_path %>
   </p>
 </p>
