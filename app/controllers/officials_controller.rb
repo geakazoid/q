@@ -12,7 +12,9 @@ class OfficialsController < ApplicationController
     else
       # if we aren't an admin we shouldn't be here
       record_not_found and return if !admin? and !official_admin?
-      @officials = Official.find(:all)
+      @selected_event = params[:event_id] ? params[:event_id] : Event.active_event.id
+      @events = Event.get_events
+      @officials = Official.find(:all, :conditions => "event_id = #{@selected_event}")
       @title = "Official Registrations"
     end
 
@@ -68,6 +70,7 @@ class OfficialsController < ApplicationController
   # POST /officials
   def create
     @official = Official.new(params[:official])
+    @official.event = Event.active_event
     if (params[:official][:user_id].nil?)
       @user = @official.user = current_user
     else
@@ -84,9 +87,9 @@ class OfficialsController < ApplicationController
         #send_default_evaluations
         format.js {
           flash[:notice] = 'You have successfully registered "' + @official.full_name + '" as an official. '
-          flash[:notice] << 'You will receive confirmation of this via email and someone will contact you shortly regarding your registration.'
+          #flash[:notice] << 'You will receive confirmation of this via email and someone will contact you shortly regarding your registration.'
           render :update do |page|
-            page.redirect_to new_official_path()
+            page.redirect_to root_path()
           end
         }
       else

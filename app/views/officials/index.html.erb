@@ -1,19 +1,26 @@
 <div id='page_title'>
   <%= title(@title, :h1) %>
 </div>
+<% if !params[:user_id] %>
+  <p>
+    Selected Event: <%= select_tag 'event_select', options_from_collection_for_select(@events, "id", "name", @selected_event.to_i) %>
+  </p>
+<% end %>
 <% if (@officials.empty?) %>
   <p>No officials registrations found.</p>
 <% else %>
+  <% if params[:user_id] %>
   <p>
-  	<% if params[:user_id] %>
     Below you can see all official registrations you have submitted ordered by first name.
     Any registrations that are editable can be modified directly from this screen.
-    <% else %>
+  </p>
+  <% else %>
+  <p>
     Below you can see all official registrations that have been submitted.
     Any registrations that are editable can be modified directly from this screen.
     You can also send evaluations and approve officials.
-    <% end %>
   </p>
+  <% end %>
   <% @officials.each do |official| %>
     <%= render :partial => "official", :object => official %>
   <% end %>

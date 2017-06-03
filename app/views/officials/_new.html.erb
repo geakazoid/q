@@ -25,12 +25,28 @@
       <%= f.text_field :last_name, {:id => 'last_name'} %>
     </div>
     <div>
-      <%= f.label :phone, 'Contact Phone' %><br/>
-      <%= f.text_field :phone, {:id => 'phone'} %>
+      <%= f.label :address, 'Address' %><br/>
+      <%= f.text_field :address, {:id => 'address'} %>
     </div>
     <div>
-      <%= f.label :email, 'Contact Email' %><br/>
+      <%= f.label :city, 'City' %><br/>
+      <%= f.text_field :city, {:id => 'city'} %>
+    </div>
+    <div>
+      <%= f.label :state, 'State' %><br/>
+      <%= f.select :state, us_states, {:prompt => '- Select -'} %>
+    </div>
+    <div>
+      <%= f.label :zipcode, 'Zipcode' %><br/>
+      <%= f.text_field :zipcode, {:id => 'zipcode'} %>
+    </div>
+    <div>
+      <%= f.label :email, 'Email' %><br/>
       <%= f.text_field :email, {:id => 'email'} %>
+    </div>
+    <div>
+      <%= f.label :phone, 'Phone' %><br/>
+      <%= f.text_field :phone, {:id => 'phone'} %>
     </div>
     <div>
       <%= f.label :district, 'District / Region' %><br/>
