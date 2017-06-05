@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 69) do
+ActiveRecord::Schema.define(:version => 70) do
 
   create_table "Officials", :id => false, :force => true do |t|
     t.integer  "id",          :default => 0, :null => false
@@ -336,6 +336,7 @@ ActiveRecord::Schema.define(:version => 69) do
     t.boolean  "coaching_team_2"
     t.string   "staying_off_campus"
     t.integer  "event_id"
+    t.string   "team_division"
   end
 
   create_table "participant_registrations_teams", :id => false, :force => true do |t|

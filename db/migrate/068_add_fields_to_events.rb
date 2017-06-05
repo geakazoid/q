@@ -9,7 +9,7 @@ class AddFieldsToEvents < ActiveRecord::Migration
   end
 
   def self.down
-    # remove support for menus
+    # remove fields from events
     remove_column :events, :title
     remove_column :events, :logo_file_name
     remove_column :events, :logo_content_type

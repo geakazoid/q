@@ -8,7 +8,7 @@
       {'Quizzer' => 'quizzer',
       'Coach' => 'coach',
       'Official' => 'official'},
-      {:prompt => "- Select -"} %>
+      {:prompt => "- Select -"}, {:onChange => "javascript:check_for_quizzer();"} %>
   </p>
   <div id='registration_info'></div>
   <h3>Basics</h3>
@@ -81,6 +81,10 @@
       {:prompt => '- Select -'},
       {:id => 'district'} %>
   </p>
+  <p id="team_division_row" style="display:none;">
+    <%= pform.label :team_division, 'What division are you quizzing in?' %><br/>
+    <%= pform.select :team_division, ['Regional A','Regional B'], :prompt => "- Select -" %>
+  </p>
   <p>
     <%= pform.label :special_needs, 'Do you have any special physical needs (such as prescription medication, wheelchair needs, etc.)?' %><br/>
     <%= pform.select :special_needs, ['Yes','No'], :prompt => "- Select -" %>
@@ -99,4 +103,11 @@
   var user_phone = '<%= current_user.phone %>';
   var user_email = '<%= current_user.email %>';
   var user_district = '<%= current_user.district_id %>';
+
+  function check_for_quizzer() {
+    $('#team_division_row').hide()
+    if ($('#participant_registration_registration_type').val() == "quizzer") {
+      $('#team_division_row').show()
+    }
+  }
 </script>

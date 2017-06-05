@@ -8,7 +8,7 @@ class AddAddressToOfficials < ActiveRecord::Migration
   end
 
   def self.down
-    # remove support for menus
+    # remove fields from officials
     remove_column :officials, :address
     remove_column :officials, :city
     remove_column :officials, :state
