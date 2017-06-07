@@ -7,7 +7,6 @@
     <%= pform.select :registration_type,
       {'Quizzer' => 'quizzer',
       'Coach' => 'coach',
-      'Official' => 'official'},
       {:prompt => "- Select -"}, {:onChange => "javascript:check_for_quizzer();"} %>
   </p>
   <p id="team_division_row" style="display:none;">
