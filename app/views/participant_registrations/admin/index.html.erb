@@ -2,6 +2,7 @@
   <h4>Actions</h4>
   <ul>
     <li><%= link_to 'Download Participant Registrations', reports_path %></li>
+    <li><%= link_to 'Download Quizmachine File', :controller => 'reports', :action => 'quizmachine_2017', :event_id => @selected_event %></li>
   </ul>
 <% end %>
 

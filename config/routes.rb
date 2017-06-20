@@ -81,6 +81,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :claimed_teams => :get,
                                 :coaches_teams => :get,
                                 :quizzers_teams => :get,
+                                :quizmachine_2017 => :get,
                                 :coaches_quizzers_teams => :get,
                                 :officials => :get,
                                 :group_leaders => :get,

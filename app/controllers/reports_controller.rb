@@ -255,6 +255,44 @@ class ReportsController < ApplicationController
     participants_teams
   end
 
+  # create a downloadable excel of quizzers and their team
+  # this is VERY specific to national quiz 2017 so it will probably never be used again
+  def quizmachine_2017
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+
+    # write out headers
+    column = 0
+    sheet1[0,column] = 'Team'
+    sheet1[0,column+=1] = 'Quizzer'
+
+    @participant_registrations = ParticipantRegistration.all(:conditions => "registration_type = 'quizzer' and event_id = #{params['event_id']}", :order => 'first_name asc, last_name asc')
+
+    pos = 1
+    teams = Hash.new
+    @participant_registrations.each do |participant_registration|
+      division = 'NONE'
+      division = 'A' if participant_registration.team_division == 'Regional A'
+      division = 'B' if participant_registration.team_division == 'Regional B'
+      teams[participant_registration.district.region.name + ' ' + division] = Array.new if teams[participant_registration.district.region.name + ' ' + division].nil?
+      teams[participant_registration.district.region.name + ' ' + division].push(participant_registration.full_name)
+    end
+
+    pos = 1
+    teams.each do |key,names|
+      names.each do |name|
+        sheet1[pos,0] = key
+        sheet1[pos,1] = name
+        pos+=1
+      end
+    end
+    
+
+    book.write "#{RAILS_ROOT}/public/download/quizmachine_teams_quizzers.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/quizmachine_teams_quizzers.xls", :filename => "quizmachine_teams_quizzers.xls"
+  end
+
   # create a downloadable excel of participants and teams
   # this method should not be called directly
   def participants_teams

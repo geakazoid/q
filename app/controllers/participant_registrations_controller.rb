@@ -251,7 +251,7 @@ class ParticipantRegistrationsController < ApplicationController
       record_not_found and return if !admin?
     end
 
-    # destroy the team registration
+    # destroy the participant registration
     @participant_registration.destroy
 
     flash[:notice] = 'Participant Registration deleted successfully.'
