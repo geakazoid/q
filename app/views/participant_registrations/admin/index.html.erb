@@ -30,8 +30,8 @@
         <tr>
           <td><%= participant_registration.full_name %></td>
           <td><%= participant_registration.registration_type %></td>
-          <td><%= participant_registration.district.region.name %></td>
-          <td><%= participant_registration.district.name %></td>
+          <td><%= participant_registration.district.region.name unless participant_registration.district.nil? %></td>
+          <td><%= participant_registration.district.name unless participant_registration.district.nil? %></td>
           <td><%= link_to 'Make Changes', edit_participant_registration_path(participant_registration) %></td>
         </tr>
       <% end %>
