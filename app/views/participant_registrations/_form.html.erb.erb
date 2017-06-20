@@ -94,6 +94,10 @@
   </p>
   <p id='submit_registration'>
     <%= pform.submit 'Submit Registration', :class => 'btn btn-primary' %>
+    <% if admin? %>
+      &nbsp;
+      <%= link_to 'Delete Registration', @participant_registration, :confirm => 'Are you sure you want to delete this participant registration?', :method => :delete, :class => 'btn btn-primary' %>
+    <% end %>
   </p>
 <% end %>
 <script type='text/javascript'>
