@@ -281,7 +281,8 @@ class ReportsController < ApplicationController
     end
 
     pos = 1
-    teams.each do |key,names|
+    sorted_teams = teams.sort_by { |key,value| key }
+    sorted_teams.each do |key,names|
       names.each do |name|
         sheet1[pos,0] = key
         sheet1[pos,1] = name
