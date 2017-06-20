@@ -271,11 +271,13 @@ class ReportsController < ApplicationController
     pos = 1
     teams = Hash.new
     @participant_registrations.each do |participant_registration|
-      division = 'NONE'
-      division = 'A' if participant_registration.team_division == 'Regional A'
-      division = 'B' if participant_registration.team_division == 'Regional B'
-      teams[participant_registration.district.region.name + ' ' + division] = Array.new if teams[participant_registration.district.region.name + ' ' + division].nil?
-      teams[participant_registration.district.region.name + ' ' + division].push(participant_registration.full_name)
+      unless participant_registration.district.nil?
+        division = ''
+        division = 'A' if participant_registration.team_division == 'Regional A'
+        division = 'B' if participant_registration.team_division == 'Regional B'
+        teams[participant_registration.district.region.name + ' ' + division] = Array.new if teams[participant_registration.district.region.name + ' ' + division].nil?
+        teams[participant_registration.district.region.name + ' ' + division].push(participant_registration.full_name)
+      end
     end
 
     pos = 1
