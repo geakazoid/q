@@ -18,12 +18,9 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Status</th>
         <th>Role</th>
-        <th>Group Leader</th>
-        <th>Amount Ordered</th>
-        <th>Amount Paid</th>
-        <th>Amount Due</th>
+        <th>Field</th>
+        <th>District</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -31,12 +28,9 @@
       <% @participant_registrations.each do |participant_registration| %>
         <tr>
           <td><%= participant_registration.full_name %></td>
-          <td><%= participant_registration.complete? ? "Complete" : "Incomplete" %></td>
           <td><%= participant_registration.registration_type %></td>
-          <td><%= participant_registration.group_leader_name %></td>
-          <td>$<%= participant_registration.amount_ordered %>.00</td>
-          <td>$<%= participant_registration.amount_paid %>.00</td>
-          <td>$<%= participant_registration.amount_due %>.00</td>
+          <td><%= participant_registration.district.region.name %></td>
+          <td><%= participant_registration.district.name %></td>
           <td><%= link_to 'Make Changes', edit_participant_registration_path(participant_registration) %></td>
         </tr>
       <% end %>
