@@ -17,6 +17,15 @@
     <%= event_form.label :active, 'Active? (Note: Only one event may be active at a time.)' %>
   </p>
   <p>
+    <label>Enabled Registrations</label><br />
+    <%= event_form.check_box :enable_participant_registration, :size => 50 %>
+    <%= event_form.label :active, 'Participant' %>&nbsp;&nbsp;&nbsp;
+    <%= event_form.check_box :enable_team_registration, :size => 50 %>
+    <%= event_form.label :active, 'Team' %>&nbsp;&nbsp;&nbsp;
+    <%= event_form.check_box :enable_equipment_registration, :size => 50 %>
+    <%= event_form.label :active, 'Equipment' %>
+  </p>
+  <p>
     <%= event_form.label :title, 'Logo' %><br />
     <% if !@event.new_record? and @event.logo_file_name != false %>
       <%= image_tag(@event.logo.url(:original), :id => 'logo') %><br/><br/>
