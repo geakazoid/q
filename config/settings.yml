@@ -1,26 +1,26 @@
 development: &non_production_settings
   site_url: http://localhost:3000
-  site_name: Q2016 DEV
-  admin_email: Q2016 <q2016@nazquizzing.org>
+  site_name: Quizzing Events DEV
+  admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
-  regional_code: regionals2016
+  regional_code: regionals2018
   cvent_url: http://www.cvent.com/d/nrqtzj/4W
   
 test:
   <<: *non_production_settings
 
 staging:
-  site_url: http://q2016dev.nazquizzing.org
-  site_name: Q2016 DEV
-  admin_email: Q2016 <q2016@nazquizzing.org>
+  site_url: http://dev.quizzingevents.com
+  site_name: Quizzing Events
+  admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
-  regional_code: regionals2016
+  regional_code: regionals2018
   cvent_url: http://www.cvent.com/d/nrqtzj/4W
   
 production:
-  site_url: http://www.q2016.org
-  site_name: Q2016
-  admin_email: Q2016 <q2016@nazquizzing.org>
-  test_mode: true
-  regional_code: regionals2016
+  site_url: http://www.quizzingevents.com
+  site_name: Quizzing Events
+  admin_email: Quizzing Events <info@quizzingevents.com>
+  test_mode: false
+  regional_code: regionals2018
   cvent_url: http://www.cvent.com/d/nrqtzj/4W
