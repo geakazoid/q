@@ -59,7 +59,8 @@ ActionController::Routing::Routes.draw do |map|
                                 :claim => [:get, :post]},
                 :member => {:audit => :get}
   map.resources :team_registrations,
-                :collection => {:confirm => :get}
+                :collection => {:confirm => :get,
+                                :convio => :get}
   map.resources :equipment_registrations,
                 :collection => {:register => :get}
   map.resources :equipment,

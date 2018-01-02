@@ -104,12 +104,11 @@ class TeamRegistrationsController < ApplicationController
       if @team_registration.save
         case params[:commit_action]
         when 'registration_action'
-          # mark the team_registration as paid
-          @team_registration.paid = true
           @team_registration.audit_user = current_user
           @team_registration.save
-          flash[:notice] = 'Team Registration submitted succesfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
-          format.html { redirect_to(user_team_registrations_url(current_user)) }
+          #flash[:notice] = 'Team Registration submitted succesfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
+          prepare_session
+          format.html { redirect_to("/team_registrations/convio") }
         when 'save_action'
           flash[:notice] = 'Team Registration saved successfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
           format.html { redirect_to(root_url) }
@@ -226,9 +225,17 @@ class TeamRegistrationsController < ApplicationController
   
   # GET /team_registration/confirm
   def confirm
-    # find the page with confirmation / thank you text
-    @page = Page.find_by_label('Team Confirmation Text')
-    
+    # clean up the session and save our registration
+    clean_up
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  # GET /participant_registration/convio
+  # placeholder for 3rd party credit card site
+  def convio
     respond_to do |format|
       format.html
     end
@@ -274,5 +281,23 @@ class TeamRegistrationsController < ApplicationController
     end
     
     @team_registration.amount_in_cents = total_amount
+  end
+
+  # prepare our session with the correct amount to pay for
+  def prepare_session
+    # prepare hash for storing team registration values
+    session[:team_registration] = Hash.new
+
+    # store all values in the session
+    session[:team_registration][:id] = @team_registration.id
+  end
+
+  def clean_up
+    @team_registration = TeamRegistration.find(session[:team_registration][:id])
+    @team_registration.audit_user = current_user
+    @team_registration.paid = true
+
+    # save our registration back to the database
+    @team_registration.save
   end
 end

@@ -318,6 +318,6 @@ table.filters td {
   font-weight: bold;
 }
 
-#participant_registration_submit {
-  margin-top: 20px;
+#fees_row {
+  margin-bottom: 10px;
 }

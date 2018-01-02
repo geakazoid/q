@@ -9,8 +9,8 @@
                                :id,
                                :name,
                                {:prompt => '- Select -' },
-                               {:class => 'division'
-                                #:onchange => 'javascript: check_regional_selection()'
+                               {:class => 'division',
+                                :onchange => 'javascript: check_regional_selection(); update_fee();'
                                } %>
     &nbsp;
 	  <%= form.label :coach, 'Coach:' %>

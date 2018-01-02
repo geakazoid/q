@@ -29,7 +29,7 @@ class TeamRegistration < ActiveRecord::Base
 
   # custom validations
   #validate_on_create :only_two_regional_teams
-  #validate_on_create :has_regional_code
+  validate_on_create :has_regional_code
 
   # before save to store out audit information
   before_save :prepare_audit
@@ -71,7 +71,7 @@ class TeamRegistration < ActiveRecord::Base
       end
     end
     if !self.complete? and registering_regional_team and self.regional_code != AppConfig.regional_code
-      errors.add(:regional_code,'You must provide a code in order to register a regional team.')
+      errors.add_to_base('You must provide a code in order to register a regional team')
     end
   end
 

@@ -14,6 +14,11 @@ class Division < ActiveRecord::Base
     "$%.2f" % (price_in_cents / 100)
   end
 
+  # return the price in a simple format
+  def simple_price
+    "%.2f" % (price_in_cents / 100)
+  end
+
   # return the type of division
   def type
     return 'regional' if (self.name.downcase.include?('regional'))

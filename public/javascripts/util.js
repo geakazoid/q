@@ -423,66 +423,20 @@ function check_for_small_child() {
 
 /* update the total on the team registration page */
 function update_team_total() {
-    var divisions = $$('.division');
-    var district = $('district');
-    var district_registrations = 0;
-    var total = 0.00;
-    var discount_price = 0.00;
+    $('#fees_row').hide()
+    var divisions = $('.division');
+    var fee = 0.00;
 
     for (i = 0; i < divisions.length; i++) {
         var division_id = divisions[i].options[divisions[i].selectedIndex].value;
         if (division_id != '') {
-            total += division_array[division_id]['price'];
-
-            /* check for a district registration */
-            if (division_array[division_id]['type'] == 'district') {
-                district_registrations++;
-            }
+            total += fees[division_id]['price'];
         }
     }
 
-    /* if skip_discount is set we don't bother with checking for discounts
-     * this is only active for one user at the moment
-     * this is a hack and should be removed when it isn't needed anymore */
-    if (district_registrations > 0 && !skip_discount) {
-        /* make sure we have a district */
-        if (district.options[district.selectedIndex].value != '') {
-            /* find the number of already registered district teams */
-            var num_registrations = parseInt($('num_registrations').innerHTML);
-            /* see if user applies for a discount */
-            var discounted_count = 0;
-            if (num_registrations >= 2) {
-                discounted_count = district_registrations;
-            } else if (num_registrations == 1) {
-                discounted_count = district_registrations - 1;
-            } else {
-                discounted_count = district_registrations - 2;
-            }
-            if (discounted_count < 0) {
-                discounted_count = 0;
-            }
-            discount_price = discounted_count * 15;
-            if (discounted_count > 0) {
-                var discount_text = 'Your registration applies for a discount. Lucky You!<br/>';
-                discount_text += 'After 2 district team registrations, each further registration is subject to a $15 discount.<br/><br/>';
-                discount_text += discounted_count + ' team(s) apply for this discount for a total discount of $' + discount_price + '.';
-                $('discount').innerHTML = discount_text;
-            } else {
-                $('discount').innerHTML = '';
-            }
-        }
-    } else {
-        /* no district teams selected */
-        $('discount').innerHTML = '';
-    }
-	
-    $('total_amount').innerHTML = formatAsMoney(total - discount_price);
-    
-    $('submit_register').value = 'Submit And Pay';
-    $('commit_action').value = 'payment_action';
-    if (total == 0) {
-        $('submit_register').value = 'Submit Registration';
-        $('commit_action').value = 'registration_action';
+    if (fee > 0) {
+        $('#fee_display').html(fee)
+        $('#fees_row').show()
     }
 }
 

@@ -46,15 +46,17 @@
     <% end %>
   </div>
   <%= add_team_link(f) %><br/><br/>
-  <!-- <p id='regional_code' style='display:none'>
+  <p id='regional_code' style='display:none'>
     <%= f.label :regional_code, 'Regional Code' %><br />
     <%= f.text_field :regional_code, {:id => "regional_code"} %>
     <% test_output("Regional Code: " + AppConfig.regional_code + "</label>") if AppConfig.test_mode %>
-  </p> -->
+  </p>
+  <p id="fees_row" style="display:none" class="alert alert-info">
+    In order to complete your registration you will need to submit payment of $<span id="fee_display"></span>. You will be redirected to a third party site to submit your credit card payment.
+  </p>
   <p>
     <%= hidden_field_tag :commit_action, 'registration_action' %>
-    <%= f.submit 'Register Teams', {:id => 'submit_register', :class => 'btn btn-primary', :onclick => "$('#spinner').show(); $('#submit_register').prop('disabled', 'disabled'); $('#submit_save').prop('disabled', 'disabled'); $('#submit_register').val('Submitting Team Registration...'); submit(); return false;", :autocomplete => 'off'} %>
-    <%= f.submit 'Save For Later', {:id => 'submit_save', :class => 'btn btn-primary', :onclick => "$('#spinner').show(); $('#submit_register').prop('disabled', 'disabled'); $('#submit_save').prop('disabled', 'disabled'); $('#submit_save').val('Saving Team Registration...'); $('#commit_action').val('save_action'); submit(); return false;", :autocomplete => 'off'} %>
+    <%= f.submit 'Submit Registration', {:id => 'submit_register', :class => 'btn btn-primary', :onclick => "$('#spinner').show(); $('#submit_register').prop('disabled', 'disabled'); $('#submit_save').prop('disabled', 'disabled'); $('#submit_register').val('Submitting Team Registration...'); submit(); return false;", :autocomplete => 'off'} %>
     <span id='spinner' style='display:none;'>
       &nbsp;&nbsp;<img style='vertical-align: middle;' src='/images/spinner_white.gif'/>
     </span>
@@ -66,7 +68,38 @@
 	var user_phone = '<%= current_user.phone %>';
 	var user_email = '<%= current_user.email %>';
 	var user_district = '<%= current_user.district_id %>';
+
+  /* fees */
+  var fees = [];
+  <% @divisions.each do |division| %>
+    fees[<%= division.id %>] = <%= division.simple_price %>;
+  <% end %>
+
+  function update_fee() {
+    $('#fees_row').hide()
+    var divisions = $('.division');
+    var fee = 0.00;
+
+    for (i = 0; i < divisions.length; i++) {
+        var division_id = divisions[i].options[divisions[i].selectedIndex].value;
+        if (division_id != '') {
+            fee += fees[division_id];
+        }
+    }
+
+    if (fee > 0) {
+        $('#fee_display').html(fee);
+        $('#fees_row').show();
+    }
+  }
 </script>
-<script>
-  //check_regional_selection();
-</script>
+
+<% content_for :javascript do %>
+  <script>
+    /* run through all checks on first load */
+    $( document ).ready(function() {
+      check_regional_selection();
+      update_fee();
+    });
+  </script>
+<% end %>
