@@ -263,9 +263,6 @@ class ParticipantRegistrationsController < ApplicationController
     # clean up the session and save our registration
     clean_up
     
-    # find the page with confirmation / thank you text
-    @page = Page.find_by_label('Participant Confirmation Text')
-    
     respond_to do |format|
       format.html
     end
