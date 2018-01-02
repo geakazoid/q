@@ -31,8 +31,6 @@ class ParticipantRegistrationsController < ApplicationController
     registerable_items.each do |registerable_item|
       @participant_registration.registration_items.build({ :registerable_item => registerable_item })
     end
-    # set default travel type
-    @participant_registration.travel_type = 'unknown'
     # set default housing and meals for participants
     @participant_registration.participant_housing = 'meals_and_housing'
     # set default housing and meals for exhibitors
@@ -43,7 +41,8 @@ class ParticipantRegistrationsController < ApplicationController
     @participant_registration.family_registrations = current_user.list_family_registrations
     @family_participant_registrations = current_user.family_participant_registrations
     @shared_users = Array.new
-    @districts = District.find(:all, :order => "name")
+    @districts = District.find(:all, :order => 'name')
+    @registration_options = RegistrationOption.all(:order => 'sort')
     get_registered_teams
     get_group_leaders
     get_schools
@@ -89,7 +88,8 @@ class ParticipantRegistrationsController < ApplicationController
     # set default payment type
     @participant_registration.payment_type = 'full'
 
-    @districts = District.find(:all, :order => "name")
+    @districts = District.find(:all, :order => 'name')
+    @registration_options = RegistrationOption.all(:order => 'sort')
     get_registered_teams
     get_group_leaders
     get_schools
@@ -114,26 +114,16 @@ class ParticipantRegistrationsController < ApplicationController
     # create ParticipantRegistrationUser
     @participant_registration_user = ParticipantRegistrationUser.new(:user => current_user, :participant_registration => @participant_registration, :owner => true)
 
-    # deal with extra users
-    @shared_users = Array.new
-    params[:extra_users].each do |id|
-      user = User.find(id)
-      @shared_users.push(user)
-    end unless params[:extra_users].nil?
-
     respond_to do |format|
       if @participant_registration.save
         @participant_registration_user.save
-        # save shared users
-        @shared_users.each do |shared_user|
-          participant_registration_user = ParticipantRegistrationUser.new(:user => shared_user, :participant_registration => @participant_registration)
-          participant_registration_user.save
-          #ParticipantRegistrationMailer.deliver_registration_shared(current_user, shared_user)
-        end
-        flash[:notice] = "Participant registered successfully! You can see the participants you've registered on your registrations page. This can be accessed by using the right sidebar."
-        format.html { redirect_to(root_url) }
+        #flash[:notice] = "Participant registered successfully! You can see the participants you've registered on your registrations page. This can be accessed by using the right sidebar."
+        # add participant_registration to the session
+        prepare_session
+        format.html { redirect_to("/participant_registrations/convio") }
       else
         @districts = District.find(:all, :order => "name")
+        @registration_options = RegistrationOption.all(:order => 'sort')
         @family_participant_registrations = current_user.family_participant_registrations
         get_registered_teams
         get_group_leaders
@@ -222,6 +212,7 @@ class ParticipantRegistrationsController < ApplicationController
         end
       else
         @districts = District.find(:all, :order => "name")
+        @registration_options = RegistrationOption.all(:order => 'sort')
         # generate list of other family registrations if we haven't paid anything yet
         if !@participant_registration.paid_any_registration_fee?
           @family_participant_registrations = @participant_registration.family_participant_registrations
@@ -275,6 +266,14 @@ class ParticipantRegistrationsController < ApplicationController
     # find the page with confirmation / thank you text
     @page = Page.find_by_label('Participant Confirmation Text')
     
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  # GET /participant_registration/convio
+  # placeholder for 3rd party credit card site
+  def convio
     respond_to do |format|
       format.html
     end
@@ -814,125 +813,17 @@ class ParticipantRegistrationsController < ApplicationController
     # prepare hash for storing participant registration values
     session[:participant_registration] = Hash.new
 
-    # find out the registration amount we're paying
-    if @participant_registration.payment_type == 'partial' and @participant_registration.partial_amount.to_i * 100 <= params[:registration_amount].to_i
-      registration_amount = @participant_registration.partial_amount.to_i * 100
-      session[:participant_registration][:partial_payment] = true
-    else
-      registration_amount = params[:registration_amount].to_i
-      session[:participant_registration][:partial_payment] = false
-    end
-
-    session[:participant_registration][:registration_amount] = registration_amount
-
-    # check if we're skipping extras
-    if !params[:skip_extras]
-      # find out the extras amount we're paying
-      extras_amount = params[:extras_amount].to_i
-    else
-      extras_amount = 0
-    end
-    
-    session[:participant_registration][:extras_amount] = extras_amount
-
-    # figure out our payment amount
-    payment_amount = (registration_amount + extras_amount) / 100
-
-    # create a details hash to store what we're paying for in the session
-    details = Hash.new
-
-    # store the registration amount
-    details['registration_amount'] = registration_amount
-
-    # store extras (unless we're skipping them)
-    if !params[:skip_extras]
-      # possible extra values
-      boolean_extras = ['housing_sunday','housing_saturday','breakfast_monday','lunch_monday',
-        'need_arrival_shuttle','need_departure_shuttle','sv_transportation']
-      numeric_extras = ['num_extra_group_photos','num_dvd','num_extra_youth_small_shirts',
-        'num_extra_youth_medium_shirts','num_extra_youth_large_shirts',
-        'num_extra_small_shirts','num_extra_medium_shirts','num_extra_large_shirts',
-        'num_extra_xlarge_shirts','num_extra_2xlarge_shirts','num_extra_3xlarge_shirts',
-        'num_extra_4xlarge_shirts','num_extra_5xlarge_shirts','num_sv_tickets']
-
-      # store any bought extras
-      boolean_extras.each do |extra|
-        details[extra] = eval("@participant_registration.#{extra}") if eval("@participant_registration.#{extra}?")
-      end
-      numeric_extras.each do |extra|
-        details[extra] = eval("@participant_registration.#{extra}") if !eval("@participant_registration.#{extra}").nil? and eval("@participant_registration.#{extra}") > 0
-      end
-    end
-
     # store all values in the session
     session[:participant_registration][:id] = @participant_registration.id
-    session[:participant_registration][:payment_amount] = payment_amount * 100
-    session[:participant_registration][:details] = details
-
-    # store whether we're skipping extras
-    if params[:skip_extras]
-      session[:participant_registration][:skip_extras] = true
-    end
   end
 
   def clean_up
     @participant_registration = ParticipantRegistration.find(session[:participant_registration][:id])
     @participant_registration.audit_user = current_user
-
-    # reset all extras (unless they're being skipped)
-    if session[:participant_registration][:skip_extras].nil?
-      numeric_extras = ['num_extra_group_photos','num_dvd','num_extra_youth_small_shirts',
-        'num_extra_youth_medium_shirts','num_extra_youth_large_shirts',
-        'num_extra_small_shirts','num_extra_medium_shirts','num_extra_large_shirts',
-        'num_extra_xlarge_shirts','num_extra_2xlarge_shirts','num_extra_3xlarge_shirts',
-        'num_extra_4xlarge_shirts','num_extra_5xlarge_shirts','num_sv_tickets']
-
-      # reset all numeric extras to nil (this clears the form for us)
-      numeric_extras.each do |extra|
-        eval("@participant_registration.#{extra} = nil")
-      end
-
-      # clear out extras fee (since we just paid it)
-      @participant_registration.extras_fee = 0;
-    end
-
-    # find our registration fee
-    registration_fee = @participant_registration.registration_fee
-
-    # find out what's been paid already
-    registration_paid = @participant_registration.paid_registration_amount * 100
-
-    # get our discounts (if applicable)
-    registration_discount = @participant_registration.registration_discount ? @participant_registration.registration_discount : 0
-
-    # find out what's remaining to be paid
-    registration_fee_remaining = registration_fee - registration_paid - registration_discount
-
-    if registration_fee_remaining == 0
-      @participant_registration.paid = true
-    end
-    
-    # create stub payment to deal with extras + discounts equaling 0, and core staff who don't pay for extras
-    @payment = Payment.new
-    @payment.user = current_user
-    @payment.first_name = current_user.first_name
-    @payment.last_name = current_user.last_name
-    @payment.email = current_user.email
-    @payment.phone = current_user.phone
-    @payment.amount_in_cents = 0
-    @payment.response = 'STUB TRANSACTION'
-    @payment.details = session[:participant_registration][:details]
-    @payment.participant_registration_id = session[:participant_registration][:id]
-    @payment.save
+    @participant_registration.paid = true
 
     # save our registration back to the database
     @participant_registration.save
-
-    # update school registration paid status if exhibitor
-    if @participant_registration.exhibitor?
-      @participant_registration.school.paid = true
-      @participant_registration.school.save
-    end
   end
   
   # claim a participant registration using a confirmation code

@@ -156,7 +156,7 @@ a:focus, a:hover {
     margin: 0;
 }
 
-div.registration {
+div.registration, p.registration {
     border: solid 1px #ccc;
     background: #eee;
     padding: 5px;
@@ -308,4 +308,16 @@ table.filters td {
 
 .errorExplanation h2 {
   font-size: 24px;
+}
+
+.form_row {
+  margin-bottom: 10px;
+}
+
+#fee_display {
+  font-weight: bold;
+}
+
+#participant_registration_submit {
+  margin-top: 20px;
 }

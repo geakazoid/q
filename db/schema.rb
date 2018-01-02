@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 70) do
+ActiveRecord::Schema.define(:version => 75) do
 
   create_table "Officials", :id => false, :force => true do |t|
     t.integer  "id",          :default => 0, :null => false
@@ -149,7 +149,7 @@ ActiveRecord::Schema.define(:version => 70) do
 
   create_table "events", :force => true do |t|
     t.string   "name"
-    t.boolean  "active",            :default => false
+    t.boolean  "active",                          :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "title"
@@ -157,6 +157,9 @@ ActiveRecord::Schema.define(:version => 70) do
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
+    t.boolean  "enable_participant_registration"
+    t.boolean  "enable_team_registration"
+    t.boolean  "enable_equipment_registration"
   end
 
   create_table "housing_rooms", :force => true do |t|
@@ -245,7 +248,7 @@ ActiveRecord::Schema.define(:version => 70) do
     t.string   "past_events_attended"
     t.boolean  "reminder"
     t.integer  "reminder_days"
-    t.boolean  "paid",                           :default => false
+    t.boolean  "paid",                              :default => false
     t.text     "audit"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -254,11 +257,11 @@ ActiveRecord::Schema.define(:version => 70) do
     t.string   "airline_arrival_date"
     t.string   "airline_arrival_time"
     t.string   "airline_arrival_from"
-    t.boolean  "need_arrival_shuttle",           :default => false
+    t.boolean  "need_arrival_shuttle",              :default => false
     t.string   "departure_airline"
     t.string   "airline_departure_date"
     t.string   "airline_departure_time"
-    t.boolean  "need_departure_shuttle",         :default => false
+    t.boolean  "need_departure_shuttle",            :default => false
     t.string   "driving_arrival_date"
     t.string   "driving_arrival_time"
     t.string   "registration_code"
@@ -285,7 +288,7 @@ ActiveRecord::Schema.define(:version => 70) do
     t.string   "participant_housing"
     t.string   "arrival_flight_number"
     t.string   "departure_flight_number"
-    t.integer  "registration_fee",               :default => 0
+    t.integer  "registration_fee",                  :default => 0
     t.string   "family_registrations"
     t.integer  "num_extra_youth_small_shirts"
     t.integer  "num_extra_youth_medium_shirts"
@@ -293,18 +296,18 @@ ActiveRecord::Schema.define(:version => 70) do
     t.string   "country"
     t.integer  "discount_in_cents"
     t.text     "discount_description"
-    t.integer  "extras_fee",                     :default => 0
+    t.integer  "extras_fee",                        :default => 0
     t.integer  "building_id"
     t.string   "room"
-    t.boolean  "medical_liability",              :default => false
-    t.boolean  "background_check",               :default => false
+    t.boolean  "medical_liability",                 :default => false
+    t.boolean  "background_check",                  :default => false
     t.integer  "ministry_project_id"
     t.string   "ministry_project_group"
     t.string   "arrival_airport"
     t.string   "departure_airport"
     t.integer  "num_sv_tickets"
     t.boolean  "sv_transportation"
-    t.boolean  "nazsafe",                        :default => false
+    t.boolean  "nazsafe",                           :default => false
     t.string   "confirmation_number"
     t.integer  "age"
     t.boolean  "understand_form_completion"
@@ -337,6 +340,22 @@ ActiveRecord::Schema.define(:version => 70) do
     t.string   "staying_off_campus"
     t.integer  "event_id"
     t.string   "team_division"
+    t.string   "graduation_year"
+    t.string   "coach_name"
+    t.text     "roommate_notes"
+    t.boolean  "understand_background_check"
+    t.boolean  "special_needs_food_allergies"
+    t.boolean  "special_needs_handicap_accessible"
+    t.boolean  "special_needs_hearing_impaired"
+    t.boolean  "special_needs_vision_impaired"
+    t.boolean  "special_needs_other"
+    t.boolean  "special_needs_na"
+    t.text     "travel_type_details"
+  end
+
+  create_table "participant_registrations_registration_options", :id => false, :force => true do |t|
+    t.integer "participant_registration_id"
+    t.integer "registration_option_id"
   end
 
   create_table "participant_registrations_teams", :id => false, :force => true do |t|
@@ -432,6 +451,14 @@ ActiveRecord::Schema.define(:version => 70) do
     t.integer  "participant_registration_id"
     t.integer  "registerable_item_id"
     t.integer  "count",                       :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "registration_options", :force => true do |t|
+    t.string   "item"
+    t.integer  "price"
+    t.integer  "sort"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

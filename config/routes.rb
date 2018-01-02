@@ -55,6 +55,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :filter_ministry_project => :get,
                                 :save_ministry_project => :post,
                                 :confirm => :get,
+                                :convio => :get,
                                 :claim => [:get, :post]},
                 :member => {:audit => :get}
   map.resources :team_registrations,

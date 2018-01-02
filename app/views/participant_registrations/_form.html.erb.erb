@@ -1,17 +1,18 @@
 <% form_for [@user, @participant_registration] do |pform| %>
   <%= error_messages_for :participant_registration, :header_message => "There were errors with your registration.", :message => "We encountered the following problems:" %>
 
-  <%= render :partial => 'pages/page', :locals => { :page => @page } if !@page.nil? %>
+  <p>
+    Please fill out the following form to register for <%= Event.active_event.title %>.
+  </p>
   <p>
     <%= pform.label :registration_type, 'Registration Type' %><br/>
     <%= pform.select :registration_type,
-      {'Quizzer' => 'quizzer',
-      'Coach' => 'coach'},
-      {:prompt => "- Select -"}, {:onChange => "javascript:check_for_quizzer();"} %>
-  </p>
-  <p id="team_division_row" style="display:none;">
-    <%= pform.label :team_division, 'What division are you quizzing in?' %><br/>
-    <%= pform.select :team_division, ['Regional A','Regional B'], :prompt => "- Select -" %>
+      {'Quizzer ($195)' => 'quizzer',
+      'Coach ($195)' => 'coach',
+      'Official ($150)' => 'official',
+      'Staff / Intern ($150)' => 'staff',
+      'Off-Campus Guest ($0)' => 'off-campus'},
+      {:prompt => "- Select -"}, {:onChange => "check_for_registration_type();"} %>
   </p>
   <div id='registration_info'></div>
   <h3>Basics</h3>
@@ -38,9 +39,13 @@
     <%= pform.label :gender, 'Gender' %><br/>
     <%= pform.select :gender, ['Male','Female'], :prompt => '- Select -' %>
   </p>
-  <p>
-    <%= pform.label :most_recent_grade, 'Age Group or grade most recently completed in school' %><br/>
-    <%= pform.select :most_recent_grade, ['Child Age 3 and Under','Child Age 4-12','6th','7th','8th','9th','10th','11th','12th','Adult'], {:prompt => "- Select -"} %>
+  <p id='most_recent_grade_row' style='display:none;'>
+    <%= pform.label :most_recent_grade, 'Grade most recently completed in the summer of 2018?' %><br/>
+    <%= pform.select :most_recent_grade, ['Below 6th grade','6th grade','7th grade','8th grade','9th grade','10th grade','11th grade','12th grade'], {:prompt => "- Select -"} %>
+  </p>
+  <p id='graduation_year_row' style='display:none;'>
+    <%= pform.label :graduation_year, 'What is your graduation year?' %><br/>
+    <%= pform.select :graduation_year, ['2018','2019','2020','2021','2022','2023','2024','After 2024'], {:prompt => "- Select -"} %>
   </p>
   <h3>Contact Information</h3>
   <p>
@@ -64,13 +69,41 @@
     <%= pform.country_select(:country, ['United States','Canada','Mexico'], {}) %>
   </p>
   <p>
-    <%= pform.label :home_phone, 'Home Phone (xxx-xxx-xxxx)' %><br/>
+    <%= pform.label :home_phone, 'Primary Phone (xxx-xxx-xxxx)' %><br/>
     <%= pform.text_field :home_phone %>
   </p>
-  <p>
-    <%= pform.label :mobile_phone, 'Mobile Phone (xxx-xxx-xxxx) - Must have this on file for emergency contact and/or other communication! (If you do not own a mobile phone please enter the phone # of someone else who is attending the event.)' %><br/>
-    <%= pform.text_field :mobile_phone, {:id => 'phone'} %>
-  </p>
+  <h3>Emergency Contact Information</h3>
+  <p>Please provide emergency contact information.</p>
+  <div class='row form_row'>
+    <div class="col-md-4">
+      <%= pform.label :emergency_contact_name, 'Full Name' %><br/>
+      <%= pform.text_field :emergency_contact_name %>
+    </div>
+    <div class="col-md-4">
+      <%= pform.label :emergency_contact_number, 'Phone Number' %><br/>
+      <%= pform.text_field :emergency_contact_number %>
+    </div>
+    <div class="col-md-4">
+      <%= pform.label :emergency_contact_relationship, 'Relationship' %><br/>
+      <%= pform.text_field :emergency_contact_relationship %>
+    </div>
+  </div>
+  <div id='housing_details'>
+    <h3>Roommate Preferences</h3>
+    <p>
+      <%= pform.label :roommate_preference_1, 'Roommate Preference - 1st Choice' %><br/>
+      <%= pform.text_field :roommate_preference_1 %>
+    </p>
+    <p>
+      <%= pform.label :roommate_preference_2, 'Roommate Preference - 2nd Choice' %><br/>
+      <%= pform.text_field :roommate_preference_2 %>
+    </p>
+    <p>
+      <%= pform.label :roommate_notes, 'Any Additional Roommate Notes' %><br/>
+      <%= pform.text_area :roommate_notes, :size => "50x6" %>
+    </p>
+  </div>
+    <h3>Other Information</h3>
   <p>
     <%= pform.label :local_church, 'Your Local Church' %><br/>
     <%= pform.text_field :local_church %>
@@ -85,16 +118,73 @@
       {:id => 'district'} %>
   </p>
   <p>
-    <%= pform.label :special_needs, 'Do you have any special physical needs (such as prescription medication, wheelchair needs, etc.)?' %><br/>
-    <%= pform.select :special_needs, ['Yes','No'], :prompt => "- Select -" %>
+    <%= pform.label :group_leader, 'Your Group Leader' %><br/>
+    <%= pform.text_field :group_leader %>
   </p>
   <p>
-    <%= pform.label :special_needs_details, 'If you selected yes for special needs, please list what your special needs are. Please be detailed so that we can ensure your participation is enjoyable.' %><br/>
-    <%= pform.text_area :special_needs_details, :size => "50x12" %>
+    <%= pform.label :group_leader_email, 'Group Leader Email (If Known)' %><br/>
+    <%= pform.text_field :group_leader_email %>
+  </p>
+  <p id='coach_name_row' style='display:none;'>
+    <%= pform.label :coach_name, 'Your Coach' %><br/>
+    <%= pform.text_field :coach_name %>
+  </p>
+  <p id='planning_on_coaching_row' style='display:none;'>
+    <%= pform.label :planning_on_coaching, 'Are you planning on coaching a team?' %><br/>
+    <%= pform.select :planning_on_coaching, {'Yes' => 1,'No' => 0}, :prompt => '- Select -' %>
+  </p>
+  <p id='planning_on_officiating_row' style='display:none;'>
+    <%= pform.label :planning_on_officiating, 'Are you planning to be an official?' %><br/>
+    <%= pform.select :planning_on_officiating, {'Yes' => 1,'No' => 0}, :prompt => '- Select -' %>
+  </p>
+  <p>
+    <%= pform.label :shirt_size, 'T-shirt Size' %><br/>
+    <%= pform.select :shirt_size, ['X-Small','Small','Medium','Large','X-Large','2X-Large','3X-Large','4X-Large'], :prompt => "- Select -" %>
+  </p>
+  <p>
+    <label>Do you have any special needs that the staff should be aware of?</label><br/>
+    <%= pform.check_box :special_needs_food_allergies, {:onChange => 'check_special_needs()'} %>&nbsp;&nbsp;<%= pform.label :special_needs_food_allergies, 'Food Allergies' %><br/>
+    <%= pform.check_box :special_needs_handicap_accessible, {:onChange => 'check_special_needs()'} %>&nbsp;&nbsp;<%= pform.label :special_needs_handicap_accessible, 'Handicap Accessible' %><br/>
+    <%= pform.check_box :special_needs_hearing_impaired, {:onChange => 'check_special_needs()'} %>&nbsp;&nbsp;<%= pform.label :special_needs_hearing_impaired, 'Hearing Impaired' %><br/>
+    <%= pform.check_box :special_needs_vision_impaired, {:onChange => 'check_special_needs()'} %>&nbsp;&nbsp;<%= pform.label :special_needs_vision_impaired, 'Vision Impaired' %><br/>
+    <%= pform.check_box :special_needs_other, {:onChange => 'check_special_needs()'} %>&nbsp;&nbsp;<%= pform.label :special_needs_other, 'Other' %><br/>
+    <%= pform.check_box :special_needs_na, {:onChange => 'check_special_needs()'} %>&nbsp;&nbsp;<%= pform.label :special_needs_na, 'N/A' %><br/>
+  </p>
+  <p id='special_needs_details_row' style='display:none;'>
+    <%= pform.label :special_needs_details, 'Please provide us further details regarding your special needs. Please be detailed so that we can ensure your participation is enjoyable.' %><br/>
+    <%= pform.text_area :special_needs_details, :size => "60x6" %>
+  </p>
+  <p>
+    <%= pform.label :travel_type, 'How do you plan to travel to Q2018?' %><br/>
+    <%= pform.select :travel_type, ['I do not yet know how I am getting to the event.','I am flying to the event.','I am driving to the event.'], {:prompt => "- Select -"}, {:onChange => "check_travel_details()"} %>
+  </p>
+  <p id='travel_type_details_row' style='display:none;'>
+    <%= pform.label :travel_type_details, 'Please provide us your flight information (arriving and departing).' %><br/>
+    <%= pform.text_area :travel_type_details, :size => "60x6" %>
+  </p>
+  <h2>Optional Purchases</h2>
+  <p>
+    Please check any optional purchases you'd like to make. These will be added to your total.
+  </p>
+  <p id="optional_purchases_row">
+    <% @registration_options.each do |registration_option| -%>
+      <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
+      <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
+      <%=h registration_option.item -%> ($<%=h registration_option.price %>)<br/>
+    <% end -%>
+  </p>
+  <p>
+    <%= pform.check_box :understand_form_completion %>&nbsp;&nbsp;<label>I understand that I will be required to fill out a medical liability form.</label>
+  </p>
+  <p>
+    <%= pform.check_box :understand_background_check %>&nbsp;&nbsp;<label>I understand that I will be required to complete a background check form.</label>
+  </p>
+  <p id="fees_row" style="display:none;" class="alert alert-info">
+    In order to complete your registration you will need to submit payment of $<span id="fee_display"></span>. You will be redirected to a third party site to submit your credit card payment.
   </p>
   <p id='submit_registration'>
     <%= pform.submit 'Submit Registration', :class => 'btn btn-primary' %>
-    <% if admin? %>
+    <% if admin? and !@participant_registration.new_record? %>
       &nbsp;
       <%= link_to 'Delete Registration', @participant_registration, :confirm => 'Are you sure you want to delete this participant registration?', :method => :delete, :class => 'btn btn-primary' %>
     <% end %>
@@ -107,10 +197,77 @@
   var user_email = '<%= current_user.email %>';
   var user_district = '<%= current_user.district_id %>';
 
-  function check_for_quizzer() {
-    $('#team_division_row').hide()
+  /* fees */
+  var fees = {'quizzer': 195, 'coach': 195, 'official': 150, 'staff': 150, 'off-campus': 0}
+
+  function update_fee() {
+    $('#fees_row').hide()
+    if ($('#participant_registration_registration_type').val() != "") {
+      var fee = fees[$('#participant_registration_registration_type').val()]
+      fee += get_optional_purchases()
+      $('#fee_display').html(fee)
+      $('#fees_row').show()
+    }
+  }
+
+  function get_optional_purchases() {
+    var options = $('#optional_purchases_row input:checkbox:checked')
+    var total = 0
+    $.each(options, function (i,checkbox) {
+      var index = $(checkbox).val().split(/_/).pop()
+      var price = $('#option_price_' + index).val()
+      total += parseInt(price)
+    })
+    return total
+  }
+
+  function check_for_registration_type() {
+    $('#most_recent_grade_row').hide()
+    $('#graduation_year_row').hide()
+    $('#coach_name_row').hide()
+    $('#planning_on_coaching_row').hide()
+    $('#planning_on_officiating_row').hide()
     if ($('#participant_registration_registration_type').val() == "quizzer") {
-      $('#team_division_row').show()
+      $('#most_recent_grade_row').show()
+      $('#graduation_year_row').show()
+      $('#coach_name_row').show()
+    }
+    if ($('#participant_registration_registration_type').val() == "official") {
+      $('#planning_on_coaching_row').show()
+    }
+    if ($('#participant_registration_registration_type').val() == "coach") {
+      $('#planning_on_officiating_row').show()
+    }
+    update_fee()
+  }
+
+  function check_special_needs() {
+    $('#special_needs_details_row').hide()
+    if ($('#participant_registration_special_needs_food_allergies').is(':checked') == true ||
+        $('#participant_registration_special_needs_handicap_accessible').is(':checked') == true ||
+        $('#participant_registration_special_needs_hearing_impaired').is(':checked') == true ||
+        $('#participant_registration_special_needs_vision_impaired').is(':checked') == true ||
+        $('#participant_registration_special_needs_other').is(':checked') == true ||
+        $('#participant_registration_special_needs_na').is(':checked') == true) {
+      $('#special_needs_details_row').show()
+    }
+  }
+
+  function check_travel_details() {
+    $('#travel_type_details_row').hide()
+    if ($('#participant_registration_travel_type').val() == "I am flying to the event.") {
+      $('#travel_type_details_row').show()
     }
   }
 </script>
+
+<% content_for :javascript do %>
+  <script>
+    /* run through all checks on first load */
+    $( document ).ready(function() {
+      check_for_registration_type()
+      check_special_needs()
+      check_travel_details()
+    })
+  </script>
+<% end %>

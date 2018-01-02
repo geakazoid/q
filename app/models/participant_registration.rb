@@ -12,6 +12,7 @@ class ParticipantRegistration < ActiveRecord::Base
   has_many :shared_participant_registration_users, :class_name => 'ParticipantRegistrationUser', :conditions => 'owner = false'
   has_many :shared_users, :through => :shared_participant_registration_users, :class_name => 'User', :source => :user
   has_and_belongs_to_many :teams
+  has_and_belongs_to_many :registration_options
   belongs_to :team1, :class_name => 'Team', :foreign_key => 'team1_id'
   belongs_to :team2, :class_name => 'Team', :foreign_key => 'team2_id'
   belongs_to :team3, :class_name => 'Team', :foreign_key => 'team3_id'
@@ -29,7 +30,36 @@ class ParticipantRegistration < ActiveRecord::Base
   attr_accessor :payment_type
   attr_accessor :partial_amount
 
-  HUMANIZED_COLUMNS = {:street => "Address"}
+  # validations
+  validates_presence_of :registration_type
+  validates_presence_of :first_name
+  validates_presence_of :last_name
+  validates_presence_of :email
+  validates_presence_of :gender
+  validates_presence_of :most_recent_grade, :if => "self.quizzer?"
+  validates_presence_of :graduation_year, :if => "self.quizzer?"
+  validates_presence_of :street
+  validates_presence_of :city
+  validates_presence_of :state
+  validates_presence_of :zipcode
+  validates_presence_of :country
+  validates_presence_of :home_phone
+  validates_presence_of :emergency_contact_name
+  validates_presence_of :emergency_contact_number
+  validates_presence_of :emergency_contact_relationship
+  validates_presence_of :local_church
+  validates_presence_of :district
+  validates_presence_of :group_leader
+  validates_presence_of :coach_name, :if => "self.quizzer?"
+  validates_presence_of :planning_on_coaching, :if => "self.official?"
+  validates_presence_of :planning_on_officiating, :if => "self.coach?"
+  validates_presence_of :shirt_size
+  validates_presence_of :travel_type
+  validates_presence_of :travel_details, :if => "self.travel_type == 'I am flying to the event.'"
+  validates_presence_of :understand_form_completion
+  validates_presence_of :understand_background_check
+
+  HUMANIZED_ATTRIBUTES = {:street => "Address", :home_phone => "Primary Phone", :district => "District and Field"}
 
   # This is purposefully imperfect -- it's just a check for bogus input. See
   # http://www.regular-expressions.info/email.html
@@ -185,6 +215,10 @@ class ParticipantRegistration < ActiveRecord::Base
   named_scope :by_event, lambda { |event_id|
     { :conditions => ["event_id = ?", event_id] }
   }
+
+  def self.human_attribute_name(attr)
+    HUMANIZED_ATTRIBUTES[attr.to_sym] || super
+  end
 
   # strip out extra characters in mobile phone
   def before_validation
