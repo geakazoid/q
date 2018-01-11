@@ -9,8 +9,8 @@
     <%= pform.select :registration_type,
       {'Quizzer ($195)' => 'quizzer',
       'Coach ($195)' => 'coach',
-      'Official ($150)' => 'official',
-      'Staff / Intern ($150)' => 'staff',
+      'Official / Volunteer ($150)' => 'official',
+      'Staff / Intern ($0)' => 'staff',
       'Off-Campus Guest ($0)' => 'off-campus'},
       {:prompt => "- Select -"}, {:onChange => "check_for_registration_type();"} %>
   </p>
@@ -35,7 +35,7 @@
     <%= pform.label :email %><br />
     <%= pform.text_field :email, {:id => 'email', :size => 35} %>
   </div>
-  <p>
+  <p id='gender_row' style='display:none;'>
     <%= pform.label :gender, 'Gender' %><br/>
     <%= pform.select :gender, ['Male','Female'], :prompt => '- Select -' %>
   </p>
@@ -48,23 +48,23 @@
     <%= pform.select :graduation_year, ['2018','2019','2020','2021','2022','2023','2024','After 2024'], {:prompt => "- Select -"} %>
   </p>
   <h3>Contact Information</h3>
-  <p>
+  <p id='street_row' style='display:none;'>
     <%= pform.label :street, 'Address' %><br/>
     <%= pform.text_field :street %>
   </p>
-  <p>
+  <p id='city_row' style='display:none;'>
     <%= pform.label :city, 'City' %><br/>
     <%= pform.text_field :city %>
   </p>
-  <p>
+  <p id='state_row' style='display:none;'>
     <%= pform.label :state, 'State / Province' %><br/>
     <%= pform.select :state, ['AB','AK','AL','AR','AS','AZ','BC','CA','CO','CT','DC','DE','FL','FM','GA','GU','HI','IA','ID','IL','IN','KS','KY','LA','MA','MB','MD','ME','MH','MI','MN','MO','MP','MS','MT','NB','NC','ND','NE','NH','NJ','NL','NM','NS','NT','NU','NV','NY','OH','OK','ON','OR','PA','PE','PR','PW','QC','RI','SC','SD','SK','TN','TX','UT','VA','VI','VT','WA','WI','WV','WY','YT','Non USA/Canada'], :prompt => "- Select -" %>
   </p>
-  <p>
+  <p id='zipcode_row' style='display:none;'>
     <%= pform.label :zipcode, 'Zipcode / Postal Code' %><br/>
     <%= pform.text_field :zipcode %>
   </p>
-  <p>
+  <p id='country_row' style='display:none;'>
     <%= pform.label :country, 'Country' %><br/>
     <%= pform.country_select(:country, ['United States','Canada','Mexico'], {}) %>
   </p>
@@ -72,20 +72,22 @@
     <%= pform.label :home_phone, 'Primary Phone (xxx-xxx-xxxx)' %><br/>
     <%= pform.text_field :home_phone %>
   </p>
-  <h3>Emergency Contact Information</h3>
-  <p>Please provide emergency contact information.</p>
-  <div class='row form_row'>
-    <div class="col-md-4">
-      <%= pform.label :emergency_contact_name, 'Full Name' %><br/>
-      <%= pform.text_field :emergency_contact_name %>
-    </div>
-    <div class="col-md-4">
-      <%= pform.label :emergency_contact_number, 'Phone Number' %><br/>
-      <%= pform.text_field :emergency_contact_number %>
-    </div>
-    <div class="col-md-4">
-      <%= pform.label :emergency_contact_relationship, 'Relationship' %><br/>
-      <%= pform.text_field :emergency_contact_relationship %>
+  <div id='emergency_contact_details' style='display:none;'>
+    <h3>Emergency Contact Information</h3>
+    <p>Please provide emergency contact information.</p>
+    <div class='row form_row'>
+      <div class="col-md-4">
+        <%= pform.label :emergency_contact_name, 'Full Name' %><br/>
+        <%= pform.text_field :emergency_contact_name %>
+      </div>
+      <div class="col-md-4">
+        <%= pform.label :emergency_contact_number, 'Phone Number' %><br/>
+        <%= pform.text_field :emergency_contact_number %>
+      </div>
+      <div class="col-md-4">
+        <%= pform.label :emergency_contact_relationship, 'Relationship' %><br/>
+        <%= pform.text_field :emergency_contact_relationship %>
+      </div>
     </div>
   </div>
   <div id='housing_details'>
@@ -104,7 +106,7 @@
     </p>
   </div>
     <h3>Other Information</h3>
-  <p>
+  <p id='local_church_row' style='display:none;'>
     <%= pform.label :local_church, 'Your Local Church' %><br/>
     <%= pform.text_field :local_church %>
   </p>
@@ -117,11 +119,11 @@
       {:prompt => '- Select -'},
       {:id => 'district'} %>
   </p>
-  <p>
+  <p id='group_leader_row' style='display:none;'>
     <%= pform.label :group_leader, 'Your Group Leader' %><br/>
     <%= pform.text_field :group_leader %>
   </p>
-  <p>
+  <p id='group_leader_email_row' style='display:none;'>
     <%= pform.label :group_leader_email, 'Group Leader Email (If Known)' %><br/>
     <%= pform.text_field :group_leader_email %>
   </p>
@@ -137,11 +139,11 @@
     <%= pform.label :planning_on_officiating, 'Are you planning to be an official?' %><br/>
     <%= pform.select :planning_on_officiating, {'Yes' => 1,'No' => 0}, :prompt => '- Select -' %>
   </p>
-  <p>
+  <p id='shirt_size_row' style='display:none;'>
     <%= pform.label :shirt_size, 'T-shirt Size' %><br/>
     <%= pform.select :shirt_size, ['X-Small','Small','Medium','Large','X-Large','2X-Large','3X-Large','4X-Large'], :prompt => "- Select -" %>
   </p>
-  <p>
+  <p id='special_needs_row' style='display:none;'>
     <label>Do you have any special needs that the staff should be aware of?</label><br/>
     <%= pform.check_box :special_needs_food_allergies, {:onChange => 'check_special_needs()'} %>&nbsp;&nbsp;<%= pform.label :special_needs_food_allergies, 'Food Allergies' %><br/>
     <%= pform.check_box :special_needs_handicap_accessible, {:onChange => 'check_special_needs()'} %>&nbsp;&nbsp;<%= pform.label :special_needs_handicap_accessible, 'Handicap Accessible' %><br/>
@@ -154,12 +156,12 @@
     <%= pform.label :special_needs_details, 'Please provide us further details regarding your special needs. Please be detailed so that we can ensure your participation is enjoyable.' %><br/>
     <%= pform.text_area :special_needs_details, :size => "60x6" %>
   </p>
-  <p>
+  <p id='travel_type_row' style='display:none;'>
     <%= pform.label :travel_type, 'How do you plan to travel to Q2018?' %><br/>
     <%= pform.select :travel_type, ['I do not yet know how I am getting to the event.','I am flying to the event.','I am driving to the event.'], {:prompt => "- Select -"}, {:onChange => "check_travel_details()"} %>
   </p>
   <p id='travel_type_details_row' style='display:none;'>
-    <%= pform.label :travel_type_details, 'Please provide us your flight information (arriving and departing).' %><br/>
+    <%= pform.label :travel_type_details, 'Please provide us your flight information including airline(s), flight number(s), and arrival and departure times.' %><br/>
     <%= pform.text_area :travel_type_details, :size => "60x6" %>
   </p>
   <h2>Optional Purchases</h2>
@@ -173,10 +175,10 @@
       <%=h registration_option.item -%> ($<%=h registration_option.price %>)<br/>
     <% end -%>
   </p>
-  <p>
+  <p id='understand_form_completion_row' style='display:none;'>
     <%= pform.check_box :understand_form_completion %>&nbsp;&nbsp;<label>I understand that I will be required to fill out a medical liability form.</label>
   </p>
-  <p>
+  <p id='understand_backgroun_check_row' style='display:none;'>
     <%= pform.check_box :understand_background_check %>&nbsp;&nbsp;<label>I understand that I will be required to complete a background check form.</label>
   </p>
   <p id="fees_row" style="display:none;" class="alert alert-info">
@@ -198,7 +200,7 @@
   var user_district = '<%= current_user.district_id %>';
 
   /* fees */
-  var fees = {'quizzer': 195, 'coach': 195, 'official': 150, 'staff': 150, 'off-campus': 0}
+  var fees = {'quizzer': 195, 'coach': 195, 'official': 150, 'staff': 0, 'off-campus': 0}
 
   function update_fee() {
     $('#fees_row').hide()
@@ -222,11 +224,45 @@
   }
 
   function check_for_registration_type() {
+    $('#gender_row').hide()
     $('#most_recent_grade_row').hide()
     $('#graduation_year_row').hide()
+    $('#street_row').hide()
+    $('#city_row').hide()
+    $('#state_row').hide()
+    $('#zipcode_row').hide()
+    $('#country_row').hide()
+    $('#emergency_contact_details').hide()
+    $('#housing_details').hide()
+    $('#local_church_row').hide()
+    $('#group_leader_row').hide()
+    $('#group_leader_email_row').hide()
     $('#coach_name_row').hide()
     $('#planning_on_coaching_row').hide()
     $('#planning_on_officiating_row').hide()
+    $('#shirt_size_row').hide()
+    $('#special_needs_row').hide()
+    $('#travel_type_row').hide()
+    $('#understand_form_completion_row').hide()
+    $('#understand_background_check_row').hide()
+    if ($('#participant_registration_registration_type').val() != "off-campus") {
+      $('#gender_row').show()
+      $('#street_row').show()
+      $('#city_row').show()
+      $('#state_row').show()
+      $('#zipcode_row').show()
+      $('#country_row').show()
+      $('#emergency_contact_details').show()
+      $('#housing_details').show()
+      $('#local_church_row').show()
+      $('#group_leader_row').show()
+      $('#group_leader_email_row').show()
+      $('#shirt_size_row').show()
+      $('#special_needs_row').show()
+      $('#travel_type_row').show()
+      $('#understand_form_completion_row').show()
+      $('#understand_background_check_row').show()
+    }
     if ($('#participant_registration_registration_type').val() == "quizzer") {
       $('#most_recent_grade_row').show()
       $('#graduation_year_row').show()
@@ -247,8 +283,7 @@
         $('#participant_registration_special_needs_handicap_accessible').is(':checked') == true ||
         $('#participant_registration_special_needs_hearing_impaired').is(':checked') == true ||
         $('#participant_registration_special_needs_vision_impaired').is(':checked') == true ||
-        $('#participant_registration_special_needs_other').is(':checked') == true ||
-        $('#participant_registration_special_needs_na').is(':checked') == true) {
+        $('#participant_registration_special_needs_other').is(':checked') == true) {
       $('#special_needs_details_row').show()
     }
   }

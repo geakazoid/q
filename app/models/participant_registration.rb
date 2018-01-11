@@ -35,29 +35,29 @@ class ParticipantRegistration < ActiveRecord::Base
   validates_presence_of :first_name
   validates_presence_of :last_name
   validates_presence_of :email
-  validates_presence_of :gender
+  validates_presence_of :gender, :if => "!self.off_campus?"
   validates_presence_of :most_recent_grade, :if => "self.quizzer?"
   validates_presence_of :graduation_year, :if => "self.quizzer?"
-  validates_presence_of :street
-  validates_presence_of :city
-  validates_presence_of :state
-  validates_presence_of :zipcode
-  validates_presence_of :country
+  validates_presence_of :street, :if => "!self.off_campus?"
+  validates_presence_of :city, :if => "!self.off_campus?"
+  validates_presence_of :state, :if => "!self.off_campus?"
+  validates_presence_of :zipcode, :if => "!self.off_campus?"
+  validates_presence_of :country, :if => "!self.off_campus?"
   validates_presence_of :home_phone
-  validates_presence_of :emergency_contact_name
-  validates_presence_of :emergency_contact_number
-  validates_presence_of :emergency_contact_relationship
-  validates_presence_of :local_church
+  validates_presence_of :emergency_contact_name, :if => "!self.off_campus?"
+  validates_presence_of :emergency_contact_number, :if => "!self.off_campus?"
+  validates_presence_of :emergency_contact_relationship, :if => "!self.off_campus?"
+  validates_presence_of :local_church, :if => "!self.off_campus?"
   validates_presence_of :district
-  validates_presence_of :group_leader
+  validates_presence_of :group_leader, :if => "!self.off_campus?"
   validates_presence_of :coach_name, :if => "self.quizzer?"
   validates_presence_of :planning_on_coaching, :if => "self.official?"
   validates_presence_of :planning_on_officiating, :if => "self.coach?"
-  validates_presence_of :shirt_size
-  validates_presence_of :travel_type
+  validates_presence_of :shirt_size, :if => "!self.off_campus?"
+  validates_presence_of :travel_type, :if => "!self.off_campus?"
   validates_presence_of :travel_details, :if => "self.travel_type == 'I am flying to the event.'"
-  validates_presence_of :understand_form_completion
-  validates_presence_of :understand_background_check
+  validates_presence_of :understand_form_completion, :if => "!self.off_campus?"
+  validates_presence_of :understand_background_check, :if => "!self.off_campus?"
 
   HUMANIZED_ATTRIBUTES = {:street => "Address", :home_phone => "Primary Phone", :district => "District and Field"}
 
@@ -371,6 +371,11 @@ class ParticipantRegistration < ActiveRecord::Base
   # returns if this registration is for a core staff member
   def core_staff?
     self.registration_type == 'core_staff'
+  end
+
+  # returns if this registration is for an off-campus guest
+  def off_campus?
+    self.registration_type == 'off-campus'
   end
 
   # returns if this registration is for an exhibitor
