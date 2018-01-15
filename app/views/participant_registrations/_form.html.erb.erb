@@ -175,7 +175,7 @@
         <% @registration_options_meals.each do |registration_option| -%>
           <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
           <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
-          <%=h registration_option.item -%> ($<%=h registration_option.price %>)<br/>
+          <span id='option_label_<%=h registration_option.id -%>'><%=h registration_option.item -%> ($<%=h registration_option.price %>)</span><br/>
         <% end -%>
       </p>
     </div>
@@ -185,7 +185,7 @@
         <% @registration_options_other.each do |registration_option| -%>
           <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
           <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
-          <%=h registration_option.item -%> ($<%=h registration_option.price %>)<br/>
+          <span id='option_label_<%=h registration_option.id -%>'><%=h registration_option.item -%> ($<%=h registration_option.price %>)</span><br/>
         <% end -%>
       </p>
     </div>
@@ -238,6 +238,7 @@
   }
 
   function check_for_registration_type() {
+    console.log("got here")
     $('#gender_row').hide()
     $('#most_recent_grade_row').hide()
     $('#graduation_year_row').hide()
@@ -258,6 +259,8 @@
     $('#special_needs_row').hide()
     $('#travel_type_row').hide()
     $('#optional_purchases_meals_row').hide()
+    $('#option_21').hide()
+    $('#option_label_21').hide()
     $('#releases_row').hide()
     if ($('#participant_registration_registration_type').val() != "off-campus") {
       $('#gender_row').show()
@@ -274,6 +277,8 @@
       $('#shirt_size_row').show()
       $('#special_needs_row').show()
       $('#travel_type_row').show()
+      $('#option_21').show()
+      $('#option_label_21').show()
       $('#releases_row').show()
     }
     if ($('#participant_registration_registration_type').val() == "quizzer") {
