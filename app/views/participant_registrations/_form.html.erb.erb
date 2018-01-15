@@ -164,23 +164,37 @@
     <%= pform.label :travel_type_details, 'Please provide us your flight information including airline(s), flight number(s), and arrival and departure times.' %><br/>
     <%= pform.text_area :travel_type_details, :size => "60x6" %>
   </p>
-  <h2>Optional Purchases</h2>
+  <h3>Optional Purchases</h3>
   <p>
     Please check any optional purchases you'd like to make. These will be added to your total.
   </p>
-  <p id="optional_purchases_row">
-    <% @registration_options.each do |registration_option| -%>
-      <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
-      <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
-      <%=h registration_option.item -%> ($<%=h registration_option.price %>)<br/>
-    <% end -%>
-  </p>
-  <p id='understand_form_completion_row' style='display:none;'>
-    <%= pform.check_box :understand_form_completion %>&nbsp;&nbsp;<label>I understand that I will be required to fill out a medical liability form.</label>
-  </p>
-  <p id='understand_backgroun_check_row' style='display:none;'>
+  <div id='optional_purchases_row'>
+    <div id='optional_purchases_meals_row' style='display:none;'>
+      <h4>Meals</h4>
+      <p>
+        <% @registration_options_meals.each do |registration_option| -%>
+          <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
+          <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
+          <%=h registration_option.item -%> ($<%=h registration_option.price %>)<br/>
+        <% end -%>
+      </p>
+    </div>
+    <div id='optional_purchases_other_row'>
+      <h4>Other</h4>
+      <p>
+        <% @registration_options_other.each do |registration_option| -%>
+          <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
+          <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
+          <%=h registration_option.item -%> ($<%=h registration_option.price %>)<br/>
+        <% end -%>
+      </p>
+    </div>
+  </div>
+  <div id='releases_row'>
+    <h3>Realeases</h3>
+    <%= pform.check_box :understand_form_completion %>&nbsp;&nbsp;<label>I understand that I will be required to fill out a medical liability form.</label><br/>
     <%= pform.check_box :understand_background_check %>&nbsp;&nbsp;<label>I understand that I will be required to complete a background check form.</label>
-  </p>
+  </div>
   <p id="fees_row" style="display:none;" class="alert alert-info">
     In order to complete your registration you will need to submit payment of $<span id="fee_display"></span>. You will be redirected to a third party site to submit your credit card payment.
   </p>
@@ -243,8 +257,8 @@
     $('#shirt_size_row').hide()
     $('#special_needs_row').hide()
     $('#travel_type_row').hide()
-    $('#understand_form_completion_row').hide()
-    $('#understand_background_check_row').hide()
+    $('#optional_purchases_meals_row').hide()
+    $('#releases_row').hide()
     if ($('#participant_registration_registration_type').val() != "off-campus") {
       $('#gender_row').show()
       $('#street_row').show()
@@ -260,8 +274,7 @@
       $('#shirt_size_row').show()
       $('#special_needs_row').show()
       $('#travel_type_row').show()
-      $('#understand_form_completion_row').show()
-      $('#understand_background_check_row').show()
+      $('#releases_row').show()
     }
     if ($('#participant_registration_registration_type').val() == "quizzer") {
       $('#most_recent_grade_row').show()
@@ -273,6 +286,9 @@
     }
     if ($('#participant_registration_registration_type').val() == "coach") {
       $('#planning_on_officiating_row').show()
+    }
+    if ($('#participant_registration_registration_type').val() == "off-campus") {
+      $('#optional_purchases_meals_row').show()
     }
     update_fee()
   }

@@ -319,5 +319,14 @@ table.filters td {
 }
 
 #fees_row {
+  margin-top: 20px;
   margin-bottom: 10px;
+}
+
+h3 {
+  margin-top: 25px;
+}
+
+#submit_registration {
+  margin-top: 20px;
 }
