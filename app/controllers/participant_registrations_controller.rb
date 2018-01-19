@@ -122,7 +122,13 @@ class ParticipantRegistrationsController < ApplicationController
         #flash[:notice] = "Participant registered successfully! You can see the participants you've registered on your registrations page. This can be accessed by using the right sidebar."
         # add participant_registration to the session
         prepare_session
-        format.html { redirect_to("/participant_registrations/convio") }
+        if (params[:registration_fee].to_i > 0)
+          # send to 3rd party payment platform
+          format.html { redirect_to("/participant_registrations/convio") }
+        else
+          # no need to ask for payment. send to confirmation process
+          format.html { redirect_to(confirm_participant_registrations_url) }
+        end
       else
         @districts = District.find(:all, :order => "name")
         @registration_options = RegistrationOption.all(:order => 'sort')

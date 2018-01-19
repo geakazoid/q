@@ -199,6 +199,7 @@
     In order to complete your registration you will need to submit payment of $<span id="fee_display"></span>. You will be redirected to a third party site to submit your credit card payment.
   </p>
   <p id='submit_registration'>
+    <input type='hidden' id='registration_fee' name='registration_fee'>
     <%= pform.submit 'Submit Registration', :class => 'btn btn-primary' %>
     <% if admin? and !@participant_registration.new_record? %>
       &nbsp;
@@ -221,8 +222,14 @@
     if ($('#participant_registration_registration_type').val() != "") {
       var fee = fees[$('#participant_registration_registration_type').val()]
       fee += get_optional_purchases()
-      $('#fee_display').html(fee)
-      $('#fees_row').show()
+      if (fee < 0) {
+        fee = 0
+      }
+      $('#registration_fee').val(fee)
+      if (fee > 0) {
+        $('#fee_display').html(fee)
+        $('#fees_row').show()
+      }
     }
   }
 
@@ -294,6 +301,7 @@
     }
     if ($('#participant_registration_registration_type').val() == "off-campus") {
       $('#optional_purchases_meals_row').show()
+      $('#option_21').prop('checked', false);
     }
     update_fee()
   }
