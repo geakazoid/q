@@ -22,8 +22,9 @@ ActionController::Routing::Routes.draw do |map|
   # tiny mce upload
   map.tinymce_upload 'tinymce/upload', :controller => 'pages', :action => 'tinymce_upload'
   
-  map.convio_fail '/convio/fail', :controller => 'payments', :action => 'fail'
-  map.convio_success '/convio/success', :controller => 'payments', :action => 'success'
+  #map.convio_fail '/convio/fail', :controller => 'payments', :action => 'fail'
+  #map.convio_success '/convio/success', :controller => 'payments', :action => 'success'
+  map.convio_return '/process/post-process.php', :controller => 'payments', :action => 'confirm'
   
   map.connect 'statistics/:name', :controller => 'statistics', :action => 'show'
 

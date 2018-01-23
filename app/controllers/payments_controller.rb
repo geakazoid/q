@@ -278,4 +278,29 @@ class PaymentsController < ApplicationController
       }
     end
   end
+
+  def confirm
+    if session[:team_registration]
+      @team_registration = TeamRegistration.find(session[:team_registration][:id])
+      if params['amount'].to_i == @team_registration.amount_in_cents
+        redirect_to(confirm_team_registrations_url)
+      else
+        render "failure"
+      end
+    elsif session[:participant_registration]
+      @participant_registration = ParticipantRegistration.find(session[:participant_registration][:id])
+      logger.warn(params['amount'])
+      if params['amount'].to_i == @participant_registration.amount_ordered * 100
+        redirect_to(confirm_participant_registrations_url)
+      else
+        render "failure"
+      end
+    end
+  end
+
+  def failure
+    respond_to do |format|
+      format.html
+    end
+  end
 end

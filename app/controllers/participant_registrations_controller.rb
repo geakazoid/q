@@ -109,6 +109,7 @@ class ParticipantRegistrationsController < ApplicationController
   # POST /participant_registrations
   def create
     @participant_registration = ParticipantRegistration.new
+    @participant_registration.amount_ordered = params[:registration_fee].to_i
     @participant_registration.audit_user = current_user
     @participant_registration.attributes = params[:participant_registration]
     @participant_registration.event = Event.active_event
@@ -122,9 +123,10 @@ class ParticipantRegistrationsController < ApplicationController
         #flash[:notice] = "Participant registered successfully! You can see the participants you've registered on your registrations page. This can be accessed by using the right sidebar."
         # add participant_registration to the session
         prepare_session
+        registration_fee = @participant_registration.amount_ordered * 100
         if (params[:registration_fee].to_i > 0)
           # send to 3rd party payment platform
-          format.html { redirect_to("/participant_registrations/convio") }
+          format.html { redirect_to(AppConfig.convio_url + '&set.Value=' + registration_fee.to_s + '&set.custom.ucro_quiz_Id=' + @participant_registration.id.to_s) }
         else
           # no need to ask for payment. send to confirmation process
           format.html { redirect_to(confirm_participant_registrations_url) }

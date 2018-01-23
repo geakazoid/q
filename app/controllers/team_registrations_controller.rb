@@ -108,7 +108,7 @@ class TeamRegistrationsController < ApplicationController
           @team_registration.save
           #flash[:notice] = 'Team Registration submitted succesfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
           prepare_session
-          format.html { redirect_to("/team_registrations/convio") }
+          format.html { redirect_to((format.html { redirect_to(AppConfig.convio_url + '&set.Value=' + registration_fee.to_s + '&set.custom.ucro_quiz_Id=' + @team_registration.id.to_s) })) }
         when 'save_action'
           flash[:notice] = 'Team Registration saved successfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
           format.html { redirect_to(root_url) }
