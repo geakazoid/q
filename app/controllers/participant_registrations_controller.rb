@@ -133,7 +133,8 @@ class ParticipantRegistrationsController < ApplicationController
         end
       else
         @districts = District.find(:all, :order => "name")
-        @registration_options = RegistrationOption.all(:order => 'sort')
+        @registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
+        @registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
         @family_participant_registrations = current_user.family_participant_registrations
         get_registered_teams
         get_group_leaders
@@ -222,7 +223,8 @@ class ParticipantRegistrationsController < ApplicationController
         end
       else
         @districts = District.find(:all, :order => "name")
-        @registration_options = RegistrationOption.all(:order => 'sort')
+        @registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
+        @registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
         # generate list of other family registrations if we haven't paid anything yet
         if !@participant_registration.paid_any_registration_fee?
           @family_participant_registrations = @participant_registration.family_participant_registrations
