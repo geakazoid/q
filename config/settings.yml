@@ -4,7 +4,7 @@ development: &non_production_settings
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
   regional_code: regionals2018
-  convio_url: https://secure2.convio.net/cn/site/Donation2?df_id=19881&19881.donation=form1&set.DonationLevel=21862&df_preview=1
+  convio_url: https://secure2.convio.net/cn/site/Donation2?df_id=19881&19881.donation=form1&set.DonationLevel=21862
   
 test:
   <<: *non_production_settings
@@ -15,7 +15,7 @@ staging:
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
   regional_code: regionals2018
-  convio_url: https://secure2.convio.net/cn/site/Donation2?df_id=19881&19881.donation=form1&set.DonationLevel=21862&df_preview=1
+  convio_url: https://secure2.convio.net/cn/site/Donation2?df_id=19881&19881.donation=form1&set.DonationLevel=21862
   
 production:
   site_url: http://www.quizzingevents.com
