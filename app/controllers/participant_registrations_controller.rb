@@ -51,6 +51,11 @@ class ParticipantRegistrationsController < ApplicationController
     # find page for participant registrations text
     @page = Page.find_by_label('Register Participant Text')
 
+    # define if user can pay with a check
+    if params[:code] == 'gh56q13'
+      @pay_by_check = true
+    end
+
     respond_to do |format|
       format.html
     end
@@ -124,9 +129,12 @@ class ParticipantRegistrationsController < ApplicationController
         # add participant_registration to the session
         prepare_session
         registration_fee = @participant_registration.amount_ordered * 100
-        if (params[:registration_fee].to_i > 0)
+        if (params[:registration_fee].to_i > 0 and params[:pay_by_check] != "true")
           # send to 3rd party payment platform
           format.html { redirect_to(AppConfig.convio_url + '&set.Value=' + registration_fee.to_s + '&set.custom.ucro_quiz_Id=' + @participant_registration.id.to_s) }
+        elsif (params[:pay_by_check] == "true")
+          # no need to ask for payment, send to confirmation check page
+          format.html { redirect_to(confirm_check_participant_registrations_url) }
         else
           # no need to ask for payment. send to confirmation process
           format.html { redirect_to(confirm_participant_registrations_url) }
@@ -141,6 +149,10 @@ class ParticipantRegistrationsController < ApplicationController
         get_schools
         # find page for participant registrations text
         @page = Page.find_by_label('Register Participant Text')
+        # define if user can pay with a check
+        if params[:pay_by_check] == 'true'
+          @pay_by_check = true
+        end
         format.html { render :action => "new" }
       end
     end
@@ -274,6 +286,15 @@ class ParticipantRegistrationsController < ApplicationController
   def confirm
     # clean up the session and save our registration
     clean_up
+    
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  # GET /participant_registration/confirm_check
+  def confirm_check
+    @participant_registration = ParticipantRegistration.find(session[:participant_registration][:id])
     
     respond_to do |format|
       format.html

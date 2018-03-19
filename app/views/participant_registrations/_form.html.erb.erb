@@ -196,9 +196,12 @@
     <%= pform.check_box :understand_background_check %>&nbsp;&nbsp;<label>I understand that I will be required to complete a background check form.</label>
   </div>
   <p id="fees_row" style="display:none;" class="alert alert-info">
-    In order to complete your registration you will need to submit payment of $<span id="fee_display"></span>. You will be redirected to a third party site to submit your credit card payment.
+    In order to complete your registration you will need to submit payment of $<span id="fee_display"></span>. <span id="fee_text"></span>
   </p>
   <p id='submit_registration'>
+    <% if @pay_by_check %>
+      <input type='hidden' id='pay_by_check' name='pay_by_check' value='true'>
+    <% end %>
     <input type='hidden' id='registration_fee' name='registration_fee'>
     <%= pform.submit 'Submit Registration', :class => 'btn btn-primary' %>
     <% if admin? and !@participant_registration.new_record? %>
@@ -228,6 +231,11 @@
       $('#registration_fee').val(fee)
       if (fee > 0) {
         $('#fee_display').html(fee)
+        if ($('#pay_by_check').val() == 'true') {
+          $('#fee_text').html('Please send your payment to NYI via check in order to complete your registration.')
+        } else {
+          $('#fee_text').html('You will be redirected to a third party site to submit your credit card payment.')
+        }
         $('#fees_row').show()
       }
     }
