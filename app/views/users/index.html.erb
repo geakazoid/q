@@ -28,7 +28,7 @@
       <% @users.each do |user| %>
         <tr>
           <td><%=h user.fullname %><br/><%=h user.email %></td>
-          <td><%= user.state %></td>
+          <td><%= user.state == 'active' ? '<span class="label label-success">' + user.state.capitalize + '</span>' : '<span class="label label-default">' + user.state.capitalize + '</span>' %></td>
           <td>
             <%= link_to 'Edit', edit_user_path(user) %> :: 
             <%= link_to 'Roles', user_event_roles_path(user) %> :: 

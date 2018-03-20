@@ -19,9 +19,9 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Role</th>
-        <th>Field</th>
-        <th>District</th>
+        <th>Type</th>
+        <th>Field / District</th>
+        <th>Payment</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -29,9 +29,9 @@
       <% @participant_registrations.each do |participant_registration| %>
         <tr>
           <td><%= participant_registration.full_name %></td>
-          <td><%= participant_registration.registration_type %></td>
-          <td><%= participant_registration.district.region.name unless participant_registration.district.nil? %></td>
-          <td><%= participant_registration.district.name unless participant_registration.district.nil? %></td>
+          <td><%= participant_registration.registration_type.capitalize %></td>
+          <td><%= participant_registration.district.region.name unless participant_registration.district.nil? %> / <%= participant_registration.district.name unless participant_registration.district.nil? %></td>
+          <td><%= participant_registration.paid? ? '<span class="label label-success">Paid</span>' : '<span class="label label-default">Pending</span>' %></td>
           <td><%= link_to 'Make Changes', edit_participant_registration_path(participant_registration) %></td>
         </tr>
       <% end %>
