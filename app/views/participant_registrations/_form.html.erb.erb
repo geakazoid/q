@@ -191,22 +191,47 @@
     </div>
   </div>
   <div id='releases_row'>
-    <h3>Realeases</h3>
+    <h3>Releases</h3>
     <%= pform.check_box :understand_form_completion %>&nbsp;&nbsp;<label>I understand that I will be required to fill out a medical liability form.</label> (<a target="_blank" href="/files/Adult Medical and Liability Release.pdf">Download Adult</a> :: <a target="_blank" href="/files/Student Medical and Liability Release.pdf">Download Student</a>)<br/>
     <%= pform.check_box :understand_background_check %>&nbsp;&nbsp;<label>I understand that I will be required to complete a background check form.</label>
   </div>
+  <% if !@participant_registration.new_record? && admin? %>
+  <div id='payment_info_row'>
+    <h3>Payment Information</h3>
+    <% if !@participant_registration.amount_ordered.nil? and @participant_registration.amount_ordered > 0 %>
+      <% if @participant_registration.paid? %>
+        <label>Paid Amount:&nbsp;</label>$<%= @participant_registration.amount_ordered %><br/>
+      <% else %>
+        <label>Amount Due:&nbsp;</label>$<%= @participant_registration.amount_ordered %><br/>
+      <% end %>
+      <%= pform.check_box :paid %>&nbsp;&nbsp;<label>Paid?</label>
+    <% else %>
+      Payment was not required.
+    <% end %>
+  </div>
+  <% end %>
+  <% if !@participant_registration.new_record? && admin? %>
+  <p id='notes_row'>
+    <%= pform.label :notes, 'Notes' %><br/>
+    <%= pform.text_area :notes, :size => "60x6" %>
+  </p>
+  <% end %>
+  <% if @participant_registration.new_record? %>
   <p id="fees_row" style="display:none;" class="alert alert-info">
     In order to complete your registration you will need to submit payment of $<span id="fee_display"></span>. <span id="fee_text"></span>
   </p>
+  <% end %>
   <p id='submit_registration'>
     <% if @pay_by_check %>
       <input type='hidden' id='pay_by_check' name='pay_by_check' value='true'>
     <% end %>
     <input type='hidden' id='registration_fee' name='registration_fee'>
-    <%= pform.submit 'Submit Registration', :class => 'btn btn-primary' %>
     <% if admin? and !@participant_registration.new_record? %>
+      <%= pform.submit 'Edit Registration', :class => 'btn btn-primary' %>
       &nbsp;
-      <%= link_to 'Delete Registration', @participant_registration, :confirm => 'Are you sure you want to delete this participant registration?', :method => :delete, :class => 'btn btn-primary' %>
+      <%= link_to 'Delete Registration', @participant_registration, :confirm => 'Are you sure you want to delete this participant registration? This cannot be undone.', :method => :delete, :class => 'btn btn-primary' %>
+    <% else %>
+      <%= pform.submit 'Submit Registration', :class => 'btn btn-primary' %>
     <% end %>
   </p>
 <% end %>

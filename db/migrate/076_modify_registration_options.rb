@@ -10,6 +10,6 @@ class ModifyRegistrationOptions < ActiveRecord::Migration
 
   def self.down
     # remove category field for grouping
-    remove_column :registration_options, :category, :text
+    remove_column :registration_options, :category
   end
 end

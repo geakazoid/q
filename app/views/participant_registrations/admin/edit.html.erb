@@ -1,7 +1,7 @@
 <div id='page_title'>
-  <%= title('Edit Participant Registration', :h1) %>
+  <%= title('Edit Participant Registration For ' + @participant_registration.full_name, :h1) %>
 </div>
 
-View <%= link_to 'Audit Log', audit_participant_registration_path %> for this registration.
+<p>View <%= link_to 'Audit Log', audit_participant_registration_path %> for this registration.</p>
 
 <%= render :partial => 'form' %>

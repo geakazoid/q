@@ -162,95 +162,31 @@ class ParticipantRegistrationsController < ApplicationController
   # PUT /users/:user_id/participant_registrations/:id
   def update
     @participant_registration = ParticipantRegistration.find(params[:id])
-    if params[:user_id]
-      @user = User.find(params[:user_id])
-      # if the users don't match we shouldn't be here
-      record_not_found and return if @user != current_user and !admin?
+    # if we aren't an admin we shouldn't be here
+    record_not_found and return if !admin?
 
-      # hack to deal with the discount (if any)
-      @participant_registration.discount = params[:participant_registration]['discount']
-      params[:participant_registration].delete('discount')
-
-      @participant_registration.attributes = params[:participant_registration]
-    else
-      # if we aren't an admin we shouldn't be here
-      record_not_found and return if !admin?
-      # hack to deal witht he discount (if any)
-      @participant_registration.discount = params[:participant_registration]['discount']
-      params[:participant_registration].delete('discount')
-
-      @participant_registration.attributes = params[:participant_registration]
-    end
+    @participant_registration.attributes = params[:participant_registration]
 
     @participant_registration.audit_user = current_user
 
-    # deal with extra users
-    @shared_users = Array.new
-    params[:extra_users].each do |id|
-      user = User.find(id)
-      @shared_users.push(user)
-    end unless params[:extra_users].nil?
-
     respond_to do |format|
       if @participant_registration.save
-        # saved any new shared users
-        @shared_users.each do |shared_user|
-          participant_registration_user = ParticipantRegistrationUser.find(:first, :conditions => "user_id = #{shared_user.id} and participant_registration_id = #{@participant_registration.id}")
-          if participant_registration_user.nil?
-            participant_registration_user = ParticipantRegistrationUser.new(:user => shared_user, :participant_registration => @participant_registration)
-            participant_registration_user.save
-            #ParticipantRegistrationMailer.deliver_registration_shared(current_user, shared_user)
-          end
-        end
         # deleted any shared users that have been removed
         # only do this if we're the owner
-        if @participant_registration.owner == current_user
-          @users_to_remove = @participant_registration.shared_users - @shared_users
-          @users_to_remove.each do |user|
-            participant_registration_user = ParticipantRegistrationUser.find(:first, :conditions => "user_id = #{user.id} and participant_registration_id = #{@participant_registration.id}")
-            participant_registration_user.destroy
-          end
-        end
-        if !@user.nil?
-          case params[:commit]
-          when "Submit Payment"
-            # add participant_registration to the session
-            prepare_session
-            format.html { redirect_to(new_payment_url) }
-          when "Submit Registration"
-            # add participant_registration to the session
-            prepare_session
-            format.html { redirect_to(confirm_participant_registrations_url) }
-          when "Save For Later"
-            flash[:notice] = 'Participant Registration saved successfully. It can be edited later on the participant registrations page. This can be accessed by using the right sidebar.'
-            format.html { redirect_to(user_participant_registrations_path(@user)) }
-          when "Update Registration"
-            flash[:notice] = 'Participant Registration updated successfully.'
-            format.html { redirect_to(user_participant_registrations_path(@user)) }
-          end
-        else
-          # this is an admin update
-          flash[:notice] = 'Participant Registration was successfully updated.'
-          format.html { redirect_to(participant_registrations_path) }
-        end
+      
+        # this is an admin update
+        flash[:notice] = 'Participant Registration was successfully updated.'
+        format.html { redirect_to(participant_registrations_path) }
       else
         @districts = District.find(:all, :order => "name")
         @registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
         @registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
-        # generate list of other family registrations if we haven't paid anything yet
-        if !@participant_registration.paid_any_registration_fee?
-          @family_participant_registrations = @participant_registration.family_participant_registrations
-        end
         get_registered_teams
         get_group_leaders
         get_schools
         # find page for participant registrations text
         @page = Page.find_by_label('Register Participant Text')
-        if !@user.nil?
-          format.html { render :action => "edit" }
-        else
-          format.html { render "participant_registrations/admin/edit" }
-        end
+        format.html { render "participant_registrations/admin/edit" }
       end
     end
   end
