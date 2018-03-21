@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 77) do
+ActiveRecord::Schema.define(:version => 78) do
 
   create_table "Officials", :id => false, :force => true do |t|
     t.integer  "id",          :default => 0, :null => false
@@ -312,7 +312,7 @@ ActiveRecord::Schema.define(:version => 77) do
     t.integer  "age"
     t.boolean  "understand_form_completion"
     t.boolean  "over_18"
-    t.string   "group_leader_import"
+    t.string   "group_leader_text"
     t.integer  "num_district_teams"
     t.integer  "num_local_teams"
     t.integer  "amount_ordered"

@@ -49,17 +49,17 @@ class ParticipantRegistration < ActiveRecord::Base
   validates_presence_of :emergency_contact_relationship, :if => "!self.off_campus?"
   validates_presence_of :local_church, :if => "!self.off_campus?"
   validates_presence_of :district
-  validates_presence_of :group_leader, :if => "!self.off_campus?"
+  validates_presence_of :group_leader_text, :if => "!self.off_campus?"
   validates_presence_of :coach_name, :if => "self.quizzer?"
-  validates_inclusion_of :planning_on_coaching, :in => [true, false], :if => "self.official?"
-  validates_inclusion_of :planning_on_officiating, :in => [true, false], :if => "self.coach?"
+  validates_inclusion_of :planning_on_coaching, :in => [true, false], :if => "self.official?", :message => "must be selected."
+  validates_inclusion_of :planning_on_officiating, :in => [true, false], :if => "self.coach?", :message => "must be selected."
   validates_presence_of :shirt_size, :if => "!self.off_campus?"
   validates_presence_of :travel_type, :if => "!self.off_campus?"
   validates_presence_of :travel_type_details, :if => "self.travel_type == 'I am flying to the event.'"
   validates_presence_of :understand_form_completion, :if => "!self.off_campus?"
   validates_presence_of :understand_background_check, :if => "!self.off_campus?"
 
-  HUMANIZED_ATTRIBUTES = {:street => "Address", :home_phone => "Primary Phone", :district => "District and Field"}
+  HUMANIZED_ATTRIBUTES = {:street => "Address", :home_phone => "Primary Phone", :district => "District and Field", :group_leader_text => "Group Leader"}
 
   # This is purposefully imperfect -- it's just a check for bogus input. See
   # http://www.regular-expressions.info/email.html

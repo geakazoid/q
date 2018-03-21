@@ -755,9 +755,7 @@ class ParticipantRegistrationsController < ApplicationController
 
   # get all group leaders (someone who's registered a team)
   def get_group_leaders
-    @group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
-    @group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
-    @group_leaders = @group_leaders1 + @group_leaders2
+    @group_leaders = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
     @group_leaders = @group_leaders.uniq.sort_by { |user| user[0].downcase }
     @group_leaders.insert(0, ['- Select -', ''])
     @group_leaders.push(['Staff', -4])
@@ -767,6 +765,7 @@ class ParticipantRegistrationsController < ApplicationController
     @group_leaders.push(['My group leader is not listed.', -1])
     @group_leaders.push(['I don\'t know who my group leader is.', -2])
     @group_leaders.push(['I don\'t have a group leader.', -3])
+    logger.info(@group_leaders.inspect)
   end
 
   # get all schools
