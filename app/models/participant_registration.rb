@@ -51,8 +51,8 @@ class ParticipantRegistration < ActiveRecord::Base
   validates_presence_of :district
   validates_presence_of :group_leader_text, :if => "!self.off_campus?"
   validates_presence_of :coach_name, :if => "self.quizzer?"
-  validates_inclusion_of :planning_on_coaching, :in => [true, false], :if => "self.official?", :message => "must be selected."
-  validates_inclusion_of :planning_on_officiating, :in => [true, false], :if => "self.coach?", :message => "must be selected."
+  validates_inclusion_of :planning_on_coaching, :in => [true, false], :if => "self.official?", :message => "must be selected"
+  validates_inclusion_of :planning_on_officiating, :in => [true, false], :if => "self.coach?", :message => "must be selected"
   validates_presence_of :shirt_size, :if => "!self.off_campus?"
   validates_presence_of :travel_type, :if => "!self.off_campus?"
   validates_presence_of :travel_type_details, :if => "self.travel_type == 'I am flying to the event.'"
