@@ -133,11 +133,11 @@
   </p>
   <p id='planning_on_coaching_row' style='display:none;'>
     <%= pform.label :planning_on_coaching, 'Are you planning on coaching a team?' %><br/>
-    <%= pform.select :planning_on_coaching, {'Yes' => 1,'No' => 0}, :prompt => '- Select -' %>
+    <%= pform.select :planning_on_coaching, {'Yes' => true,'No' => false}, :prompt => '- Select -' %>
   </p>
   <p id='planning_on_officiating_row' style='display:none;'>
     <%= pform.label :planning_on_officiating, 'Are you planning to be an official?' %><br/>
-    <%= pform.select :planning_on_officiating, {'Yes' => 1,'No' => 0}, :prompt => '- Select -' %>
+    <%= pform.select :planning_on_officiating, {'Yes' => true,'No' => false}, :prompt => '- Select -' %>
   </p>
   <p id='shirt_size_row' style='display:none;'>
     <%= pform.label :shirt_size, 'T-shirt Size' %><br/>
