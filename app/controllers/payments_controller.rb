@@ -295,6 +295,8 @@ class PaymentsController < ApplicationController
       else
         render "failure"
       end
+    else
+      render "failure"
     end
   end
 

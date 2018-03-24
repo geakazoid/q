@@ -789,6 +789,9 @@ class ParticipantRegistrationsController < ApplicationController
 
     # save our registration back to the database
     @participant_registration.save
+
+    # clean up the session
+    session[:participant_registration] = nil
   end
   
   # claim a participant registration using a confirmation code
