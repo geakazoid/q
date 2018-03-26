@@ -39,6 +39,10 @@
     <%= pform.label :gender, 'Gender' %><br/>
     <%= pform.select :gender, ['Male','Female'], :prompt => '- Select -' %>
   </p>
+  <p id='over18_row' style='display:none;'>
+      <%= pform.label :over_18, 'Are you 18 years of age or older?' %><br/>
+    <%= pform.select :over_18, {'Yes' => true,'No' => false}, :prompt => '- Select -' %>
+  </p>
   <p id='most_recent_grade_row' style='display:none;'>
     <%= pform.label :most_recent_grade, 'Grade most recently completed in the summer of 2018?' %><br/>
     <%= pform.select :most_recent_grade, ['Below 6th grade','6th grade','7th grade','8th grade','9th grade','10th grade','11th grade','12th grade'], {:prompt => "- Select -"} %>
@@ -341,6 +345,7 @@
     }
     if ($('#participant_registration_registration_type').val() == "coach") {
       $('#planning_on_officiating_row').show()
+      $('#over18_row').show()
     }
     if ($('#participant_registration_registration_type').val() == "off-campus") {
       $('#optional_purchases_meals_row').show()
