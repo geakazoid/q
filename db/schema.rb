@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 78) do
+ActiveRecord::Schema.define(:version => 80) do
 
   create_table "Officials", :id => false, :force => true do |t|
     t.integer  "id",          :default => 0, :null => false
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(:version => 78) do
     t.string  "name"
     t.integer "price_in_cents"
     t.integer "event_id"
+    t.boolean "code_required"
   end
 
   create_table "equipment", :force => true do |t|
@@ -160,6 +161,7 @@ ActiveRecord::Schema.define(:version => 78) do
     t.boolean  "enable_participant_registration"
     t.boolean  "enable_team_registration"
     t.boolean  "enable_equipment_registration"
+    t.string   "team_code"
   end
 
   create_table "housing_rooms", :force => true do |t|

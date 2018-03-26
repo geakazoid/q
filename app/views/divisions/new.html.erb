@@ -3,12 +3,11 @@
 </div>
 
 <p>
-  Add new divisions below. Please follow the following format: name,price. Example:
+  Add new divisions below. Please follow the following format: name,price,code_required. Example:
   <pre>
-  	District Experienced,100
-	Local Experienced,125
-  </pre>
-  Note: Divisions with the same name will have their information updated.
+  	District Experienced,100,true
+	Local Experienced,125,false</pre>
+  Note: Divisions with the same name will have their information updated. Excluding the code_required field assumes a code is not required.
 </p>
 <%= form_tag(divisions_path) %>
   <p>

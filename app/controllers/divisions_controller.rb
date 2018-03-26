@@ -36,6 +36,11 @@ class DivisionsController < ApplicationController
       # either find the division or create it
       division = Division.find_or_create_by_name(details[0])
       division.price = details[1]
+      if (!details[2].nil? and details[2].downcase == 'true')
+        division.code_required = true
+      else
+        division.code_required = false
+      end
       division.event_id = params[:event_id]
       division.save
     end
@@ -65,6 +70,7 @@ class DivisionsController < ApplicationController
     @division = Division.find(params[:id])
     @division.price = params[:division][:price]
     @division.name = params[:division][:name]
+    @division.code_required = params[:division][:code_required]
 
     respond_to do |format|
       if @division.save

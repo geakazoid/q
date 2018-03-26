@@ -17,6 +17,7 @@
       <tr>
         <th>Division</th>
         <th>Price</th>
+        <th>Code Required?</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -25,6 +26,7 @@
         <tr>
           <td><%= division.name %></td>
           <td><%= division.price %></td>
+          <td><%= division.code_required? ? '<span class="label label-success">True</span>' : '<span class="label label-default">False</span>' %></td>
           <td>
             <%= link_to 'Edit', edit_division_path(division) %> :: 
             <%= link_to 'Delete', division, :confirm => 'Are you sure?', :method => :delete %>

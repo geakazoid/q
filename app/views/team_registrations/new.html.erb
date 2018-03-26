@@ -46,10 +46,10 @@
     <% end %>
   </div>
   <%= add_team_link(f) %><br/><br/>
-  <p id='regional_code' style='display:none'>
-    <%= f.label :regional_code, 'Regional Code' %><br />
-    <%= f.text_field :regional_code, {:id => "regional_code"} %>
-    <% test_output("Regional Code: " + AppConfig.regional_code + "</label>") if AppConfig.test_mode %>
+  <p id='registration_code_row' style='display:none'>
+    <%= f.label :registration_code, 'Registration Code' %><br />
+    <%= f.text_field :registration_code, {:id => "registration_code"} %>
+    <% test_output("Registration Code: " + Event.active_event.team_code + "</label>") if AppConfig.test_mode %>
   </p>
   <p id="fees_row" style="display:none" class="alert alert-info">
     In order to complete your registration you will need to submit payment of $<span id="fee_display"></span>. You will be redirected to a third party site to submit your credit card payment.
@@ -69,27 +69,43 @@
 	var user_email = '<%= current_user.email %>';
 	var user_district = '<%= current_user.district_id %>';
 
-  /* fees */
+  /* fees and code requirements */
   var fees = [];
+  var code_required = [];
   <% @divisions.each do |division| %>
     fees[<%= division.id %>] = <%= division.simple_price %>;
+    code_required[<%= division.id %>] = <%= division.code_required ? 'true' : 'false' %>;
   <% end %>
 
   function update_fee() {
-    $('#fees_row').hide()
+    $('#fees_row').hide();
     var divisions = $('.division');
     var fee = 0.00;
 
     for (i = 0; i < divisions.length; i++) {
-        var division_id = divisions[i].options[divisions[i].selectedIndex].value;
-        if (division_id != '') {
-            fee += fees[division_id];
-        }
+      var division_id = divisions[i].options[divisions[i].selectedIndex].value;
+      if (division_id != '') {
+        fee += fees[division_id];
+      }
     }
 
     if (fee > 0) {
-        $('#fee_display').html(fee);
-        $('#fees_row').show();
+      $('#fee_display').html(fee);
+      $('#fees_row').show();
+    }
+  }
+
+  /* check the division being selected on the team registration page. if the
+   * team being selected requires a code we show a required code text field */
+  function check_for_code_requirement() {
+    $('#registration_code_row').hide();
+    var divisions = $('.division');
+
+    for (i = 0; i < divisions.length; i++) {
+      var division_id = divisions[i].options[divisions[i].selectedIndex].value;
+      if (division_id != '' && code_required[division_id] == true) {
+        $('#registration_code_row').show();
+      }
     }
   }
 </script>
@@ -98,7 +114,7 @@
   <script>
     /* run through all checks on first load */
     $( document ).ready(function() {
-      check_regional_selection();
+      check_for_code_requirement();
       update_fee();
     });
   </script>

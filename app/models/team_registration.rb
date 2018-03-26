@@ -9,6 +9,8 @@ class TeamRegistration < ActiveRecord::Base
 
   serialize :audit
 
+  attr_accessor :registration_code
+
   # This is purposefully imperfect -- it's just a check for bogus input. See
   # http://www.regular-expressions.info/email.html
   RE_EMAIL_NAME   = '[\w\.%\+\-]+'                          # what you actually see in practice
@@ -28,8 +30,7 @@ class TeamRegistration < ActiveRecord::Base
   validates_format_of :email, :with => RE_EMAIL_OK, :message => MSG_EMAIL_BAD
 
   # custom validations
-  #validate_on_create :only_two_regional_teams
-  validate_on_create :has_regional_code
+  validate_on_create :has_registration_code
 
   # before save to store out audit information
   before_save :prepare_audit
@@ -54,24 +55,19 @@ class TeamRegistration < ActiveRecord::Base
       phone.insert(3, '-')
     end
   end
-  
-  # validate that we have a code if a regional team is selected.
-  def has_regional_code
-    regional_a_division = Division.find_by_name('Regional A')
-    regional_b_division = Division.find_by_name('Regional B')
-    registering_regional_team = false
+
+  # validate that we have a code if a selected division requires one
+  def has_registration_code
+    registration_code_required = false
     # look through teams on this registration to see if any of them
-    # are regional teams.
+    # require a registration code
     self.teams.each do |team|
-      if team.division == regional_a_division
-        registering_regional_team = true
-      end
-      if team.division == regional_b_division
-        registering_regional_team = true
+      if team.division.code_required?
+        registration_code_required = true
       end
     end
-    if !self.complete? and registering_regional_team and self.regional_code != AppConfig.regional_code
-      errors.add_to_base('You must provide a code in order to register a regional team')
+    if !self.complete? and registration_code_required and self.registration_code != Event.active_event.team_code
+      errors.add_to_base('You must provide a correct registration code in order to register for one or more of the selected divisions')
     end
   end
 

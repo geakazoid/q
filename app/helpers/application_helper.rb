@@ -94,12 +94,7 @@ module ApplicationHelper
 
     if team_total > 0
       info << "Team Registrations<br/>"
-      if team_complete > 0
-        info << "#{team_complete} complete.<br/>"
-      end
-      if team_incomplete > 0
-        info << "#{team_incomplete} incomplete.<br/>"
-      end
+      info << "#{team_complete} complete.<br/>"
       info << link_to("View my team registrations.", user_team_registrations_path(current_user))
       info << "<br/><br/>"
     end

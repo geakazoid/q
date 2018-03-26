@@ -26,6 +26,10 @@
     <%= event_form.label :active, 'Equipment' %>
   </p>
   <p>
+    <%= event_form.label :team_code, 'Team Registration Code' %><br />
+    <%= event_form.text_field :team_code, :size => 50 %>
+  </p>
+  <p>
     <%= event_form.label :title, 'Logo' %><br />
     <% if !@event.new_record? and @event.logo_file_name != false %>
       <%= image_tag(@event.logo.url(:original), :id => 'logo') %><br/><br/>

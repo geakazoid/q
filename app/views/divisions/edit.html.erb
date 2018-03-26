@@ -13,6 +13,10 @@
     <%= f.text_field :price %>
   </p>
   <p>
+    <%= f.label :code_required, 'Should a registration code be required?' %><br/>
+    <%= f.select :code_required, {'Yes' => true,'No' => false}, :prompt => '- Select -' %>
+  </p>
+  <p>
     <%= f.submit 'Update', {:class => 'btn btn-primary'} %> or <%= link_to 'Cancel', divisions_path %>
   </p>
 <% end %>
