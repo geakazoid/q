@@ -89,6 +89,10 @@ class ReportsController < ApplicationController
   # create a downloadable excel file of participant registrations
   # this method should not be accessed directly
   def participant_registrations
+
+    registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
+    registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
+
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
     # write out headers
@@ -103,13 +107,16 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'City'
     sheet1[0,column+=1] = 'State'
     sheet1[0,column+=1] = 'Zipcode'
+    sheet1[0,column+=1] = 'Country'
     sheet1[0,column+=1] = 'Gender'
     sheet1[0,column+=1] = 'Age / Most Recent Grade'
-    sheet1[0,column+=1] = 'Mobile Phone'
+    sheet1[0,column+=1] = 'Graduation Year'
+    sheet1[0,column+=1] = 'Over 18'
+    sheet1[0,column+=1] = 'Primary Phone'
     sheet1[0,column+=1] = 'Group Leader'
     sheet1[0,column+=1] = 'Local Church'
     sheet1[0,column+=1] = 'District'
-    sheet1[0,column+=1] = 'Region'
+    sheet1[0,column+=1] = 'Field'
     sheet1[0,column+=1] = 'Shirt Size'
     sheet1[0,column+=1] = 'Roommate Preference 1'
     sheet1[0,column+=1] = 'Roommate Preference 2'
@@ -117,23 +124,21 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Team 2'
     sheet1[0,column+=1] = 'Team 3'
     sheet1[0,column+=1] = 'Housing Assignment'
-    sheet1[0,column+=1] = 'Staying Off Campus'
     sheet1[0,column+=1] = 'Special Needs?'
     sheet1[0,column+=1] = 'Special Needs Details'
     sheet1[0,column+=1] = 'Travel Type'
-    sheet1[0,column+=1] = 'Arrival Date'
-    sheet1[0,column+=1] = 'Arrival Airline'
-    sheet1[0,column+=1] = 'Arrival Airline Flight Number'
-    sheet1[0,column+=1] = 'Departure Date'
-    sheet1[0,column+=1] = 'Departure Airline'
-    sheet1[0,column+=1] = 'Departure Airline Flight Number'
-    sheet1[0,column+=1] = 'Airport Shuttle'
-    sheet1[0,column+=1] = 'Housing June 25th'
-    sheet1[0,column+=1] = 'Housing June26th'
+    sheet1[0,column+=1] = 'Travel Details'
+    
+    # registration options
+    registration_options_meals.each do |registration_option|
+      sheet1[0,column+=1] = registration_option.item
+    end
+    registration_options_other.each do |registration_option|
+      sheet1[0,column+=1] = registration_option.item
+    end
+
     sheet1[0,column+=1] = 'Medical / Liability?'
-    sheet1[0,column+=1] = 'Amount Ordered'
-    sheet1[0,column+=1] = 'Amount Paid'
-    sheet1[0,column+=1] = 'Amount Due'
+    sheet1[0,column+=1] = 'Payment Amount'
     sheet1[0,column+=1] = 'Created On'
     sheet1[0,column+=1] = 'Updated On'
 
@@ -150,9 +155,12 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant_registration.city
       sheet1[pos,column+=1] = participant_registration.state
       sheet1[pos,column+=1] = participant_registration.zipcode
+      sheet1[pos,column+=1] = participant_registration.country
       sheet1[pos,column+=1] = participant_registration.gender
       sheet1[pos,column+=1] = participant_registration.most_recent_grade
-      sheet1[pos,column+=1] = participant_registration.mobile_phone
+      sheet1[pos,column+=1] = participant_registration.graduation_year
+      sheet1[pos,column+=1] = participant_registration.over_18? ? 'YES' : 'NO'
+      sheet1[pos,column+=1] = participant_registration.home_phone
       sheet1[pos,column+=1] = participant_registration.group_leader_name
       sheet1[pos,column+=1] = participant_registration.local_church
       if !participant_registration.district.nil?
@@ -198,33 +206,30 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = ''
       end
 
-      sheet1[pos,column+=1] = !participant_registration.staying_off_campus.nil? ? participant_registration.staying_off_campus : '' 
-      sheet1[pos,column+=1] = !participant_registration.special_needs.nil? ? participant_registration.special_needs.upcase : '' 
+      # special needs
+      special_needs = ''
+      special_needs += 'Food Allergies, ' if participant_registration.special_needs_food_allergies
+      special_needs += 'Handicap Accessible, ' if participant_registration.special_needs_handicap_accessible
+      special_needs += 'Hearing Impaired, ' if participant_registration.special_needs_hearing_impaired
+      special_needs += 'Vision Impaired, ' if participant_registration.special_needs_vision_impaired
+      special_needs += 'Other, ' if participant_registration.special_needs_other
+      special_needs.chomp(' ,')
+      sheet1[pos,column+=1] = special_needs
       sheet1[pos,column+=1] = participant_registration.special_needs_details
 
       sheet1[pos,column+=1] = participant_registration.travel_type
+      sheet1[pos,column+=1] = participant_registration.travel_type_details
 
-      # arrival date
-      if participant_registration.travel_type == 'I am driving to the event.'
-        sheet1[pos,column+=1] = participant_registration.driving_arrival_date
-      elsif participant_registration.travel_type == 'I am flying to the event.'
-        sheet1[pos,column+=1] = participant_registration.airline_arrival_date
-      else
-        sheet1[pos,column+=1] = ''
+      # registration options
+      registration_options_meals.each do |registration_option|
+        sheet1[pos,column+=1] = participant_registration.registration_options.include?(registration_option) ? "YES" : "NO"
+      end
+      registration_options_other.each do |registration_option|
+        sheet1[pos,column+=1] = participant_registration.registration_options.include?(registration_option) ? "YES" : "NO"
       end
 
-      sheet1[pos,column+=1] = participant_registration.arrival_airline
-      sheet1[pos,column+=1] = participant_registration.arrival_flight_number
-      sheet1[pos,column+=1] = participant_registration.airline_departure_date
-      sheet1[pos,column+=1] = participant_registration.departure_airline
-      sheet1[pos,column+=1] = participant_registration.departure_flight_number
-      sheet1[pos,column+=1] = participant_registration.airport_transportation? ? 'YES' : ''
-      sheet1[pos,column+=1] = participant_registration.housing_saturday? ? 'YES' : ''
-      sheet1[pos,column+=1] = participant_registration.housing_sunday? ? 'YES' : ''
       sheet1[pos,column+=1] = participant_registration.medical_liability? ? 'YES' : 'NO'
       sheet1[pos,column+=1] = participant_registration.amount_ordered
-      sheet1[pos,column+=1] = participant_registration.amount_paid
-      sheet1[pos,column+=1] = participant_registration.amount_due
       sheet1[pos,column+=1] = participant_registration.created_at.strftime("%m/%d/%Y %H:%M:%S")
       sheet1[pos,column+=1] = participant_registration.updated_at.strftime("%m/%d/%Y %H:%M:%S")
       pos += 1
