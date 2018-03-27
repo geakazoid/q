@@ -106,9 +106,12 @@ class TeamRegistrationsController < ApplicationController
         when 'registration_action'
           @team_registration.audit_user = current_user
           @team_registration.save
-          #flash[:notice] = 'Team Registration submitted succesfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
           prepare_session
-          format.html { redirect_to(AppConfig.convio_url + '&set.Value=' + @team_registration.amount_in_cents.to_s + '&set.custom.ucro_quiz_Id=' + @team_registration.id.to_s) }
+          if (@team_registration.amount_in_cents > 0)
+            format.html { redirect_to(AppConfig.convio_url + '&set.Value=' + @team_registration.amount_in_cents.to_s + '&set.custom.ucro_quiz_Id=' + @team_registration.id.to_s) }
+          else
+            format.html { redirect_to(confirm_no_payment_team_registrations_url) }
+          end
         when 'save_action'
           flash[:notice] = 'Team Registration saved successfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
           format.html { redirect_to(root_url) }
@@ -225,6 +228,16 @@ class TeamRegistrationsController < ApplicationController
   
   # GET /team_registration/confirm
   def confirm
+    # clean up the session and save our registration
+    clean_up
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  # GET /team_registration/confirm_no_payment
+  def confirm_no_payment
     # clean up the session and save our registration
     clean_up
 
