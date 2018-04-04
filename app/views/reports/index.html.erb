@@ -10,7 +10,10 @@
 <h3>Standard Reports</h3>
 <p>
 <% if admin? %>
-  <%= link_to 'Team Registrations', :controller => 'reports', :action => 'team_registrations_all', :event_id => @selected_event %>
+  Team Registrations : 
+  <%= link_to 'All', :controller => 'reports', :action => 'team_registrations_all', :event_id => @selected_event %>
+  <%= link_to 'Paid', :controller => 'reports', :action => 'team_registrations_paid', :event_id => @selected_event %>
+  <%= link_to 'Unpaid', :controller => 'reports', :action => 'team_registrations_unpaid', :event_id => @selected_event %>
   <br/>
   Participant Registrations : 
   <%= link_to 'All', :controller => 'reports', :action => 'participant_registrations_all', :event_id => @selected_event %> : 
