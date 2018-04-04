@@ -12,7 +12,10 @@
 <% if admin? %>
   <%= link_to 'Team Registrations', :controller => 'reports', :action => 'team_registrations_all', :event_id => @selected_event %>
   <br/>
-  <%= link_to 'Participant Registrations', :controller => 'reports', :action => 'participant_registrations_all', :event_id => @selected_event %>
+  Participant Registrations : 
+  <%= link_to 'All', :controller => 'reports', :action => 'participant_registrations_all', :event_id => @selected_event %> : 
+  <%= link_to 'Paid', :controller => 'reports', :action => 'participant_registrations_paid', :event_id => @selected_event %> : 
+  <%= link_to 'Unpaid', :controller => 'reports', :action => 'participant_registrations_unpaid', :event_id => @selected_event %>
   <br/>
   Participants and Teams :
   <%= link_to 'All', :controller => 'reports', :action => 'coaches_quizzers_teams', :event_id => @selected_event %> :

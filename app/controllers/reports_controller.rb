@@ -86,6 +86,20 @@ class ReportsController < ApplicationController
     participant_registrations
   end
 
+  # generate a report of paid participant registrations
+  def participant_registrations_paid
+    @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc', :conditions => "event_id = #{params['event_id']} and paid = 1")
+    @report_type = 'paid'
+    participant_registrations
+  end
+
+  # generate a report of unpaid participant registrations
+  def participant_registrations_unpaid
+    @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc', :conditions => "event_id = #{params['event_id']} and paid = 0")
+    @report_type = 'unpaid'
+    participant_registrations
+  end
+
   # create a downloadable excel file of participant registrations
   # this method should not be accessed directly
   def participant_registrations
@@ -139,6 +153,7 @@ class ReportsController < ApplicationController
 
     sheet1[0,column+=1] = 'Medical / Liability?'
     sheet1[0,column+=1] = 'Payment Amount'
+    sheet1[0,column+=1] = 'Paid?'
     sheet1[0,column+=1] = 'Created On'
     sheet1[0,column+=1] = 'Updated On'
 
@@ -230,6 +245,7 @@ class ReportsController < ApplicationController
 
       sheet1[pos,column+=1] = participant_registration.medical_liability? ? 'YES' : 'NO'
       sheet1[pos,column+=1] = participant_registration.amount_ordered
+      sheet1[pos,column+=1] = participant_registration.paid? ? 'YES' : 'NO'
       sheet1[pos,column+=1] = participant_registration.created_at.strftime("%m/%d/%Y %H:%M:%S")
       sheet1[pos,column+=1] = participant_registration.updated_at.strftime("%m/%d/%Y %H:%M:%S")
       pos += 1
