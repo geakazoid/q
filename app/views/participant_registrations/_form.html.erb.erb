@@ -6,6 +6,16 @@
   </p>
   <p>
     <%= pform.label :registration_type, 'Registration Type' %><br/>
+    <% if !@participant_registration.new_record? %>
+    <%= pform.select :registration_type,
+      {'Quizzer ($195)' => 'quizzer',
+      'Coach ($195)' => 'coach',
+      'Official / Volunteer ($150)' => 'official',
+      'Staff / Intern ($0)' => 'staff',
+      'Off-Campus Guest ($0)' => 'off-campus',
+      'Spectator' => 'spectator'},
+      {:prompt => "- Select -"}, {:onChange => "check_for_registration_type();"} %>
+    <% else %>
     <%= pform.select :registration_type,
       {'Quizzer ($195)' => 'quizzer',
       'Coach ($195)' => 'coach',
@@ -13,6 +23,7 @@
       'Staff / Intern ($0)' => 'staff',
       'Off-Campus Guest ($0)' => 'off-campus'},
       {:prompt => "- Select -"}, {:onChange => "check_for_registration_type();"} %>
+    <% end %>
   </p>
   <div id='registration_info'></div>
   <h3>Basics</h3>
@@ -290,7 +301,6 @@
   }
 
   function check_for_registration_type() {
-    console.log("got here")
     $('#gender_row').hide()
     $('#most_recent_grade_row').hide()
     $('#graduation_year_row').hide()
