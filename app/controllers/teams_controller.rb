@@ -18,20 +18,7 @@ class TeamsController < ApplicationController
   def edit
     @team = Team.find(params[:id])
     
-    if params[:show_all] && admin?
-      @quizzers = ParticipantRegistration.find(:all,
-                                               :joins => :district,
-                                               :conditions => 'registration_type = "Quizzer" or registration_type = "Student"',
-                                               :order => 'districts.name desc, first_name asc, last_name asc')
-    elsif @team.regional_team?
-      @quizzers = ParticipantRegistration.find(:all,
-                                               :conditions => 'district_id in (select id from districts where region_id = ' + @team.team_registration.user.district.region_id.to_s + ') and (registration_type = "Quizzer" or registration_type = "Student")',
-                                               :order => 'first_name asc, last_name asc')
-    else
-      @quizzers = ParticipantRegistration.find(:all,
-                                               :conditions => 'district_id = ' + @team.team_registration.user.district_id.to_s + ' and (registration_type = "Quizzer" or registration_type = "Student")',
-                                               :order => 'first_name asc, last_name asc')
-    end
+    @quizzers = self.available_quizzers(@team)
     
     # add in quizzers that are already on the team
     @quizzers = @quizzers + @team.participant_registrations
@@ -64,20 +51,7 @@ class TeamsController < ApplicationController
           end
         }
       else
-        if params[:show_all] && admin?
-          @quizzers = ParticipantRegistration.find(:all,
-                                                   :joins => :district,
-                                                   :conditions => 'registration_type = "Quizzer" or registration_type = "Student"',
-                                                   :order => 'districts.name desc, first_name asc, last_name asc')
-        elsif @team.regional_team?
-          @quizzers = ParticipantRegistration.find(:all,
-                                                   :conditions => 'district_id in (select id from districts where region_id = ' + @team.team_registration.user.district.region_id.to_s + ') and (registration_type = "Quizzer" or registration_type = "Student")',
-                                                   :order => 'first_name asc, last_name asc')
-        else
-          @quizzers = ParticipantRegistration.find(:all,
-                                                   :conditions => 'district_id = ' + @team.team_registration.user.district_id.to_s + ' and (registration_type = "Quizzer" or registration_type = "Student")',
-                                                   :order => 'first_name asc, last_name asc')
-        end
+        @quizzers = self.available_quizzers(@team)
 
         # add in quizzers that are already on the team
         @quizzers = @quizzers + @team.participant_registrations
@@ -93,5 +67,24 @@ class TeamsController < ApplicationController
         format.html { render :action => "edit" }
       end
     end
+  end
+
+  def available_quizzers(team)
+    if params[:show_all] && admin?
+      quizzers = ParticipantRegistration.find(:all,
+                                               :joins => :district,
+                                               :conditions => '(registration_type = "Quizzer" or registration_type = "Student") and paid = 1 and event_id = ' + Event.active_event.id.to_s,
+                                               :order => 'districts.name desc, first_name asc, last_name asc')
+    elsif @team.regional_team?
+      quizzers = ParticipantRegistration.find(:all,
+                                               :conditions => 'district_id in (select id from districts where region_id = ' + team.team_registration.user.district.region_id.to_s + ') and (registration_type = "Quizzer" or registration_type = "Student") and paid = 1 and event_id = ' + Event.active_event.id.to_s,
+                                               :order => 'first_name asc, last_name asc')
+    else
+      quizzers = ParticipantRegistration.find(:all,
+                                               :conditions => 'district_id = ' + team.team_registration.user.district_id.to_s + ' and (registration_type = "Quizzer" or registration_type = "Student") and paid = 1 and event_id = ' + Event.active_event.id.to_s,
+                                               :order => 'first_name asc, last_name asc')
+    end
+
+    quizzers
   end
 end

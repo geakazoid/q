@@ -37,7 +37,7 @@
           <% quizzers.each do |quizzer| %>
             <% i = i + 1 %>
             <%= check_box_tag("team[participant_registration_ids][]", quizzer.id, @team.participant_registrations.include?(quizzer)) %>
-            <span id='participant_registration_<%= quizzer.id %>'><%= quizzer.full_name %></span><br/>
+            <span id='participant_registration_<%= quizzer.id %>'><%= quizzer.full_name %> <%= "(unpaid)" if !quizzer.paid? %></span><br/>
             <%= '</div><div>' if i % num_per_column == 0 %>
           <% end %>
         </div>
