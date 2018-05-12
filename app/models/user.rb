@@ -13,10 +13,10 @@ class User < ActiveRecord::Base
   has_many :participant_registration_owners, :class_name => 'ParticipantRegistrationUser', :conditions => 'owner = true'
   has_many :participant_registration_editors, :class_name => 'ParticipantRegistrationUser', :conditions => 'owner = false'
   has_many :participant_registrations, :through => :participant_registration_users
-  has_many :complete_participant_registrations, :through => :participant_registration_users, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => 'paid = true'
-  has_many :incomplete_participant_registrations, :through => :participant_registration_users, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => 'paid = false'
-  has_many :owned_participant_registrations, :through => :participant_registration_owners, :class_name => 'ParticipantRegistration', :source => :participant_registration
-  has_many :owned_participant_registrations_with_teams, :through => :participant_registration_owners, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => '(num_experienced_local_teams > 0 or num_novice_local_teams > 0 or num_experienced_district_teams > 0 or num_novice_district_teams > 0)'
+  has_many :complete_participant_registrations, :through => :participant_registration_users, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => "paid = true and event_id = #{Event.active_event.id}"
+  has_many :incomplete_participant_registrations, :through => :participant_registration_users, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => "paid = false and event_id = #{Event.active_event.id}"
+  has_many :owned_participant_registrations, :through => :participant_registration_owners, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => "event_id = #{Event.active_event.id}"
+  has_many :owned_participant_registrations_with_teams, :through => :participant_registration_owners, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => "(num_experienced_local_teams > 0 or num_novice_local_teams > 0 or num_experienced_district_teams > 0 or num_novice_district_teams > 0) and event_id = #{Event.active_event.id}"
   has_many :shared_participant_registrations, :through => :participant_registration_editors, :class_name => 'ParticipantRegistration', :source => :participant_registration
   has_many :family_participant_registrations, :through => :participant_registration_owners, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => 'registration_type = "family" and most_recent_grade != "Child Age 3 and Under" and paid = true'
   has_many :followers, :class_name => 'ParticipantRegistration', :foreign_key => 'group_leader', :order => 'last_name asc'
