@@ -101,7 +101,7 @@ module ApplicationHelper
 
     if participant_total > 0
       info << "Participant Registrations<br/>"
-      info << "#{participant_total} complete.<br/>"
+      info << "#{participant_complete} complete.<br/>"
       info << link_to("View my participant registrations.", user_participant_registrations_path(current_user))
       info << "<br/><br/>"
     end
