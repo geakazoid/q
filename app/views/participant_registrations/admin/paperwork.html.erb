@@ -19,11 +19,7 @@
       <td>
         <%= select_tag :filter_status,
                        (session[:status].blank? ? '<option>- Select -</option>' : '') + options_for_select({'Medical / Liability On File' => 'medical_liability_complete',
-                                                                                                            'Medical / Liability Not On File' => 'medical_liability_incomplete',
-                                                                                                            'Background Check On File' => 'background_check_complete',
-                                                                                                            'Background Check Not On File' => 'background_check_incomplete',
-                                                                                                            'NazSafe Completed' => 'nazsafe_complete',
-                                                                                                            'NazSafe Not Completed' => 'nazsafe_incomplete'}.sort,
+                                                                                                            'Medical / Liability Not On File' => 'medical_liability_incomplete'}.sort,
                                                                                                            session[:status]),
                                                                                                            :onchange => "document.location='/participant_registrations/filter_paperwork/?status=' + this.value;" %>
         <% unless session[:status].blank? %>
@@ -33,7 +29,7 @@
     </tr>
     <tr>
       <td>
-        Filter By Type:
+        Filter By Registration Type:
       </td>
       <td>
         <%= select_tag :filter_type,
@@ -41,12 +37,10 @@
                         options_for_select({
                           'Quizzer' => 'quizzer',
                           'Coach' => 'coach',
-                          'Official' => 'official',
-                          'Volunteer' => 'volunteer',
-                          'Family' => 'family',
-                          'Guest' => 'guest',
-                          'Core Staff' => 'core_staff',
-                          'Exhibitor' => 'exhibitor'},
+                          'Official / Volunteer' => 'official',
+                          'Off-Campus Guest' => 'off-campus',
+                          'Staff / Intern' => 'staff',
+                          'Spectator' => 'spectator'},
                           session[:registration_type]),
                         :onchange => "document.location='/participant_registrations/filter_paperwork/?registration_type=' + this.value;" %>
         <% unless session[:registration_type].blank? %>
@@ -78,7 +72,7 @@
     </tr>
     <tr>
       <td>
-        Filter By Region:
+        Filter By Field:
       </td>
       <td>
         <%= select_tag :filter_region, (session[:region_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@regions.collect {|d| [ d[:name], d[:id] ] }, session[:region_id].to_i), :onchange => "document.location='/participant_registrations/filter_paperwork/?region_id=' + this.value;" %>
@@ -107,8 +101,6 @@
           <tr>
             <th>Participant</th>
             <th>Medical / Liability</th>
-            <th>Background Check</th>
-            <th>NazSafe</th>
           </tr>
         </thead>
         <tbody>
@@ -122,17 +114,7 @@
                   <%= participant_registration.district.display_with_region unless participant_registration.district.nil? %>
                   </div>
                 </td>
-                <td style='text-align: center'><%= pr_fields.check_box :medical_liability, {:disabled => 'disabled'} %></td>
-                <td style='text-align: center'>
-                  <% if participant_registration.needs_background_check? %>
-                    <%= pr_fields.check_box :background_check, {:disabled => 'disabled'} %>
-                  <% end %>
-                </td>
-                <td style='text-align: center'>
-                  <% if participant_registration.needs_background_check? %>
-                    <%= pr_fields.check_box :nazsafe, {:disabled => 'disabled'} %> %>
-                  <% end %>
-                </td>
+                <td style='text-align: left'><%= pr_fields.check_box :medical_liability %></td>
               </tr>
             <% end %>
           <% end %>

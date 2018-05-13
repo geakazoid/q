@@ -662,7 +662,7 @@ class ParticipantRegistration < ActiveRecord::Base
     elsif self.group_leader.to_i == -7
       leader = 'Representative'
     else
-      unless self.group_leader.blank?
+      unless self.group_leader.blank? or self.group_leader.nil? or self.group_leader == 0
         user = User.find(self.group_leader.to_i)
         leader = user.fullname
       end

@@ -25,20 +25,18 @@
     </tr>
     <tr>
       <td>
-        Filter By Type:
+        Filter By Registration Type:
       </td>
       <td>
         <%= select_tag :filter_type,
                        (session[:registration_type].blank? ? '<option>- Select -</option>' : '') +
                         options_for_select({
-                          'Children under 3 years old' => 'Children under 3 years old',
-                          'Coach' => 'Coach',
-                          'Event Staff' => 'Event Staff',
-                          'Guest (Lodging on-campus)' => 'Guest (Lodging on-campus)',
-                          'Intern' => 'Intern',
-                          'Official' => 'Official',
-                          'Quizzer' => 'Quizzer',
-                          'Volunteer' => 'Volunteer'}.sort.map,
+                          'Quizzer' => 'quizzer',
+                          'Coach' => 'coach',
+                          'Official / Volunteer' => 'official',
+                          'Off-Campus Guest' => 'off-campus',
+                          'Staff / Intern' => 'staff',
+                          'Spectator' => 'spectator'},
                           session[:registration_type]),
                         :onchange => "document.location='/participant_registrations/filter_housing/?registration_type=' + this.value;" %>
         <% unless session[:registration_type].blank? %>
@@ -70,7 +68,7 @@
     </tr>
     <tr>
       <td>
-        Filter By Region:
+        Filter By Field:
       </td>
       <td>
         <%= select_tag :filter_region, (session[:region_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@regions.collect {|d| [ d[:name], d[:id] ] }, session[:region_id].to_i), :onchange => "document.location='/participant_registrations/filter_housing/?region_id=' + this.value;" %>
