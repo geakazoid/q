@@ -185,7 +185,7 @@
                 <% end %>
               </div>
             <% end %>
-            <% if !group_leader? %>
+            <% if group_leader? %>
               <div id="sidebar">
                 <h4>Group Leader Summary</h4>
                 <%= link_to 'Download Group Leader Summary', group_leader_summary_reports_path(:group_leader => current_user.id) %>

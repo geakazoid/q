@@ -437,6 +437,11 @@ class ReportsController < ApplicationController
   # produces an excel document for download based upon the passed in group leader id
   def group_leader_summary
     book = Spreadsheet::Workbook.new
+    active_event = !params['event_id'].nil? ? params['event_id'] : Event.active_event.id
+
+    registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
+    registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
+    registration_options_size = registration_options_meals.size + registration_options_other.size
 
     if (!params['group_leader'].blank?)
       sheet1 = book.create_worksheet
@@ -444,36 +449,36 @@ class ReportsController < ApplicationController
       if (params['group_leader'] == '-1')
         group_leader_name = 'Group Leader Not Listed'
         file_name = 'group_leader_not_listed'
-        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-1).ordered_by_last_name
+        participants = ParticipantRegistration.by_event(active_event).by_group_leader(-1).ordered_by_last_name
       elsif (params['group_leader'] == '-2')
         group_leader_name = 'Group Leader Not Known'
         file_name = 'group_leader_not_known'
-        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-2).ordered_by_last_name
+        participants = ParticipantRegistration.by_event(active_event).by_group_leader(-2).ordered_by_last_name
       elsif (params['group_leader'] == '-3')
         group_leader_name = 'No Group Leader'
         file_name = 'no_group_leader'
-        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-3).ordered_by_last_name
+        participants = ParticipantRegistration.by_event(active_event).by_group_leader(-3).ordered_by_last_name
       elsif (params['group_leader'] == '-4')
         group_leader_name = 'Staff'
         file_name = 'staff'
-        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-4).ordered_by_last_name
+        participants = ParticipantRegistration.by_event(active_event).by_group_leader(-4).ordered_by_last_name
       elsif (params['group_leader'] == '-5')
         group_leader_name = 'Official'
         file_name = 'official'
-        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-5).ordered_by_last_name
+        participants = ParticipantRegistration.by_event(active_event).by_group_leader(-5).ordered_by_last_name
       elsif (params['group_leader'] == '-6')
         group_leader_name = 'Volunteer'
         file_name = 'volunteer'
-        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-6).ordered_by_last_name
+        participants = ParticipantRegistration.by_event(active_event).by_group_leader(-6).ordered_by_last_name
       elsif (params['group_leader'] == '-7')
         group_leader_name = 'Representative'
         file_name = 'representative'
-        participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(-7).ordered_by_last_name
+        participants = ParticipantRegistration.by_event(active_event).by_group_leader(-7).ordered_by_last_name
       else
         group_leader = User.find(params['group_leader'])
         group_leader_name = group_leader.fullname
         file_name = (group_leader.first_name + '_' + group_leader.last_name).downcase
-        participants = group_leader.followers.by_event(params['event_id'])
+        participants = group_leader.followers.by_event(active_event)
       end
 
       # formatting
@@ -496,12 +501,12 @@ class ReportsController < ApplicationController
       for i in 4..6
         sheet1.row(1).set_format(i,group_header_format)
       end
-      sheet1[1,7] = 'Housing'
-      for i in 7..9
+      sheet1[1,10] = 'Travel Information'
+      for i in 10..11
         sheet1.row(1).set_format(i,group_header_format)
       end
-      sheet1[1,14] = 'Airline Information'
-      for i in 14..20
+      sheet1[1,12] = 'Registration Options'
+      for i in 12..(12+registration_options_size)
         sheet1.row(1).set_format(i,group_header_format)
       end
 
@@ -515,21 +520,20 @@ class ReportsController < ApplicationController
       sheet1[2,column+=1] = 'Team 2'
       sheet1[2,column+=1] = 'Team 3'
       sheet1[2,column+=1] = 'Housing'
-      sheet1[2,column+=1] = 'Housing June 25th'
-      sheet1[2,column+=1] = 'Housing June 26th'
-      sheet1[2,column+=1] = 'Linens'
-      sheet1[2,column+=1] = 'Pillow'
       sheet1[2,column+=1] = 'Roommate Preference 1'
       sheet1[2,column+=1] = 'Roommate Preference 2'
-      sheet1[2,column+=1] = 'Airline Arrival Date'
-      sheet1[2,column+=1] = 'Arrival Airline'
-      sheet1[2,column+=1] = 'Arrival Flight Number'
-      sheet1[2,column+=1] = 'Airline Departure Date'
-      sheet1[2,column+=1] = 'Departure Airline'
-      sheet1[2,column+=1] = 'Departure Flight Number'
-      sheet1[2,column+=1] = 'Airport Shuttle'
+      sheet1[2,column+=1] = 'Travel Type'
+      sheet1[2,column+=1] = 'Travel Details'
       sheet1[2,column+=1] = 'Medical Liability Received'
-      sheet1[2,column+=1] = 'Amount Owed'
+
+      # registration options
+      registration_options_meals.each do |registration_option|
+        sheet1[2,column+=1] = registration_option.item
+      end
+      registration_options_other.each do |registration_option|
+        sheet1[2,column+=1] = registration_option.item
+      end
+
       sheet1.row(2).default_format = header_format
       
       pos = 3
@@ -559,40 +563,28 @@ class ReportsController < ApplicationController
 
         # housing
         sheet1[pos,column+=1] = participant.housing
-        sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.linens? ? 'YES' : ''
-        sheet1[pos,column+=1] = participant.pillow? ? 'YES' : ''
         sheet1[pos,column+=1] = participant.roommate_preference_1
         sheet1[pos,column+=1] = participant.roommate_preference_2
         
-        # airline information
-        sheet1[pos,column+=1] = participant.airline_arrival_date
-        sheet1[pos,column+=1] = participant.arrival_airline
-        sheet1[pos,column+=1] = participant.arrival_flight_number
-        sheet1[pos,column+=1] = participant.airline_departure_date
-        sheet1[pos,column+=1] = participant.departure_airline
-        sheet1[pos,column+=1] = participant.departure_flight_number
-        sheet1[pos,column+=1] = participant.airport_transportation? ? 'YES' : ''
+        # travel information
+        sheet1[pos,column+=1] = participant.travel_type
+        sheet1[pos,column+=1] = participant.travel_type_details
         
         # other stuff
         sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
-        sheet1[pos,column+=1] = '$' + participant.amount_due.to_s
-        
-        # should we highlight the amount due field?
-        change_highlight = false
-          if participant.amount_due > 0
-            change_highlight = true
-            column_highlight = column
-          end
+
+        # registration options
+        registration_options_meals.each do |registration_option|
+          sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+        end
+        registration_options_other.each do |registration_option|
+          sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+        end
           
-          # set format
-          for i in 1..22
-            sheet1.row(pos).set_format(i,data_format)
-          end
-          
-          # update highlight of money owed (if needed)
-          sheet1.row(pos).set_format(column_highlight,money_owed_format) if change_highlight
+        # set format
+        for i in 1..column
+          sheet1.row(pos).set_format(i,data_format)
+        end
       
         pos += 1
       end
@@ -605,21 +597,15 @@ class ReportsController < ApplicationController
       sheet1.column(5).width = 30
       sheet1.column(6).width = 30
       sheet1.column(7).width = 30
-      sheet1.column(8).width = 10
-      sheet1.column(9).width = 10
-      sheet1.column(10).width = 10
-      sheet1.column(11).width = 10
-      sheet1.column(12).width = 30
-      sheet1.column(13).width = 30
-      sheet1.column(14).width = 20
-      sheet1.column(15).width = 20
-      sheet1.column(16).width = 20
-      sheet1.column(17).width = 20
-      sheet1.column(18).width = 20
-      sheet1.column(19).width = 20
-      sheet1.column(20).width = 10
-      sheet1.column(21).width = 10
-      sheet1.column(22).width = 10
+      sheet1.column(8).width = 20
+      sheet1.column(9).width = 20
+      sheet1.column(10).width = 20
+      sheet1.column(11).width = 30
+      sheet1.column(12).width = 20
+
+      for i in 13..(13+registration_options_size)
+        sheet1.column(i).width = 10
+      end
 
       book.write "#{RAILS_ROOT}/public/download/group_leader_summary_#{file_name}.xls"
 
@@ -646,30 +632,30 @@ class ReportsController < ApplicationController
 
         if (leader == -1)
           group_leader_name = 'Group Leader Not Listed'
-          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-1)
+          participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-1)
         elsif (leader == -2)
           group_leader_name = 'Group Leader Not Known'
-          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-2)
+          participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-2)
         elsif (leader == -3)
           group_leader_name = 'No Group Leader'
-          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-3)
+          participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-3)
         elsif (leader == -4)
           group_leader_name = 'Staff'
-          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-4)
+          participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-4)
         elsif (leader == -5)
           group_leader_name = 'Official'
-          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-5)
+          participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-5)
         elsif (leader == -6)
           group_leader_name = 'Volunteer'
-          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-6)
+          participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-6)
         elsif (leader == -7)
           group_leader_name = 'Representative'
-          participants = ParticipantRegistration.by_event(params['event_id']).ordered_by_last_name.by_group_leader(-7)
+          participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-7)
         else
           user = User.find(leader)
           logger.debug(user)
           group_leader_name = user.fullname
-          participants = user.followers.by_event(params['event_id'])
+          participants = user.followers.by_event(active_event)
         end
 
         # formatting
@@ -692,12 +678,12 @@ class ReportsController < ApplicationController
         for i in 4..6
           sheet1.row(1).set_format(i,group_header_format)
         end
-        sheet1[1,7] = 'Housing'
-        for i in 7..9
+        sheet1[1,10] = 'Travel Information'
+        for i in 10..11
           sheet1.row(1).set_format(i,group_header_format)
         end
-        sheet1[1,14] = 'Airline Information'
-        for i in 14..20
+        sheet1[1,12] = 'Registration Options'
+        for i in 12..(12+registration_options_size)
           sheet1.row(1).set_format(i,group_header_format)
         end
   
@@ -711,36 +697,25 @@ class ReportsController < ApplicationController
         sheet1[2,column+=1] = 'Team 2'
         sheet1[2,column+=1] = 'Team 3'
         sheet1[2,column+=1] = 'Housing'
-        sheet1[2,column+=1] = 'Housing June 25th'
-        sheet1[2,column+=1] = 'Housing June 26th'
-        sheet1[2,column+=1] = 'Linens'
-        sheet1[2,column+=1] = 'Pillow'
         sheet1[2,column+=1] = 'Roommate Preference 1'
         sheet1[2,column+=1] = 'Roommate Preference 2'
-        sheet1[2,column+=1] = 'Airline Arrival Date'
-        sheet1[2,column+=1] = 'Arrival Airline'
-        sheet1[2,column+=1] = 'Arrival Flight Number'
-        sheet1[2,column+=1] = 'Airline Departure Date'
-        sheet1[2,column+=1] = 'Departure Airline'
-        sheet1[2,column+=1] = 'Departure Flight Number'
-        sheet1[2,column+=1] = 'Airport Shuttle'
+        sheet1[2,column+=1] = 'Travel Type'
+        sheet1[2,column+=1] = 'Travel Details'
         sheet1[2,column+=1] = 'Medical Liability Received'
-        sheet1[2,column+=1] = 'Amount Owed'
+
+        # registration options
+        registration_options_meals.each do |registration_option|
+          sheet1[2,column+=1] = registration_option.item
+        end
+        registration_options_other.each do |registration_option|
+          sheet1[2,column+=1] = registration_option.item
+        end
+
         sheet1.row(2).default_format = header_format
 
         # keep track of t-shirt numbers
-        youth_small = 0
-        youth_medium = 0
-        youth_large = 0
-        small = 0
-        medium = 0
-        large = 0
-        x_large = 0
-        xx_large = 0
-        xxx_large = 0
-        xxxx_large = 0
-        xxxxx_large = 0
-        undefined_size = 0
+        shirt_size_count = Hash.new
+        shirt_size_count["undefined"] = 0
       
         pos = 3
         participants.each do |participant|
@@ -769,67 +744,38 @@ class ReportsController < ApplicationController
   
           # housing
           sheet1[pos,column+=1] = participant.housing
-          sheet1[pos,column+=1] = participant.housing_saturday? ? 'YES' : ''
-          sheet1[pos,column+=1] = participant.housing_sunday? ? 'YES' : ''
-          sheet1[pos,column+=1] = participant.linens? ? 'YES' : ''
-          sheet1[pos,column+=1] = participant.pillow? ? 'YES' : ''
           sheet1[pos,column+=1] = participant.roommate_preference_1
           sheet1[pos,column+=1] = participant.roommate_preference_2
           
-          # airline information
-          sheet1[pos,column+=1] = participant.airline_arrival_date
-          sheet1[pos,column+=1] = participant.arrival_airline
-          sheet1[pos,column+=1] = participant.arrival_flight_number
-          sheet1[pos,column+=1] = participant.airline_departure_date
-          sheet1[pos,column+=1] = participant.departure_airline
-          sheet1[pos,column+=1] = participant.departure_flight_number
-          sheet1[pos,column+=1] = participant.airport_transportation? ? 'YES' : ''
+          # travel information
+          sheet1[pos,column+=1] = participant.travel_type
+          sheet1[pos,column+=1] = participant.travel_type_details
           
           # other stuff
           sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
-          sheet1[pos,column+=1] = '$' + participant.amount_due.to_s
           
-          # should we highlight the amount due field?
-          change_highlight = false
-          if participant.amount_due > 0
-            change_highlight = true
-            column_highlight = column
+          # registration options
+          registration_options_meals.each do |registration_option|
+            sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+          end
+          registration_options_other.each do |registration_option|
+            sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
           end
           
           # set format
-          for i in 1..21
+          for i in 1..column
             sheet1.row(pos).set_format(i,data_format)
           end
-          
-          # update highlight of money owed (if needed)
-          sheet1.row(pos).set_format(column_highlight,money_owed_format) if change_highlight
 
           # tabulate shirt size
-          case participant.shirt_size
-          when 'Youth Small'
-            youth_small += 1
-          when 'Youth Medium'
-            youth_medium += 1
-          when 'Youth Large'
-            youth_large += 1
-          when 'Small'
-            small += 1
-          when 'Medium'
-            medium += 1
-          when 'Large'
-            large += 1
-          when 'X-Large'
-            x_large += 1
-          when '2X-Large'
-            xx_large += 1
-          when '3X-Large'
-            xxx_large += 1
-          when '4X-Large'
-            xxxx_large += 1
-          when '5X-Large'
-            xxxxx_large += 1
+          if participant.shirt_size.empty?
+            shirt_size_count["undefined"] += 1
           else
-            undefined_size += 1
+            if shirt_size_count[participant.shirt_size].nil?
+              shirt_size_count[participant.shirt_size] = 1
+            else
+              shirt_size_count[participant.shirt_size] += 1
+            end
           end
           
           pos += 1
@@ -843,52 +789,45 @@ class ReportsController < ApplicationController
         sheet1.column(5).width = 30
         sheet1.column(6).width = 30
         sheet1.column(7).width = 30
-        sheet1.column(8).width = 10
-        sheet1.column(9).width = 10
-        sheet1.column(10).width = 10
-        sheet1.column(11).width = 10
-        sheet1.column(12).width = 30
-        sheet1.column(13).width = 20
-        sheet1.column(14).width = 20
-        sheet1.column(15).width = 20
-        sheet1.column(16).width = 20
-        sheet1.column(17).width = 20
-        sheet1.column(18).width = 20
-        sheet1.column(19).width = 10
-        sheet1.column(20).width = 10
-        sheet1.column(21).width = 10
+        sheet1.column(8).width = 20
+        sheet1.column(9).width = 20
+        sheet1.column(10).width = 20
+        sheet1.column(11).width = 30
+        sheet1.column(12).width = 20
+
+        for i in 13..(13+registration_options_size)
+          sheet1.column(i).width = 10
+        end
 
         # output shirt size counts
         pos += 2
-        sheet1[pos,1] = "Youth Small"
-        sheet1[pos,2] = youth_small
-        sheet1[pos,3] = "X-Large"
-        sheet1[pos,4] = x_large
-        pos += 1
-        sheet1[pos,1] = "Youth Medium"
-        sheet1[pos,2] = youth_medium
-        sheet1[pos,3] = "2X-Large"
-        sheet1[pos,4] = xx_large
-        pos += 1
-        sheet1[pos,1] = "Youth Large"
-        sheet1[pos,2] = youth_large
-        sheet1[pos,3] = "3X-Large"
-        sheet1[pos,4] = xxx_large
+        sheet1[pos,1] = "Shirt Sizes"
+        sheet1.row(pos).set_format(1,group_header_format)
+        sheet1.row(pos).set_format(2,group_header_format)
         pos += 1
         sheet1[pos,1] = "Small"
-        sheet1[pos,2] = small
-        sheet1[pos,3] = "4X-Large"
-        sheet1[pos,4] = xxxx_large
+        sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
         pos += 1
         sheet1[pos,1] = "Medium"
-        sheet1[pos,2] = medium
-        sheet1[pos,3] = "5X-Large"
-        sheet1[pos,4] = xxxxx_large
+        sheet1[pos,2] = !shirt_size_count["Medium"].nil? ? shirt_size_count["Medium"] : 0
         pos += 1
         sheet1[pos,1] = "Large"
-        sheet1[pos,2] = large
-        sheet1[pos,3] = "Undefined"
-        sheet1[pos,4] = undefined_size
+        sheet1[pos,2] = !shirt_size_count["Large"].nil? ? shirt_size_count["Large"] : 0
+        pos += 1
+        sheet1[pos,1] = "X-Large"
+        sheet1[pos,2] = !shirt_size_count["X-Large"].nil? ? shirt_size_count["X-Large"] : 0
+        pos += 1
+        sheet1[pos,1] = "2X-Large"
+        sheet1[pos,2] = !shirt_size_count["2X-Large"].nil? ? shirt_size_count["2X-Large"] : 0
+        pos += 1
+        sheet1[pos,1] = "3X-Large"
+        sheet1[pos,2] = !shirt_size_count["3X-Large"].nil? ? shirt_size_count["3X-Large"] : 0
+        pos += 1
+        sheet1[pos,1] = "4X-Large"
+        sheet1[pos,2] = !shirt_size_count["4X-Large"].nil? ? shirt_size_count["4X-Large"] : 0
+        pos += 1
+        sheet1[pos,1] = "Undefined"
+        sheet1[pos,2] = !shirt_size_count["undefined"].nil? ? shirt_size_count["undefined"] : 0
         
         sheet1.name = group_leader_name
       end
