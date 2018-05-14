@@ -2,7 +2,7 @@
   <h4>Actions</h4>
   <ul>
     <li><%= link_to 'Download Participant Registrations', reports_path %></li>
-    <li><%= link_to 'Download Quizmachine File', :controller => 'reports', :action => 'quizmachine_2017', :event_id => @selected_event %></li>
+    <li><%= link_to 'Auto Match Group Leaders', :controller => 'participant_registrations', :action => 'match_group_leaders', :event_id => @selected_event %></li>
   </ul>
 <% end %>
 
@@ -17,6 +17,9 @@
 <div class="table-responsive"> 
   <table class="table table-striped">
     <thead>
+      <tr>
+        <td style='border: 0;' colspan='5'><%= "#{@participant_registrations.size} participant registration(s) found" %></td>
+      </tr>
       <tr>
         <th>Name</th>
         <th>Type</th>

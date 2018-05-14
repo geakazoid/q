@@ -813,4 +813,52 @@ class ParticipantRegistrationsController < ApplicationController
       flash.now[:notice] = claim_message
     end
   end
+
+  # attempt to autoselect group leader for registrations based on
+  # supplied email and name from the registration
+  def match_group_leaders
+    # keep counts
+    processed = 0
+    skipped = 0
+    matched = 0
+    not_matched = 0
+
+    participant_registrations = ParticipantRegistration.find(:all, :conditions => "event_id = #{params['event_id']}", :order => "first_name asc, last_name asc")
+    participant_registrations.each do |participant_registration|
+      processed += 1
+      if !participant_registration.group_leader.nil? and !participant_registration.group_leader.blank?
+        skipped += 1
+        next
+      end
+      group_leader = User.find_by_email(participant_registration.group_leader_email) unless participant_registration.group_leader_email.blank? rescue nil
+      if (!group_leader.nil?)
+        participant_registration.group_leader = group_leader.id
+        # don't validate before save
+        participant_registration.save(false)
+        matched += 1
+        next
+      end
+      if !participant_registration.group_leader_text.nil? and !participant_registration.group_leader_text.blank?
+        first_name,last_name = participant_registration.group_leader_text.split(' ')
+        group_leader = User.find(:conditions => "first_name = #{first_name} and last_name = #{last_name}") rescue nil
+        if (!group_leader.nil?)
+          participant_registration.group_leader = group_leader.id
+          # don't validate before save
+          participant_registration.save(false)
+          matched += 1
+          next
+        end
+      end
+      not_matched += 1
+    end
+
+    flash[:notice] = "Updated Group Leaders. Processed #{processed} registrations. #{skipped} registrations were skipped because they already have a group leader defined. #{matched} registrations were matched and updated. #{not_matched} registrations could not be matched and have not been modified."
+
+    respond_to do |format|
+      format.html {
+        redirect_to(participant_registrations_url)
+      }
+    end
+
+  end
 end
