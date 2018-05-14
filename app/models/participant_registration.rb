@@ -12,6 +12,7 @@ class ParticipantRegistration < ActiveRecord::Base
   has_many :shared_participant_registration_users, :class_name => 'ParticipantRegistrationUser', :conditions => 'owner = false'
   has_many :shared_users, :through => :shared_participant_registration_users, :class_name => 'User', :source => :user
   has_and_belongs_to_many :teams
+  has_many :coached_teams, :class_name => 'Team', :foreign_key => 'coach_id'
   has_and_belongs_to_many :registration_options
   belongs_to :team1, :class_name => 'Team', :foreign_key => 'team1_id'
   belongs_to :team2, :class_name => 'Team', :foreign_key => 'team2_id'
@@ -149,6 +150,10 @@ class ParticipantRegistration < ActiveRecord::Base
   named_scope :ordered_by_last_name, {
     :order => 'last_name asc'
   }
+
+  named_scope :ordered_by_first_name, {
+    :order => 'first_name asc'
+  }
   
   named_scope :needs_housing, {
     :conditions => "registration_type != 'Guest (Lodging off-campus)' and staying_off_campus is null"
@@ -186,12 +191,12 @@ class ParticipantRegistration < ActiveRecord::Base
   }
 
   named_scope :has_special_needs, {
-    :conditions => "special_needs is not null and special_needs != 'N/A'"
+    :conditions => "special_needs_food_allergies = 1 OR special_needs_handicap_accessible = 1 OR special_needs_hearing_impaired = 1 OR special_needs_vision_impaired = 1 OR special_needs_other = 1"
   }
 
   named_scope :no_team, {
     :joins      => "LEFT JOIN participant_registrations_teams ON participant_registrations.id = participant_registrations_teams.participant_registration_id",
-    :conditions => "participant_registrations_teams.participant_registration_id IS NULL and registration_type = 'Quizzer'",
+    :conditions => "participant_registrations_teams.participant_registration_id IS NULL and registration_type = 'quizzer'",
     :select     => "DISTINCT participant_registrations.*",
     :order      => "last_name asc"
   }
@@ -640,7 +645,6 @@ class ParticipantRegistration < ActiveRecord::Base
 
   # Return the registration type as a formatted value
   def formatted_registration_type
-    return 'Core Staff' if registration_type == 'core_staff'
     return !registration_type.nil? ? registration_type.capitalize : ''
   end
 
