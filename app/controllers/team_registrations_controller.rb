@@ -77,9 +77,9 @@ class TeamRegistrationsController < ApplicationController
     @active_event = Event.active_event.id
     @divisions = Division.find(:all, :conditions => "event_id = #{@active_event}" )
     if (admin?)
-      @coaches = ParticipantRegistration.find(:all, :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and event_id = #{@active_event}", :order => "first_name asc, last_name asc")
+      @coaches = ParticipantRegistration.find(:all, :conditions => "(registration_type = 'coach' OR registration_type = 'staff' OR planning_on_coaching = 1) and event_id = #{@active_event}", :order => "first_name asc, last_name asc")
     else
-      @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id} and event_id = #{@active_event}")
+      @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR registration_type = 'staff' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id} and event_id = #{@active_event}")
     end
 
     respond_to do |format|
