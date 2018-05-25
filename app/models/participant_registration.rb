@@ -148,11 +148,11 @@ class ParticipantRegistration < ActiveRecord::Base
   }
 
   named_scope :ordered_by_last_name, {
-    :order => 'last_name asc'
+    :order => 'last_name asc, first_name asc'
   }
 
   named_scope :ordered_by_first_name, {
-    :order => 'first_name asc'
+    :order => 'first_name asc, last_name asc'
   }
   
   named_scope :needs_housing, {
@@ -220,6 +220,14 @@ class ParticipantRegistration < ActiveRecord::Base
 
   named_scope :by_event, lambda { |event_id|
     { :conditions => ["event_id = ?", event_id] }
+  }
+
+  named_scope :group_leader_undefined, {
+    :conditions => "group_leader is null"
+  }
+
+  named_scope :group_leader_defined, {
+    :conditions => "group_leader is not null"
   }
 
   def self.human_attribute_name(attr)

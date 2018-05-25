@@ -59,7 +59,8 @@ ActionController::Routing::Routes.draw do |map|
                                 :confirm_check => :get,
                                 :convio => :get,
                                 :claim => [:get, :post],
-                                :match_group_leaders => :get},
+                                :match_group_leaders => :get,
+                                :filter => :get},
                 :member => {:audit => :get}
   map.resources :team_registrations,
                 :collection => {:confirm => :get,

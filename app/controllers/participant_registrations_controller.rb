@@ -14,12 +14,64 @@ class ParticipantRegistrationsController < ApplicationController
 
       @selected_event = params[:event_id] ? params[:event_id] : Event.active_event.id
       @events = Event.get_events
-      @participant_registrations = ParticipantRegistration.find(:all, :conditions => "event_id = #{@selected_event}", :order => "first_name asc, last_name asc")
+      #@participant_registrations = ParticipantRegistration.find(:all, :conditions => "event_id = #{@selected_event}", :order => "first_name asc, last_name asc")
+      @participant_registrations = ParticipantRegistration.by_event(Event.active_event.id).ordered_by_last_name
+
+      # filter results if we have any filters
+      unless session[:paid].blank?
+        if (session[:paid] == '1')
+          @participant_registrations = @participant_registrations.complete
+          @filter_applied = true
+        elsif (session[:paid] == '0')
+          @participant_registrations = @participant_registrations.incomplete
+          @filter_applied = true
+        end
+      end
+      unless session[:group_leader].blank?
+        if (session[:group_leader] == 'defined')
+          @participant_registrations = @participant_registrations.group_leader_defined
+          @filter_applied = true
+        elsif (session[:group_leader] == 'undefined')
+          @participant_registrations = @participant_registrations.group_leader_undefined
+          @filter_applied = true
+        end
+      end
     end
 
     respond_to do |format|
       format.html {
         render "participant_registrations/admin/index" if admin? and !params[:user_id]
+      }
+    end
+  end
+
+    # GET /participant_registrations/filter/?parameters
+  # filter list based upon passed in filters
+  def filter
+    # if we aren't an admin or housing admin we shouldn't be here
+    record_not_found and return if !admin?
+
+    # clear filters if requested
+    if params[:clear] == 'true'
+      session[:paid] = nil
+      session[:group_leader] = nil
+ 
+      flash[:notice] = 'All filters have been cleared.'
+    else
+      # update session values from passed in params
+      session[:paid] = params[:paid] unless params[:paid].blank?
+      session[:group_leader] = params[:group_leader] unless params[:group_leader].blank?
+
+      # remove filters if none is passed
+      session[:paid] = nil if params[:paid] == 'none'
+      session[:group_leader] = nil if params[:group_leader] == 'none'
+    
+      flash[:notice] = 'Filters updated successfully.'
+    end
+
+    respond_to do |format|
+      format.html {
+        redirect_to(participant_registrations_url)
       }
     end
   end
