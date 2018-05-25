@@ -193,6 +193,7 @@
   </p>
   <div id='optional_purchases_row'>
     <div id='optional_purchases_meals_row' style='display:none;'>
+      <%= hidden_field_tag "participant_registration[registration_option_ids][]", nil %>
       <h4>Meals</h4>
       <p>
         <% @registration_options_meals.each do |registration_option| -%>
