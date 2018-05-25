@@ -134,16 +134,16 @@
       {:prompt => '- Select -'},
       {:id => 'district'} %>
   </p>
-  <p id='group_leader_text_row' style='display:none;'>
+  <p id='group_leader_text_row'>
     <%= pform.label :group_leader_text, 'Your Group Leader' %><br/>
     <%= pform.text_field :group_leader_text %>
   </p>
-  <p id='group_leader_email_row' style='display:none;'>
+  <p id='group_leader_email_row'>
     <%= pform.label :group_leader_email, 'Group Leader Email (If Known)' %><br/>
     <%= pform.text_field :group_leader_email %>
   </p>
   <% if !@participant_registration.new_record? && admin? %>
-  <p id='group_leader_row' style='display:none;'>
+  <p id='group_leader_row'>
     <%= pform.label :group_leader, 'Assigned Group Leader' %><br/>
     <select id="participant_registration_group_leader" name="participant_registration[group_leader]">
       <%= options_for_select(@group_leaders, @participant_registration.group_leader.to_i) %>
@@ -312,9 +312,6 @@
     $('#emergency_contact_details').hide()
     $('#housing_details').hide()
     $('#local_church_row').hide()
-    $('#group_leader_text_row').hide()
-    $('#group_leader_email_row').hide()
-    $('#group_leader_row').hide()
     $('#coach_name_row').hide()
     $('#planning_on_coaching_row').hide()
     $('#planning_on_officiating_row').hide()
@@ -335,9 +332,6 @@
       $('#emergency_contact_details').show()
       $('#housing_details').show()
       $('#local_church_row').show()
-      $('#group_leader_text_row').show()
-      $('#group_leader_email_row').show()
-      $('#group_leader_row').show()
       $('#shirt_size_row').show()
       $('#special_needs_row').show()
       $('#travel_type_row').show()
