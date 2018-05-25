@@ -8,8 +8,13 @@
 
   <h3>Basics</h3>
   <p>
-  	<label>District</label><br/>
-	<%= @team_registration.district.display_with_region %>
+  	<%= f.label :district, 'District' %><br/>
+	  <%= f.collection_select :district_id,
+                            @districts,
+                            :id,
+                            :display_with_region,
+                            {:prompt => '- Select -'},
+                            {:id => 'district'} %>
   </p>
   <p>
     <%= f.label :first_name, 'First Name' %><br/>
