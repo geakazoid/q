@@ -882,6 +882,22 @@ class ParticipantRegistrationsController < ApplicationController
         skipped += 1
         next
       end
+      # check by user type (officials get official group leader, staff gets staff group leader)
+      if (participant_registration.registration_type == 'official')
+        participant_registration.group_leader = -5
+        # don't validate before save
+        participant_registration.save(false)
+        matched += 1
+        next
+      end
+      if (participant_registration.registration_type == 'staff')
+        participant_registration.group_leader = -4
+        # don't validate before save
+        participant_registration.save(false)
+        matched += 1
+        next
+      end
+      # check by group leader email
       group_leader = User.find_by_email(participant_registration.group_leader_email) unless participant_registration.group_leader_email.blank? rescue nil
       if (!group_leader.nil?)
         participant_registration.group_leader = group_leader.id
@@ -890,6 +906,7 @@ class ParticipantRegistrationsController < ApplicationController
         matched += 1
         next
       end
+      #check by group leader name (in group_leader_text field)
       if !participant_registration.group_leader_text.nil? and !participant_registration.group_leader_text.blank?
         first_name,last_name = participant_registration.group_leader_text.split(' ')
         group_leader = User.find(:conditions => "first_name = #{first_name} and last_name = #{last_name}") rescue nil
