@@ -55,6 +55,13 @@
     <%= link_to 'All Group Leaders', :controller => 'reports', :action => 'group_leader_summary', :event_id => @selected_event %>
   <% end %>
 <% end %>
+<% if admin? %>
+<h3>Travel</h3>
+<p>
+  <%= link_to 'Flight Details', :controller => 'reports', :action => 'participants_flying', :event_id => @selected_event %><br/>
+  <%= link_to 'Shuttle Requests', :controller => 'reports', :action => 'participants_shuttle', :event_id => @selected_event %><br/>
+</p>
+<% end %>
 <% if admin? or housing_admin? %>
 </p>
 <h3>Housing</h3>

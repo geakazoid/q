@@ -204,6 +204,13 @@ class ParticipantRegistration < ActiveRecord::Base
   named_scope :needs_shuttle, {
     :conditions => "participant_registrations.airport_transportation = 1"
   }
+
+  named_scope :bought_shuttle, {
+    :joins      => "LEFT JOIN participant_registrations_registration_options on participant_registrations.id = participant_registrations_registration_options.participant_registration_id LEFT JOIN registration_options on participant_registrations_registration_options.registration_option_id = registration_options.id",
+    :conditions => "registration_options.item = 'shuttle'",
+    :select     => "DISTINCT participant_registrations.*",
+    :order      => "last_name asc"
+  }
   
   named_scope :has_linens_or_pillow, {
     :conditions => "participant_registrations.linens = 1 or participant_registrations.pillow = 1"
@@ -228,6 +235,14 @@ class ParticipantRegistration < ActiveRecord::Base
 
   named_scope :group_leader_defined, {
     :conditions => "group_leader is not null"
+  }
+
+  named_scope :is_flying, {
+    :conditions => "travel_type = 'I am flying to the event.'"
+  }
+
+  named_scope :is_driving, {
+    :conditions => "travel_type = 'I am driving to the event.'"
   }
 
   def self.human_attribute_name(attr)
@@ -399,12 +414,12 @@ class ParticipantRegistration < ActiveRecord::Base
 
   # returns if this registration has flying selected as travel_type
   def flying?
-    self.travel_type == 'flying'
+    self.travel_type == 'I am flying to the event.'
   end
 
   # returns if this registration has driving selected as travel_type
   def driving?
-    self.travel_type == 'driving'
+    self.travel_type == 'I am driving to the event.'
   end
 
   # return other family registrations related to this one

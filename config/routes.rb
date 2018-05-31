@@ -104,6 +104,8 @@ ActionController::Routing::Routes.draw do |map|
                                 :equipment_registrations => :get,
                                 :seminar_registrations => :get,
                                 :participants_liability => :get,
+                                :participants_flying => :get,
+                                :participants_shuttle => :get,
                                 :special_needs => :get,
                                 :core_staff => :get,
                                 :no_team => :get,
