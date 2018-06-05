@@ -156,7 +156,7 @@ class ParticipantRegistration < ActiveRecord::Base
   }
   
   named_scope :needs_housing, {
-    :conditions => "registration_type != 'Guest (Lodging off-campus)' and staying_off_campus is null"
+    :conditions => "registration_type != 'off-campus'"
   }
 
   named_scope :ordered_by_building_room_last_name, {

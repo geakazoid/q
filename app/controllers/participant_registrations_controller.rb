@@ -369,7 +369,7 @@ class ParticipantRegistrationsController < ApplicationController
     # if we aren't an admin or housing admin we shouldn't be here
     record_not_found and return if !admin? and !housing_admin?
 
-    @participant_registrations = ParticipantRegistration.needs_housing.ordered_by_last_name
+    @participant_registrations = ParticipantRegistration.by_event(Event.active_event.id).needs_housing.ordered_by_last_name
     @buildings = Building.all(:conditions => "event_id = #{Event.active_event.id}", :order => 'name')
     @districts = District.all(:order => 'name')
     @regions = Region.all(:order => 'name')
