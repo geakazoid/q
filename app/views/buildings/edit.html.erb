@@ -1,0 +1,14 @@
+<div id='page_title'>
+  <%= title("Editing #{@building.name}", :h1) %>
+</div>
+
+<% form_for(@building) do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.submit 'Update', {:class => 'btn btn-primary'} %> or <%= link_to 'Cancel', buildings_path %>
+  </p>
+<% end %>

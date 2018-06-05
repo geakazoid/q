@@ -37,6 +37,7 @@ ActionController::Routing::Routes.draw do |map|
     users.resources :event_roles
   end
   map.resources :event_roles
+  map.resources :buildings
   map.resources :divisions
   map.resources :districts, :collection => ['num_teams']
   map.resources :events

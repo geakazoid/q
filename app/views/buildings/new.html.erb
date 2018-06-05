@@ -1,0 +1,24 @@
+<div id='page_title'>
+  <%= title('Add New Buildings', :h1) %>
+</div>
+
+<p>
+  Add new buildings below. Please follow the following format: name. Example:
+  <pre>Albertson Hall
+Nesbit
+Callaway</pre>
+  Note: Buildings with the same name will not be added again.
+</p>
+<%= form_tag(buildings_path) %>
+  <p>
+    <label>Buildings</label><br />
+    <%= text_area_tag :building_info, nil, :size => "60x15" %>
+  </p>
+  <p>
+    <label>Event</label><br />
+    <%= select_tag :event_id, options_from_collection_for_select(@events, "id", "name", @selected_event.to_i) %>
+  </p>
+  <p>
+    <%= submit_tag 'Add Buildings', {:class => 'btn btn-primary'} %> or <%= link_to 'Cancel', buildings_path %>
+  </p>
+</p>
