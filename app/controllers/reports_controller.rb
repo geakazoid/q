@@ -97,7 +97,7 @@ class ReportsController < ApplicationController
 
   # generate a report participant registrationsa staying off campus
   def participant_registrations_off_campus
-    @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc', :conditions => "staying_off_campus = 'YES' and event_id = #{params['event_id']}")
+    @participant_registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc', :conditions => "registration_type = 'off-campus' and event_id = #{params['event_id']}")
     @report_type = 'staying_off_campus'
     participant_registrations
   end
@@ -629,14 +629,14 @@ class ReportsController < ApplicationController
         pos += 1
       end
 
-      sheet1.column(0).width = 30
+      sheet1.column(0).width = 20
       sheet1.column(1).width = 12
       sheet1.column(2).width = 12
       sheet1.column(3).width = 12
       sheet1.column(4).width = 30
       sheet1.column(5).width = 30
       sheet1.column(6).width = 30
-      sheet1.column(7).width = 30
+      sheet1.column(7).width = 20
       sheet1.column(8).width = 20
       sheet1.column(9).width = 20
       sheet1.column(10).width = 20
@@ -861,14 +861,14 @@ class ReportsController < ApplicationController
           pos += 1
         end
   
-        sheet1.column(0).width = 30
+        sheet1.column(0).width = 20
         sheet1.column(1).width = 12
         sheet1.column(2).width = 12
         sheet1.column(3).width = 12
         sheet1.column(4).width = 30
         sheet1.column(5).width = 30
         sheet1.column(6).width = 30
-        sheet1.column(7).width = 30
+        sheet1.column(7).width = 20
         sheet1.column(8).width = 20
         sheet1.column(9).width = 20
         sheet1.column(10).width = 20
