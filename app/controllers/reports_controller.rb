@@ -457,7 +457,6 @@ class ReportsController < ApplicationController
 
     registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
     registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
-    registration_options_size = registration_options_meals.size + registration_options_other.size
 
     if (!params['group_leader'].blank?)
       sheet1 = book.create_worksheet
@@ -497,6 +496,21 @@ class ReportsController < ApplicationController
         participants = group_leader.followers.by_event(active_event)
       end
 
+      # logic to remove registration options that noone has
+      # this removes completely empty columns
+      registration_options = Array.new
+      complete_registration_options = registration_options_meals + registration_options_other
+      complete_registration_options.each do |registration_option|
+        used = false
+        participants.each do |participant|
+          if participant.registration_options.include?(registration_option)
+            used = true
+          end
+        end
+        used = false if registration_option.item == 'Off-Campus Housing Discount' # hide off campus discount
+        registration_options.push(registration_option) if used == true
+      end
+
       # formatting
       title_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
       group_leader_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
@@ -522,7 +536,7 @@ class ReportsController < ApplicationController
         sheet1.row(1).set_format(i,group_header_format)
       end
       sheet1[1,12] = 'Registration Options'
-      for i in 12..(12+registration_options_size)
+      for i in 12..(12+registration_options.size-1)
         sheet1.row(1).set_format(i,group_header_format)
       end
 
@@ -540,17 +554,19 @@ class ReportsController < ApplicationController
       sheet1[2,column+=1] = 'Roommate Preference 2'
       sheet1[2,column+=1] = 'Travel Type'
       sheet1[2,column+=1] = 'Travel Details'
-      sheet1[2,column+=1] = 'Medical Liability Received'
 
       # registration options
-      registration_options_meals.each do |registration_option|
-        sheet1[2,column+=1] = registration_option.item
-      end
-      registration_options_other.each do |registration_option|
+      registration_options.each do |registration_option|
         sheet1[2,column+=1] = registration_option.item
       end
 
+      sheet1[2,column+=1] = 'Medical Liability Received'
+
       sheet1.row(2).default_format = header_format
+
+      # keep track of t-shirt numbers
+      shirt_size_count = Hash.new
+      shirt_size_count["undefined"] = 0
       
       pos = 3
       participants.each do |participant|
@@ -585,21 +601,29 @@ class ReportsController < ApplicationController
         # travel information
         sheet1[pos,column+=1] = participant.travel_type
         sheet1[pos,column+=1] = participant.travel_type_details
-        
-        # other stuff
-        sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
 
         # registration options
-        registration_options_meals.each do |registration_option|
-          sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+        registration_options.each do |registration_option|
+          sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : ""
         end
-        registration_options_other.each do |registration_option|
-          sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
-        end
+
+        # other stuff
+        sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
           
         # set format
         for i in 1..column
           sheet1.row(pos).set_format(i,data_format)
+        end
+
+        # tabulate shirt size
+        if participant.shirt_size.empty?
+          shirt_size_count["undefined"] += 1
+        else
+          if shirt_size_count[participant.shirt_size].nil?
+            shirt_size_count[participant.shirt_size] = 1
+          else
+            shirt_size_count[participant.shirt_size] += 1
+          end
         end
       
         pos += 1
@@ -619,9 +643,39 @@ class ReportsController < ApplicationController
       sheet1.column(11).width = 30
       sheet1.column(12).width = 20
 
-      for i in 13..(13+registration_options_size)
-        sheet1.column(i).width = 10
+      for i in 12..(13+registration_options.size)
+        sheet1.column(i).width = 20
       end
+
+      # output shirt size counts
+      pos += 2
+      sheet1[pos,1] = "Shirt Sizes"
+      sheet1.row(pos).set_format(1,group_header_format)
+      sheet1.row(pos).set_format(2,group_header_format)
+      pos += 1
+      sheet1[pos,1] = "Small"
+      sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
+      pos += 1
+      sheet1[pos,1] = "Medium"
+      sheet1[pos,2] = !shirt_size_count["Medium"].nil? ? shirt_size_count["Medium"] : 0
+      pos += 1
+      sheet1[pos,1] = "Large"
+      sheet1[pos,2] = !shirt_size_count["Large"].nil? ? shirt_size_count["Large"] : 0
+      pos += 1
+      sheet1[pos,1] = "X-Large"
+      sheet1[pos,2] = !shirt_size_count["X-Large"].nil? ? shirt_size_count["X-Large"] : 0
+      pos += 1
+      sheet1[pos,1] = "2X-Large"
+      sheet1[pos,2] = !shirt_size_count["2X-Large"].nil? ? shirt_size_count["2X-Large"] : 0
+      pos += 1
+      sheet1[pos,1] = "3X-Large"
+      sheet1[pos,2] = !shirt_size_count["3X-Large"].nil? ? shirt_size_count["3X-Large"] : 0
+      pos += 1
+      sheet1[pos,1] = "4X-Large"
+      sheet1[pos,2] = !shirt_size_count["4X-Large"].nil? ? shirt_size_count["4X-Large"] : 0
+      pos += 1
+      sheet1[pos,1] = "Undefined"
+      sheet1[pos,2] = !shirt_size_count["undefined"].nil? ? shirt_size_count["undefined"] : 0
 
       book.write "#{RAILS_ROOT}/public/download/group_leader_summary_#{file_name}.xls"
 
@@ -674,6 +728,21 @@ class ReportsController < ApplicationController
           participants = user.followers.by_event(active_event)
         end
 
+        # logic to remove registration options that noone has
+        # this removes completely empty columns
+        registration_options = Array.new
+        complete_registration_options = registration_options_meals + registration_options_other
+        complete_registration_options.each do |registration_option|
+          used = false
+          participants.each do |participant|
+            if participant.registration_options.include?(registration_option)
+              used = true
+            end
+          end
+          used = false if registration_option.item == 'Off-Campus Housing Discount' # hide off campus discount
+          registration_options.push(registration_option) if used == true
+        end
+
         # formatting
         title_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
         group_leader_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
@@ -699,7 +768,7 @@ class ReportsController < ApplicationController
           sheet1.row(1).set_format(i,group_header_format)
         end
         sheet1[1,12] = 'Registration Options'
-        for i in 12..(12+registration_options_size)
+        for i in 12..(12+registration_options.size-1)
           sheet1.row(1).set_format(i,group_header_format)
         end
   
@@ -717,15 +786,13 @@ class ReportsController < ApplicationController
         sheet1[2,column+=1] = 'Roommate Preference 2'
         sheet1[2,column+=1] = 'Travel Type'
         sheet1[2,column+=1] = 'Travel Details'
-        sheet1[2,column+=1] = 'Medical Liability Received'
 
         # registration options
-        registration_options_meals.each do |registration_option|
+        registration_options.each do |registration_option|
           sheet1[2,column+=1] = registration_option.item
         end
-        registration_options_other.each do |registration_option|
-          sheet1[2,column+=1] = registration_option.item
-        end
+
+        sheet1[2,column+=1] = 'Medical Liability Received'
 
         sheet1.row(2).default_format = header_format
 
@@ -767,16 +834,13 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.travel_type
           sheet1[pos,column+=1] = participant.travel_type_details
           
+          # registration options
+          registration_options.each do |registration_option|
+            sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : ""
+          end
+
           # other stuff
           sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
-          
-          # registration options
-          registration_options_meals.each do |registration_option|
-            sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
-          end
-          registration_options_other.each do |registration_option|
-            sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
-          end
           
           # set format
           for i in 1..column
@@ -811,8 +875,8 @@ class ReportsController < ApplicationController
         sheet1.column(11).width = 30
         sheet1.column(12).width = 20
 
-        for i in 13..(13+registration_options_size)
-          sheet1.column(i).width = 10
+        for i in 12..(13+registration_options.size)
+          sheet1.column(i).width = 20
         end
 
         # output shirt size counts
