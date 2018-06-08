@@ -230,11 +230,11 @@ class ParticipantRegistration < ActiveRecord::Base
   }
 
   named_scope :group_leader_undefined, {
-    :conditions => "group_leader is null"
+    :conditions => "group_leader is null or group_leader = ''"
   }
 
   named_scope :group_leader_defined, {
-    :conditions => "group_leader is not null"
+    :conditions => "group_leader is not null and group_leader != ''"
   }
 
   named_scope :is_flying, {
