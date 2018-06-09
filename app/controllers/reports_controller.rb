@@ -683,6 +683,9 @@ class ReportsController < ApplicationController
     else
       file_name = 'all'
 
+      # save information about each sheet for later
+      extra_information = Hash.new
+
       # loop through all group leaders
       group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
       group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
@@ -698,7 +701,6 @@ class ReportsController < ApplicationController
       group_leaders.push(-7)
 
       group_leaders.each do |leader|
-        sheet1 = book.create_worksheet
 
         if (leader == -1)
           group_leader_name = 'Group Leader Not Listed'
@@ -728,6 +730,15 @@ class ReportsController < ApplicationController
           participants = user.followers.by_event(active_event)
         end
 
+        # skip if we don't have any participants
+        if participants.size == 0
+          next
+        end
+
+        # create our sheet
+        tempbook = Spreadsheet::Workbook.new
+        sheet1 = tempbook.create_worksheet
+
         # logic to remove registration options that noone has
         # this removes completely empty columns
         registration_options = Array.new
@@ -755,22 +766,11 @@ class ReportsController < ApplicationController
         column = 0
         sheet1[0,column] = 'Group Summary'
         sheet1[0,column+=1] = 'Group Leader: ' + group_leader_name
-        sheet1.row(0).set_format(0,title_format)
-        sheet1.row(0).set_format(1,group_leader_format)
   
         # write out group headers
         sheet1[1,4] = 'Teams'
-        for i in 4..6
-          sheet1.row(1).set_format(i,group_header_format)
-        end
         sheet1[1,10] = 'Travel Information'
-        for i in 10..11
-          sheet1.row(1).set_format(i,group_header_format)
-        end
         sheet1[1,12] = 'Registration Options'
-        for i in 12..(12+registration_options.size-1)
-          sheet1.row(1).set_format(i,group_header_format)
-        end
   
         # write out headers
         column = 0
@@ -793,8 +793,6 @@ class ReportsController < ApplicationController
         end
 
         sheet1[2,column+=1] = 'Medical Liability Received'
-
-        sheet1.row(2).default_format = header_format
 
         # keep track of t-shirt numbers
         shirt_size_count = Hash.new
@@ -861,7 +859,7 @@ class ReportsController < ApplicationController
           pos += 1
         end
   
-        sheet1.column(0).width = 20
+        sheet1.column(0).width = 25
         sheet1.column(1).width = 12
         sheet1.column(2).width = 12
         sheet1.column(3).width = 12
@@ -910,6 +908,37 @@ class ReportsController < ApplicationController
         sheet1[pos,2] = !shirt_size_count["undefined"].nil? ? shirt_size_count["undefined"] : 0
         
         sheet1.name = group_leader_name
+        extra_information[group_leader_name] = {'registration_options_size' => registration_options.size, 'num_participants' => participants.size}
+
+        book.add_worksheet(sheet1)
+      end
+
+      # loop through and do all the formatting
+      # this has to be outside the loop because it doesn't work for some sheets (odd behavior)
+      book.worksheets.each do |sheet|
+        extra = extra_information[sheet.name]
+        logger.info("SHEET NAME: " + sheet.name)
+        logger.info("EXTRA: " + extra.inspect)
+        sheet.row(0).set_format(0,title_format)
+        sheet.row(0).set_format(1,group_leader_format)
+
+        for i in 4..6
+          sheet.row(1).set_format(i,group_header_format)
+        end
+        for i in 10..11
+          sheet.row(1).set_format(i,group_header_format)
+        end
+        for i in 12..(12+extra['registration_options_size'])
+          sheet.row(1).set_format(i,group_header_format)
+        end
+        sheet.row(0).set_format(0,title_format)
+        sheet.row(0).set_format(1,group_leader_format)
+
+        sheet.row(2).default_format = header_format
+
+        # shirt sizes title
+        sheet.row(5+extra['num_participants']).set_format(1,group_header_format)
+        sheet.row(5+extra['num_participants']).set_format(2,group_header_format)
       end
 
       book.write "#{RAILS_ROOT}/public/download/group_leader_summary_#{file_name}.xls"
