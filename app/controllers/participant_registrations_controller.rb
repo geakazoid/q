@@ -78,6 +78,14 @@ class ParticipantRegistrationsController < ApplicationController
 
   # GET /participant_registrations/new
   def new
+    # if registration is closed and we don't have a code we redirect
+    if !Event.active_event.enable_participant_registration? and params[:code] != Event.active_event.participant_code
+      respond_to do |format|
+        format.html { redirect_to(root_url) }
+      end
+      return
+    end
+
     @participant_registration = ParticipantRegistration.new
     registerable_items = RegisterableItem.all
     registerable_items.each do |registerable_item|

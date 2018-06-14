@@ -13,6 +13,7 @@
       'Official / Volunteer ($150)' => 'official',
       'Staff / Intern ($0)' => 'staff',
       'Off-Campus Guest ($0)' => 'off-campus',
+      'Inactive' => 'inactive',
       'Spectator' => 'spectator'},
       {:prompt => "- Select -"}, {:onChange => "check_for_registration_type();"} %>
     <% else %>
@@ -187,6 +188,7 @@
     <%= pform.label :travel_type_details, 'Please provide us your flight information including airline(s), flight number(s), and arrival and departure times.' %><br/>
     <%= pform.text_area :travel_type_details, :size => "60x6" %>
   </p>
+  <% if Event.active_event.allow_optional_purchases? %>
   <h3>Optional Purchases</h3>
   <p>
     Please check any optional purchases you'd like to make. These will be added to your total.
@@ -214,6 +216,7 @@
       </p>
     </div>
   </div>
+  <% end %>
   <div id='releases_row'>
     <h3>Releases</h3>
     <%= pform.check_box :understand_form_completion %>&nbsp;&nbsp;<label>I understand that I will be required to fill out a medical liability form.</label> (<a target="_blank" href="/files/Adult Medical and Liability Release.pdf">Download Adult</a> :: <a target="_blank" href="/files/Student Medical and Liability Release.pdf">Download Student</a>)<br/>

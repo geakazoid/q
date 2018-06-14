@@ -26,8 +26,16 @@
     <%= event_form.label :active, 'Equipment' %>
   </p>
   <p>
+    <%= event_form.check_box :allow_optional_purchases, :size => 50 %>
+    <%= event_form.label :active, 'Allow Optional Purchases' %>
+  </p>
+  <p>
     <%= event_form.label :team_code, 'Team Registration Code' %><br />
     <%= event_form.text_field :team_code, :size => 50 %>
+  </p>
+  <p>
+    <%= event_form.label :participant_code, 'Participant Registration Code' %><br />
+    <%= event_form.text_field :participant_code, :size => 50 %>
   </p>
   <p>
     <%= event_form.label :title, 'Logo' %><br />
