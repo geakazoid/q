@@ -430,6 +430,16 @@ class ParticipantRegistrationsController < ApplicationController
       @participant_registrations = @participant_registrations.by_gender(session[:gender])
       @filter_applied = true
     end
+
+    # filter out anyone that got a housing discount
+    @temp_participant_registrations = Array.new
+    offcampus_discount = RegistrationOption.find_by_item('Off-Campus Housing Discount')
+    @participant_registrations.each do |registration|
+      if (!registration.registration_options.include?(offcampus_discount))
+        @temp_participant_registrations.push(registration)
+      end
+    end
+    @participant_registrations = @temp_participant_registrations
     
     respond_to do |format|
       format.html {
