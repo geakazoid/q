@@ -116,6 +116,21 @@ class ReportsController < ApplicationController
     participant_registrations
   end
 
+  # generate a report of registrations that have the off campus discount
+  def participant_registrations_offcampus_discount
+    registrations = ParticipantRegistration.all(:order => 'last_name asc, first_name asc', :conditions => "event_id = #{params['event_id']} and paid = 1")
+    @report_type = 'offcampus_discount'
+
+    @participant_registrations = Array.new
+    offcampus_discount = RegistrationOption.find_by_item('Off-Campus Housing Discount')
+    registrations.each do |registration|
+      if (registration.registration_options.include?(offcampus_discount))
+        @participant_registrations.push(registration)
+      end
+    end
+    participant_registrations
+  end
+
   # create a downloadable excel file of participant registrations
   # this method should not be accessed directly
   def participant_registrations
@@ -2028,8 +2043,6 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Participant'
     sheet1[0,column+=1] = 'Group Leader'
     sheet1[0,column+=1] = 'District'
-    sheet1[0,column+=1] = 'June 25th'
-    sheet1[0,column+=1] = 'June 26th'
 
     sheet1.row(0).default_format = header_format
 
@@ -2052,8 +2065,6 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant.full_name_reversed
       sheet1[pos,column+=1] = participant.group_leader_name
       sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
-      sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
-      sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
       pos += 1
     end
 
@@ -2064,8 +2075,6 @@ class ReportsController < ApplicationController
     sheet1.column(3).width = 25
     sheet1.column(4).width = 25
     sheet1.column(5).width = 25
-    sheet1.column(6).width = 15
-    sheet1.column(7).width = 15
 
     book.write "#{RAILS_ROOT}/public/download/housing_#{@filename}.xls"
 

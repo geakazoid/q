@@ -13,7 +13,8 @@
   Team Registrations : 
   <%= link_to 'All', :controller => 'reports', :action => 'team_registrations_all', :event_id => @selected_event %> : 
   <%= link_to 'Paid', :controller => 'reports', :action => 'team_registrations_paid', :event_id => @selected_event %> : 
-  <%= link_to 'Unpaid', :controller => 'reports', :action => 'team_registrations_unpaid', :event_id => @selected_event %>
+  <%= link_to 'Unpaid', :controller => 'reports', :action => 'team_registrations_unpaid', :event_id => @selected_event %> : 
+    <%= link_to 'Off Campus Discounts', :controller => 'reports', :action => 'participant_registrations_offcampus_discount', :event_id => @selected_event %>
   <br/>
   Participant Registrations : 
   <%= link_to 'All', :controller => 'reports', :action => 'participant_registrations_all', :event_id => @selected_event %> : 
@@ -66,9 +67,7 @@
 </p>
 <h3>Housing</h3>
 <p>
-  Housing Assignments :
-  <%= link_to 'All', :controller => 'reports', :action => 'housing_all', :event_id => @selected_event %> :
-  <%= link_to 'Pre', :controller => 'reports', :action => 'housing_pre', :event_id => @selected_event %>
+  <%= link_to 'Housing Assignments', :controller => 'reports', :action => 'housing_all', :event_id => @selected_event %><br/>
   <h3>Housing By Building</h3>
   <% form_tag '/reports/housing_by_building' do %>
     Select Building:

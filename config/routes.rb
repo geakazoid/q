@@ -83,6 +83,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :participant_registrations_paid => :get,
                                 :participant_registrations_unpaid => :get,
                                 :participant_registrations_off_campus => :get,
+                                :participant_registrations_offcampus_discount => :get,
                                 :team_registrations_all => :get,
                                 :team_registrations_paid => :get,
                                 :team_registrations_unpaid => :get,
