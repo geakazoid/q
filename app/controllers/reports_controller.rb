@@ -1151,8 +1151,6 @@ class ReportsController < ApplicationController
       sheet1[1,column+=1] = 'District'
       sheet1[1,column+=1] = 'Field'
       sheet1[1,column+=1] = 'Group Leader'
-      sheet1[1,column+=1] = 'June 25th'
-      sheet1[1,column+=1] = 'June 26th'
       sheet1.row(1).default_format = header_format
 
       pos = 2
@@ -1190,17 +1188,12 @@ class ReportsController < ApplicationController
         end
         sheet1[pos,column+=1] = group_leader_name
 
-        sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
-      sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
-
         pos += 1
       end
 
       sheet1.column(2).width = 25
       sheet1.column(5).width = 25
       sheet1.column(6).width = 25
-      sheet1.column(7).width = 25
-      sheet1.column(8).width = 25
 
       file_name = building.name.downcase
 
@@ -1209,7 +1202,7 @@ class ReportsController < ApplicationController
       send_file "#{RAILS_ROOT}/public/download/housing_by_building_#{file_name}.xls", :filename => "housing_by_building_#{file_name}.xls"
     else
       file_name = 'all'
-      buildings = Building.all(:order => 'name asc')
+      buildings = Building.all(:order => 'name asc', :conditions => "event_id = #{params['event_id']}")
 
       buildings.each do |building|
         sheet1 = book.create_worksheet
@@ -1234,8 +1227,6 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Field'
         sheet1[1,column+=1] = 'Group Leader'
-        sheet1[1,column+=1] = 'June 25th'
-        sheet1[1,column+=1] = 'June 26th'
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1273,17 +1264,12 @@ class ReportsController < ApplicationController
           end
           sheet1[pos,column+=1] = group_leader_name
 
-          sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
-          sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
-
           pos += 1
         end
 
         sheet1.column(2).width = 25
         sheet1.column(5).width = 25
         sheet1.column(6).width = 25
-        sheet1.column(7).width = 25
-        sheet1.column(8).width = 25
 
         sheet1.name = building.name
       end
@@ -1358,8 +1344,6 @@ class ReportsController < ApplicationController
       sheet1[1,column+=1] = 'Age Group / Grade'
       sheet1[1,column+=1] = 'District'
       sheet1[1,column+=1] = 'Field'
-      sheet1[1,column+=1] = 'June 25th'
-      sheet1[1,column+=1] = 'June 26th'
       sheet1.row(1).default_format = header_format
 
       pos = 2
@@ -1374,8 +1358,6 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.most_recent_grade
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
-        sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
-        sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
 
         pos += 1
       end
@@ -1383,8 +1365,6 @@ class ReportsController < ApplicationController
       sheet1.column(0).width = 20
       sheet1.column(3).width = 25
       sheet1.column(6).width = 20
-      sheet1.column(7).width = 25
-      sheet1.column(8).width = 25
 
       book.write "#{RAILS_ROOT}/public/download/housing_by_group_leader_#{file_name}.xls"
 
@@ -1407,7 +1387,6 @@ class ReportsController < ApplicationController
       group_leaders.push(-7)
 
       group_leaders.each do |leader|
-        sheet1 = book.create_worksheet
 
         if (leader == -1)
           group_leader_name = 'Group Leader Not Listed'
@@ -1436,6 +1415,14 @@ class ReportsController < ApplicationController
           participants = ParticipantRegistration.by_event(params['event_id']).by_group_leader(leader).ordered_by_building_room_last_name
         end
 
+        # skip if we don't have any participants
+        if participants.size == 0
+          next
+        end
+
+        # create our sheet
+        sheet1 = book.create_worksheet
+
         # formatting
         title_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
         header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify
@@ -1455,8 +1442,6 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'Age Group / Grade'
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Field'
-        sheet1[1,column+=1] = 'June 25th'
-        sheet1[1,column+=1] = 'June 26th'
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1471,8 +1456,6 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.most_recent_grade
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
-          sheet1[pos,column+=1] = participant.housing_saturday? ? 'Yes' : ''
-          sheet1[pos,column+=1] = participant.housing_sunday? ? 'Yes' : ''
 
           pos += 1
         end
@@ -1480,8 +1463,6 @@ class ReportsController < ApplicationController
         sheet1.column(0).width = 20
         sheet1.column(3).width = 25
         sheet1.column(6).width = 20
-        sheet1.column(7).width = 25
-        sheet1.column(8).width = 25
 
         sheet1.name = group_leader_name
       end

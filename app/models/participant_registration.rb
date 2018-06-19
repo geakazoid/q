@@ -226,7 +226,7 @@ class ParticipantRegistration < ActiveRecord::Base
   }
 
   named_scope :by_event, lambda { |event_id|
-    { :conditions => ["event_id = ?", event_id] }
+    { :conditions => ["participant_registrations.event_id = ?", event_id] }
   }
 
   named_scope :group_leader_undefined, {
