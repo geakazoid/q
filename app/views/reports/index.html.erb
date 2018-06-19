@@ -45,6 +45,9 @@
   <%= link_to 'All', :controller => 'reports', :action => 'housing_all', :event_id => @selected_event  %> :
   <%= link_to 'Pre', :controller => 'reports', :action => 'housing_pre', :event_id => @selected_event %> :
   <%= link_to 'Off Campus', :controller => 'reports', :action => 'housing_offcampus', :event_id => @selected_event %>
+  <% if admin? %>
+    <br/><%= link_to 'Event Check In', :controller => 'reports', :action => 'event_checkin', :event_id => @selected_event %>
+  <% end %>
 </p>
 <h3>Group Leader Summary</h3>
 <p>

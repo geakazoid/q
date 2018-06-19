@@ -95,6 +95,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :officials => :get,
                                 :group_leaders => :get,
                                 :group_leader_summary => [:get, :post],
+                                :event_checkin => :get,
                                 :housing_by_building => [:get, :post],
                                 :housing_by_group_leader => [:get, :post],
                                 :housing_all => :get,

@@ -962,6 +962,258 @@ class ReportsController < ApplicationController
     end
   end
 
+  # report used for check in at the event
+  def event_checkin
+    book = Spreadsheet::Workbook.new
+    active_event = !params['event_id'].nil? ? params['event_id'] : Event.active_event.id
+
+    # formatting
+    title_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
+    group_leader_format = Spreadsheet::Format.new :color => :blue, :weight => :bold, :size => 16
+    group_header_format = Spreadsheet::Format.new :weight => :bold, :align => :merge, :size => 9
+    header_format = Spreadsheet::Format.new :weight => :bold, :align => :justify, :size => 9
+    data_format = Spreadsheet::Format.new :size => 9
+    money_owed_format = Spreadsheet::Format.new :pattern_fg_color => :yellow, :pattern => 1, :size => 9
+
+    registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
+    registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
+
+    # save information about each sheet for later
+    extra_information = Hash.new
+
+    # loop through all group leaders
+    group_leaders1 = User.find(:all, :joins => [:participant_registrations], :conditions => "num_novice_district_teams > 0 or num_experienced_district_teams > 0 or num_novice_local_teams > 0 or num_experienced_local_teams > 0", :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    group_leaders2 = User.find(:all, :joins => [:team_registrations], :order => "first_name,last_name").map { |user| [user.fullname, user.id] }
+    temp_group_leaders = group_leaders1 + group_leaders2
+    temp_group_leaders = temp_group_leaders.uniq.sort_by { |user| user[0].downcase }
+    group_leaders = temp_group_leaders.map { |user| user[1] }
+    group_leaders.push(-1)
+    group_leaders.push(-2)
+    group_leaders.push(-3)
+    group_leaders.push(-4)
+    group_leaders.push(-5)
+    group_leaders.push(-6)
+    group_leaders.push(-7)
+
+    group_leaders.each do |leader|
+
+      if (leader == -1)
+        group_leader_name = 'Group Leader Not Listed'
+        participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-1)
+      elsif (leader == -2)
+        group_leader_name = 'Group Leader Not Known'
+        participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-2)
+      elsif (leader == -3)
+        group_leader_name = 'No Group Leader'
+        participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-3)
+      elsif (leader == -4)
+        group_leader_name = 'Staff'
+        participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-4)
+      elsif (leader == -5)
+        group_leader_name = 'Official'
+        participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-5)
+      elsif (leader == -6)
+        group_leader_name = 'Volunteer'
+        participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-6)
+      elsif (leader == -7)
+        group_leader_name = 'Representative'
+        participants = ParticipantRegistration.by_event(active_event).ordered_by_last_name.by_group_leader(-7)
+      else
+        user = User.find(leader)
+        logger.debug(user)
+        group_leader_name = user.fullname
+        participants = user.followers.by_event(active_event)
+      end
+
+      # skip if we don't have any participants
+      if participants.size == 0
+        next
+      end
+
+      # create our sheet
+      tempbook = Spreadsheet::Workbook.new
+      sheet1 = tempbook.create_worksheet
+
+      # logic to remove registration options that noone has
+      # this removes completely empty columns
+      registration_options = Array.new
+      complete_registration_options = registration_options_meals + registration_options_other
+      complete_registration_options.each do |registration_option|
+        used = false
+        participants.each do |participant|
+          if participant.registration_options.include?(registration_option)
+            used = true
+          end
+        end
+        used = false if registration_option.item == 'Off-Campus Housing Discount' # hide off campus discount
+        registration_options.push(registration_option) if used == true
+      end
+
+      # write out title
+      column = 0
+      sheet1[0,column] = 'Group Summary'
+      sheet1[0,column+=1] = 'Group Leader: ' + group_leader_name
+
+      # write out group headers
+      sheet1[1,4] = 'Teams'
+      sheet1[1,10] = 'Travel Information'
+      sheet1[1,12] = 'Registration Options'
+
+      # write out headers
+      column = 0
+      sheet1[2,column] = 'Name'
+      sheet1[2,column+=1] = 'Role'
+      sheet1[2,column+=1] = 'Gender'
+      sheet1[2,column+=1] = 'Shirt Size'
+      sheet1[2,column+=1] = 'Team 1'
+      sheet1[2,column+=1] = 'Team 2'
+      sheet1[2,column+=1] = 'Team 3'
+      sheet1[2,column+=1] = 'Housing'
+
+      # registration options
+      registration_options.each do |registration_option|
+        sheet1[2,column+=1] = registration_option.item
+      end
+
+      sheet1[2,column+=1] = 'Medical Liability Received'
+
+      # keep track of t-shirt numbers
+      shirt_size_count = Hash.new
+      shirt_size_count["undefined"] = 0
+    
+      pos = 3
+      participants.each do |participant|
+        column = 0
+        sheet1[pos,column] = participant.full_name_reversed
+        sheet1[pos,column+=1] = participant.formatted_registration_type
+        sheet1[pos,column+=1] = participant.gender
+        sheet1[pos,column+=1] = participant.shirt_size
+        if participant.teams.size == 0
+          sheet1[pos,column+=1] = ''
+          sheet1[pos,column+=1] = ''
+          sheet1[pos,column+=1] = ''
+        elsif participant.teams.size == 1
+          sheet1[pos,column+=1] = participant.teams[0].name_with_division
+          sheet1[pos,column+=1] = ''
+          sheet1[pos,column+=1] = ''
+        elsif participant.teams.size == 2
+          sheet1[pos,column+=1] = participant.teams[0].name_with_division
+          sheet1[pos,column+=1] = participant.teams[1].name_with_division
+          sheet1[pos,column+=1] = ''
+        elsif participant.teams.size == 3
+          sheet1[pos,column+=1] = participant.teams[0].name_with_division
+          sheet1[pos,column+=1] = participant.teams[1].name_with_division
+          sheet1[pos,column+=1] = participant.teams[2].name_with_division
+        end
+        
+        # registration options
+        registration_options.each do |registration_option|
+          sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : ""
+        end
+
+        # other stuff
+        sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
+        
+        # set format
+        for i in 1..column
+          sheet1.row(pos).set_format(i,data_format)
+        end
+
+        # tabulate shirt size
+        if participant.shirt_size.empty?
+          shirt_size_count["undefined"] += 1
+        else
+          if shirt_size_count[participant.shirt_size].nil?
+            shirt_size_count[participant.shirt_size] = 1
+          else
+            shirt_size_count[participant.shirt_size] += 1
+          end
+        end
+        
+        pos += 1
+      end
+
+      sheet1.column(0).width = 25
+      sheet1.column(1).width = 12
+      sheet1.column(2).width = 12
+      sheet1.column(3).width = 12
+      sheet1.column(4).width = 30
+      sheet1.column(5).width = 30
+      sheet1.column(6).width = 30
+      sheet1.column(11).width = 30
+      sheet1.column(12).width = 20
+
+      for i in 12..(13+registration_options.size)
+        sheet1.column(i).width = 20
+      end
+
+      # output shirt size counts
+      pos += 2
+      sheet1[pos,1] = "Shirt Sizes"
+      sheet1.row(pos).set_format(1,group_header_format)
+      sheet1.row(pos).set_format(2,group_header_format)
+      pos += 1
+      sheet1[pos,1] = "Small"
+      sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
+      pos += 1
+      sheet1[pos,1] = "Medium"
+      sheet1[pos,2] = !shirt_size_count["Medium"].nil? ? shirt_size_count["Medium"] : 0
+      pos += 1
+      sheet1[pos,1] = "Large"
+      sheet1[pos,2] = !shirt_size_count["Large"].nil? ? shirt_size_count["Large"] : 0
+      pos += 1
+      sheet1[pos,1] = "X-Large"
+      sheet1[pos,2] = !shirt_size_count["X-Large"].nil? ? shirt_size_count["X-Large"] : 0
+      pos += 1
+      sheet1[pos,1] = "2X-Large"
+      sheet1[pos,2] = !shirt_size_count["2X-Large"].nil? ? shirt_size_count["2X-Large"] : 0
+      pos += 1
+      sheet1[pos,1] = "3X-Large"
+      sheet1[pos,2] = !shirt_size_count["3X-Large"].nil? ? shirt_size_count["3X-Large"] : 0
+      pos += 1
+      sheet1[pos,1] = "4X-Large"
+      sheet1[pos,2] = !shirt_size_count["4X-Large"].nil? ? shirt_size_count["4X-Large"] : 0
+      pos += 1
+      sheet1[pos,1] = "Undefined"
+      sheet1[pos,2] = !shirt_size_count["undefined"].nil? ? shirt_size_count["undefined"] : 0
+      
+      sheet1.name = group_leader_name
+      extra_information[group_leader_name] = {'registration_options_size' => registration_options.size, 'num_participants' => participants.size}
+
+      book.add_worksheet(sheet1)
+    end
+
+    # loop through and do all the formatting
+    # this has to be outside the loop because it doesn't work for some sheets (odd behavior)
+    book.worksheets.each do |sheet|
+      extra = extra_information[sheet.name]
+      sheet.row(0).set_format(0,title_format)
+      sheet.row(0).set_format(1,group_leader_format)
+
+      for i in 4..6
+        sheet.row(1).set_format(i,group_header_format)
+      end
+      for i in 10..11
+        sheet.row(1).set_format(i,group_header_format)
+      end
+      for i in 12..(12+extra['registration_options_size'])
+        sheet.row(1).set_format(i,group_header_format)
+      end
+      sheet.row(0).set_format(0,title_format)
+      sheet.row(0).set_format(1,group_leader_format)
+
+      sheet.row(2).default_format = header_format
+
+      # shirt sizes title
+      sheet.row(5+extra['num_participants']).set_format(1,group_header_format)
+      sheet.row(5+extra['num_participants']).set_format(2,group_header_format)
+    end
+
+    book.write "#{RAILS_ROOT}/public/download/event_checkin.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/event_checkin.xls", :filename => "event_checkin.xls"
+  end
+
   # create a downloadable excel of equipment registrations
   def equipment_registrations
     book = Spreadsheet::Workbook.new
