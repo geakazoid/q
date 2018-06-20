@@ -1143,6 +1143,7 @@ class ReportsController < ApplicationController
       num_teams.times do |i|
         sheet1.column(4+i).width = 30
       end
+      sheet1.column(4+num_teams).width = 30
 
       # output shirt size counts
       pos += 2
