@@ -1034,7 +1034,7 @@ class ReportsController < ApplicationController
       tempbook = Spreadsheet::Workbook.new
       sheet1 = tempbook.create_worksheet
 
-      # logic to remove registration options that noone has
+      # logic to remove registration options that no one has
       # this removes completely empty columns
       registration_options = Array.new
       complete_registration_options = registration_options_meals + registration_options_other
@@ -1049,15 +1049,25 @@ class ReportsController < ApplicationController
         registration_options.push(registration_option) if used == true
       end
 
+      # logic to remove teams if no one has a second and third team
+      # this removes completely empty columns
+      num_teams = 0
+      participants.each do |participant|
+        if participant.teams.size > num_teams
+          num_teams = participant.teams.size
+        end
+      end
+
       # write out title
       column = 0
       sheet1[0,column] = 'Group Summary'
       sheet1[0,column+=1] = 'Group Leader: ' + group_leader_name
 
       # write out group headers
-      sheet1[1,4] = 'Teams'
-      sheet1[1,10] = 'Travel Information'
-      sheet1[1,12] = 'Registration Options'
+      if num_teams > 0
+        sheet1[1,4] = 'Teams'
+      end
+      sheet1[1,5+num_teams] = 'Registration Options'
 
       # write out headers
       column = 0
@@ -1065,9 +1075,9 @@ class ReportsController < ApplicationController
       sheet1[2,column+=1] = 'Role'
       sheet1[2,column+=1] = 'Gender'
       sheet1[2,column+=1] = 'Shirt Size'
-      sheet1[2,column+=1] = 'Team 1'
-      sheet1[2,column+=1] = 'Team 2'
-      sheet1[2,column+=1] = 'Team 3'
+      num_teams.times do |i|
+        sheet1[2,column+=1] = "Team #{i+1}"
+      end
       sheet1[2,column+=1] = 'Housing'
 
       # registration options
@@ -1088,23 +1098,16 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.formatted_registration_type
         sheet1[pos,column+=1] = participant.gender
         sheet1[pos,column+=1] = participant.shirt_size
-        if participant.teams.size == 0
-          sheet1[pos,column+=1] = ''
-          sheet1[pos,column+=1] = ''
-          sheet1[pos,column+=1] = ''
-        elsif participant.teams.size == 1
-          sheet1[pos,column+=1] = participant.teams[0].name_with_division
-          sheet1[pos,column+=1] = ''
-          sheet1[pos,column+=1] = ''
-        elsif participant.teams.size == 2
-          sheet1[pos,column+=1] = participant.teams[0].name_with_division
-          sheet1[pos,column+=1] = participant.teams[1].name_with_division
-          sheet1[pos,column+=1] = ''
-        elsif participant.teams.size == 3
-          sheet1[pos,column+=1] = participant.teams[0].name_with_division
-          sheet1[pos,column+=1] = participant.teams[1].name_with_division
-          sheet1[pos,column+=1] = participant.teams[2].name_with_division
+        num_teams.times do |i|
+          if !participant.teams[i].nil?
+            sheet1[pos,column+=1] = participant.teams[i].name_with_division
+          else
+            sheet1[pos,column+=1] = ''
+          end
         end
+
+        # housing
+        sheet1[pos,column+=1] = participant.housing
         
         # registration options
         registration_options.each do |registration_option|
@@ -1137,14 +1140,8 @@ class ReportsController < ApplicationController
       sheet1.column(1).width = 12
       sheet1.column(2).width = 12
       sheet1.column(3).width = 12
-      sheet1.column(4).width = 30
-      sheet1.column(5).width = 30
-      sheet1.column(6).width = 30
-      sheet1.column(11).width = 30
-      sheet1.column(12).width = 20
-
-      for i in 12..(13+registration_options.size)
-        sheet1.column(i).width = 20
+      num_teams.times do |i|
+        sheet1.column(4+i).width = 30
       end
 
       # output shirt size counts
@@ -1178,7 +1175,7 @@ class ReportsController < ApplicationController
       sheet1[pos,2] = !shirt_size_count["undefined"].nil? ? shirt_size_count["undefined"] : 0
       
       sheet1.name = group_leader_name
-      extra_information[group_leader_name] = {'registration_options_size' => registration_options.size, 'num_participants' => participants.size}
+      extra_information[group_leader_name] = {'registration_options_size' => registration_options.size, 'num_participants' => participants.size, 'num_teams' => num_teams}
 
       book.add_worksheet(sheet1)
     end
@@ -1190,13 +1187,16 @@ class ReportsController < ApplicationController
       sheet.row(0).set_format(0,title_format)
       sheet.row(0).set_format(1,group_leader_format)
 
-      for i in 4..6
-        sheet.row(1).set_format(i,group_header_format)
+    ending_column = 3+extra['num_teams']
+      if extra['num_teams'] > 0
+        for i in 4..ending_column
+          sheet.row(1).set_format(i,group_header_format)
+        end
       end
       for i in 10..11
         sheet.row(1).set_format(i,group_header_format)
       end
-      for i in 12..(12+extra['registration_options_size'])
+      for i in 5+extra['num_teams']..(5+extra['num_teams']+extra['registration_options_size'])
         sheet.row(1).set_format(i,group_header_format)
       end
       sheet.row(0).set_format(0,title_format)
