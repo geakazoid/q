@@ -1903,6 +1903,7 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'District'
     sheet1[0,column+=1] = 'Field'
     sheet1[0,column+=1] = 'Group Leader'
+    sheet1[0,column+=1] = 'Group Leader Email'
     sheet1[0,column+=1] = 'Liability Form'
     sheet1.row(0).default_format = header_format
 
@@ -1927,6 +1928,7 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
       # group leader
+      group_leader_email = ''
       if (participant.group_leader == '-1')
         group_leader_name = 'Group Leader Not Listed'
       elsif (participant.group_leader == '-2')
@@ -1945,19 +1947,22 @@ class ReportsController < ApplicationController
         if !participant.group_leader.nil? and !participant.group_leader.empty?
           user = User.find(participant.group_leader)
           group_leader_name = user.fullname
+          group_leader_email = user.email
         end
       end
       sheet1[pos,column+=1] = group_leader_name
+      sheet1[pos,column+=1] = group_leader_email
 
       sheet1[pos,column+=1] = participant.medical_liability? ? 'Recieved' : 'Not Received'
 
       pos += 1
     end
 
-    for i in 0..6
+    for i in 0..7
       sheet1.column(i).width = 20
     end
     sheet1.column(2).width = 30
+    sheet1.column(6).width = 30
 
     book.write "#{RAILS_ROOT}/public/download/participants_liability_#{file_name}.xls"
 
