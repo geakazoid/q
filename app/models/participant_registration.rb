@@ -412,6 +412,11 @@ class ParticipantRegistration < ActiveRecord::Base
     self.registration_type == 'exhibitor'
   end
 
+   # returns if this registration is inactive
+   def inactive?
+    self.registration_type == 'inactive'
+  end
+
   # returns if this registration has flying selected as travel_type
   def flying?
     self.travel_type == 'I am flying to the event.'
