@@ -5,8 +5,8 @@ class EquipmentController < ApplicationController
   layout 'equipment'
 
   def index
-    @equipment = Equipment.all
-    @rooms = Room.all(:order => 'name asc')
+    @equipment = Equipment.find(:all, :joins => [:equipment_registration], :conditions => "equipment_registrations.event_id = #{Event.active_event.id}")
+    @rooms = Room.all(:order => 'name asc', :conditions => "event_id = #{Event.active_event.id}")
 
     respond_to do |format|
       format.html # index.html.erb
