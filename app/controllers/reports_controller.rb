@@ -511,6 +511,9 @@ class ReportsController < ApplicationController
         participants = group_leader.followers.by_event(active_event)
       end
 
+      # filter to only active participants
+      participants = participants.active
+
       # logic to remove registration options that noone has
       # this removes completely empty columns
       registration_options = Array.new
@@ -744,6 +747,9 @@ class ReportsController < ApplicationController
           group_leader_name = user.fullname
           participants = user.followers.by_event(active_event)
         end
+
+        # filter to only active participants
+        participants = participants.active
 
         # skip if we don't have any participants
         if participants.size == 0
@@ -1024,6 +1030,9 @@ class ReportsController < ApplicationController
         group_leader_name = user.fullname
         participants = user.followers.by_event(active_event)
       end
+
+      # filter to only active participants
+      participants = participants.active
 
       # skip if we don't have any participants
       if participants.size == 0

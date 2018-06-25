@@ -245,6 +245,14 @@ class ParticipantRegistration < ActiveRecord::Base
     :conditions => "travel_type = 'I am driving to the event.'"
   }
 
+  named_scope :inactive, {
+    :conditions => "registration_type = 'inactive'"
+  }
+
+  named_scope :active, {
+    :conditions => "registration_type != 'inactive'"
+  }
+
   def self.human_attribute_name(attr)
     HUMANIZED_ATTRIBUTES[attr.to_sym] || super
   end
@@ -412,9 +420,14 @@ class ParticipantRegistration < ActiveRecord::Base
     self.registration_type == 'exhibitor'
   end
 
-   # returns if this registration is inactive
-   def inactive?
+  # returns if this registration is inactive
+  def inactive?
     self.registration_type == 'inactive'
+  end
+
+  # returns if this registration is active
+  def active?
+    self.registration_type != 'inactive'
   end
 
   # returns if this registration has flying selected as travel_type
