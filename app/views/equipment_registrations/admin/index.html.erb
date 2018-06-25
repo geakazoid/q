@@ -23,19 +23,19 @@
 <% @equipment_registrations.each do |equipment_registration| %>
   <tr>
     <td><%= equipment_registration.full_name %></td>
-        <td>
-          <%= equipment_registration.district.name unless equipment_registration.district.nil? %><br/>
-          <%= equipment_registration.district.region.name unless equipment_registration.district.nil? %>
-        </td>
-        <td>
-          <%= pluralize(equipment_registration.laptops.size, 'Laptop') + '<br/>' if equipment_registration.laptops.size > 0 %>
-          <%= pluralize(equipment_registration.interface_boxes.size, 'Interface Box') + '<br/>' if equipment_registration.interface_boxes.size > 0 %>
-          <%= pluralize(equipment_registration.pads.size, 'Pad Set') + '<br/>' if equipment_registration.pads.size > 0 %>
-          <%= pluralize(equipment_registration.monitors.size, 'Monitor') + '<br/>' if equipment_registration.monitors.size > 0 %>
-          <%= pluralize(equipment_registration.projectors.size, 'Projector') + '<br/>' if equipment_registration.projectors.size > 0 %>
-          <%= pluralize(equipment_registration.power_strips.size, 'Power Strip') + '<br/>' if equipment_registration.power_strips.size > 0 %>
-          <%= pluralize(equipment_registration.extension_cords.size, 'Extension Cord') + '<br/>' if equipment_registration.extension_cords.size > 0 %>
-        </td>
+      <td>
+        <%= equipment_registration.district.name unless equipment_registration.district.nil? %><br/>
+        <%= equipment_registration.district.region.name unless equipment_registration.district.nil? %>
+      </td>
+      <td>
+        <%= pluralize(equipment_registration.laptops.size, 'Laptop') + '<br/>' if equipment_registration.laptops.size > 0 %>
+        <%= pluralize(equipment_registration.interface_boxes.size, 'Interface Box') + '<br/>' if equipment_registration.interface_boxes.size > 0 %>
+        <%= pluralize(equipment_registration.pads.size, 'Pad Set') + '<br/>' if equipment_registration.pads.size > 0 %>
+        <%= pluralize(equipment_registration.monitors.size, 'Monitor') + '<br/>' if equipment_registration.monitors.size > 0 %>
+        <%= pluralize(equipment_registration.projectors.size, 'Projector') + '<br/>' if equipment_registration.projectors.size > 0 %>
+        <%= pluralize(equipment_registration.power_strips.size, 'Power Strip') + '<br/>' if equipment_registration.power_strips.size > 0 %>
+        <%= pluralize(equipment_registration.extension_cords.size, 'Extension Cord') + '<br/>' if equipment_registration.extension_cords.size > 0 %>
+      </td>
   </tr>
 <% end %>
 </table>
