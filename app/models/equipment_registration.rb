@@ -135,9 +135,9 @@ class EquipmentRegistration < ActiveRecord::Base
   end
 
   def adjust_pads
-    colors = ['red','yellow','green','other']
-    current_count = {'red' => 0, 'yellow' => 0, 'green' => 0, 'other' => 0}
-    new_count = {'red' => 0, 'yellow' => 0, 'green' => 0, 'other' => 0}
+    colors = ['red','yellow','green','blue','other']
+    current_count = {'red' => 0, 'yellow' => 0, 'green' => 0, 'blue' => 0, 'other' => 0}
+    new_count = {'red' => 0, 'yellow' => 0, 'green' => 0, 'blue' => 0, 'other' => 0}
     self.equipment.each do |item|
       if item.equipment_type == 'string_of_pads'
         colors.each do |color|

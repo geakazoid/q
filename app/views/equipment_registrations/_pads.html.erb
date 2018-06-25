@@ -6,7 +6,7 @@
     <%= form.hidden_field :first, :value => true if form.object.first? %>
   </p>
   <p>
-    <%= form.label :color, 'Color: ' %><%= form.select :color, ['Red','Yellow','Green','Other'], :prompt => '- Select -' %>
+    <%= form.label :color, 'Color: ' %><%= form.select :color, ['Red','Yellow','Green','Blue','Other'], :prompt => '- Select -' %>
     &nbsp;&nbsp;<%= form.label :number, 'Quantity: ' %><%= form.text_field :number, :size => 10 %>
   </p>
 </div>

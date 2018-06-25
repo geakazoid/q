@@ -129,6 +129,17 @@ class EquipmentRegistrationsController < ApplicationController
 
     respond_to do |format|
       if @equipment_registration.save
+        # update any nested attributes (since rails ins't doing this for us for some reason)
+        params[:equipment_registration][:equipment_attributes].each do |id,equipment|
+          logger.info("begin")
+          logger.info(equipment.inspect)
+          if !equipment['id'].nil? and equipment['_destroy'] == ''
+            loaded_equipment = Equipment.find(equipment['id'])
+            loaded_equipment.attributes = equipment.except("id","_destroy")
+            loaded_equipment.save
+            logger.info("saved")
+          end
+        end
         #EquipmentRegistrationMailer.deliver_update_registration(@equipment_registration, (admin_emails + equipment_admin_emails).uniq, current_user)
         #EquipmentRegistrationMailer.deliver_update_confirmation(@equipment_registration, current_user)
         format.js
