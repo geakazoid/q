@@ -18,11 +18,7 @@
       {:prompt => "- Select -"}, {:onChange => "check_for_registration_type();"} %>
     <% else %>
     <%= pform.select :registration_type,
-      {'Quizzer ($195)' => 'quizzer',
-      'Coach ($195)' => 'coach',
-      'Official / Volunteer ($150)' => 'official',
-      'Staff / Intern ($0)' => 'staff',
-      'Off-Campus Guest ($0)' => 'off-campus'},
+      {'Off-Campus Guest ($0)' => 'off-campus'},
       {:prompt => "- Select -"}, {:onChange => "check_for_registration_type();"} %>
     <% end %>
   </p>
@@ -199,16 +195,6 @@
       <h4>Meals</h4>
       <p>
         <% @registration_options_meals.each do |registration_option| -%>
-          <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
-          <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
-          <span id='option_label_<%=h registration_option.id -%>'><%=h registration_option.item -%> ($<%=h registration_option.price %>)</span><br/>
-        <% end -%>
-      </p>
-    </div>
-    <div id='optional_purchases_other_row'>
-      <h4>Other</h4>
-      <p>
-        <% @registration_options_other.each do |registration_option| -%>
           <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
           <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
           <span id='option_label_<%=h registration_option.id -%>'><%=h registration_option.item -%> ($<%=h registration_option.price %>)</span><br/>
