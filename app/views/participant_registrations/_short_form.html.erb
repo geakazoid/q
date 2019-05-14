@@ -1,0 +1,116 @@
+<% form_for [@user, @participant_registration] do |pform| %>
+  <%= error_messages_for :participant_registration, :header_message => "There were errors with your registration.", :message => "We encountered the following problems:" %>
+
+  <%= render :partial => 'pages/page', :locals => { :page => @page } if !@page.nil? %>
+  <p>
+    <%= pform.label :registration_type, 'Registration Type' %><br/>
+    <%= pform.select :registration_type,
+      {'Quizzer' => 'quizzer',
+      'Coach' => 'coach'},
+      {:prompt => "- Select -"}, {:onChange => "javascript:check_for_quizzer();"} %>
+  </p>
+  <p id="team_division_row" style="display:none;">
+    <%= pform.label :team_division, 'What division are you quizzing in?' %><br/>
+    <%= pform.select :team_division, ['Field A','Field B'], :prompt => "- Select -" %>
+  </p>
+  <div id='registration_info'></div>
+  <h3>Basics</h3>
+  <p>
+    Please provide us some basic information about yourself.
+  </p>
+  <p>
+    <a href='#' onClick='javascript:fill_information(); return false;'>Use My Information</a>
+  </p>
+  <div style='float: left;'>
+    <%= pform.label :first_name, 'First Name' %><br/>
+    <%= pform.text_field :first_name, {:id => 'first_name', :size => 20} %>
+    &nbsp;
+  </div>
+  <div style='float: left;'>
+    <%= pform.label :last_name, 'Last Name' %><br/>
+    <%= pform.text_field :last_name, {:id => 'last_name', :size => 20} %>
+  </div>
+  <div style='clear: left; padding-top: 10px;'>
+    <%= pform.label :email %><br />
+    <%= pform.text_field :email, {:id => 'email', :size => 35} %>
+  </div>
+  <p>
+    <%= pform.label :gender, 'Gender' %><br/>
+    <%= pform.select :gender, ['Male','Female'], :prompt => '- Select -' %>
+  </p>
+  <p>
+    <%= pform.label :most_recent_grade, 'Age Group or grade most recently completed in school' %><br/>
+    <%= pform.select :most_recent_grade, ['Child Age 3 and Under','Child Age 4-12','6th','7th','8th','9th','10th','11th','12th','Adult'], {:prompt => "- Select -"} %>
+  </p>
+  <h3>Contact Information</h3>
+  <p>
+    <%= pform.label :street, 'Address' %><br/>
+    <%= pform.text_field :street %>
+  </p>
+  <p>
+    <%= pform.label :city, 'City' %><br/>
+    <%= pform.text_field :city %>
+  </p>
+  <p>
+    <%= pform.label :state, 'State / Province' %><br/>
+    <%= pform.select :state, ['AB','AK','AL','AR','AS','AZ','BC','CA','CO','CT','DC','DE','FL','FM','GA','GU','HI','IA','ID','IL','IN','KS','KY','LA','MA','MB','MD','ME','MH','MI','MN','MO','MP','MS','MT','NB','NC','ND','NE','NH','NJ','NL','NM','NS','NT','NU','NV','NY','OH','OK','ON','OR','PA','PE','PR','PW','QC','RI','SC','SD','SK','TN','TX','UT','VA','VI','VT','WA','WI','WV','WY','YT','Non USA/Canada'], :prompt => "- Select -" %>
+  </p>
+  <p>
+    <%= pform.label :zipcode, 'Zipcode / Postal Code' %><br/>
+    <%= pform.text_field :zipcode %>
+  </p>
+  <p>
+    <%= pform.label :country, 'Country' %><br/>
+    <%= pform.country_select(:country, ['United States','Canada','Mexico'], {}) %>
+  </p>
+  <p>
+    <%= pform.label :home_phone, 'Home Phone (xxx-xxx-xxxx)' %><br/>
+    <%= pform.text_field :home_phone %>
+  </p>
+  <p>
+    <%= pform.label :mobile_phone, 'Mobile Phone (xxx-xxx-xxxx) - Must have this on file for emergency contact and/or other communication! (If you do not own a mobile phone please enter the phone # of someone else who is attending the event.)' %><br/>
+    <%= pform.text_field :mobile_phone, {:id => 'phone'} %>
+  </p>
+  <p>
+    <%= pform.label :local_church, 'Your Local Church' %><br/>
+    <%= pform.text_field :local_church %>
+  </p>
+  <p>
+    <%= pform.label :district, 'Your District and Field' %><br/>
+    <%= pform.collection_select :district_id,
+      @districts,
+      :id,
+      :display_with_region,
+      {:prompt => '- Select -'},
+      {:id => 'district'} %>
+  </p>
+  <p>
+    <%= pform.label :special_needs, 'Do you have any special physical needs (such as prescription medication, wheelchair needs, etc.)?' %><br/>
+    <%= pform.select :special_needs, ['Yes','No'], :prompt => "- Select -" %>
+  </p>
+  <p>
+    <%= pform.label :special_needs_details, 'If you selected yes for special needs, please list what your special needs are. Please be detailed so that we can ensure your participation is enjoyable.' %><br/>
+    <%= pform.text_area :special_needs_details, :size => "50x12" %>
+  </p>
+  <p id='submit_registration'>
+    <%= pform.submit 'Submit Registration', :class => 'btn btn-primary' %>
+    <% if admin? %>
+      &nbsp;
+      <%= link_to 'Delete Registration', @participant_registration, :confirm => 'Are you sure you want to delete this participant registration?', :method => :delete, :class => 'btn btn-primary' %>
+    <% end %>
+  </p>
+<% end %>
+<script type='text/javascript'>
+  var user_first_name = '<%= current_user.first_name %>';
+  var user_last_name = '<%= current_user.last_name %>';
+  var user_phone = '<%= current_user.phone %>';
+  var user_email = '<%= current_user.email %>';
+  var user_district = '<%= current_user.district_id %>';
+
+  function check_for_quizzer() {
+    $('#team_division_row').hide()
+    if ($('#participant_registration_registration_type').val() == "quizzer") {
+      $('#team_division_row').show()
+    }
+  }
+</script>

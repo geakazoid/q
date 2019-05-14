@@ -2,4 +2,8 @@
   <%= title('Participant Registration', :h1) %>
 </div>
 
-<%= render :partial => 'form' %>
+<% if Event.active_event.use_short_registration? %>
+  <%= render :partial => 'short_form' %>
+<% else %>
+  <%= render :partial => 'form' %>
+<% end %>
