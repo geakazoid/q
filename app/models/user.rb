@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   has_many :participant_registration_users
   has_many :participant_registration_owners, :class_name => 'ParticipantRegistrationUser', :conditions => 'owner = true'
   has_many :participant_registration_editors, :class_name => 'ParticipantRegistrationUser', :conditions => 'owner = false'
-  has_many :participant_registrations, :through => :participant_registration_users
+  has_many :participant_registrations, :through => :participant_registration_users, :conditions => "event_id = #{Event.active_event.id}"
   has_many :complete_participant_registrations, :through => :participant_registration_users, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => "paid = true and event_id = #{Event.active_event.id}"
   has_many :incomplete_participant_registrations, :through => :participant_registration_users, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => "paid = false and event_id = #{Event.active_event.id}"
   has_many :owned_participant_registrations, :through => :participant_registration_owners, :class_name => 'ParticipantRegistration', :source => :participant_registration, :conditions => "event_id = #{Event.active_event.id}"
