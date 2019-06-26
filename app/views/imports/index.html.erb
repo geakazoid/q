@@ -1,9 +1,10 @@
 <div id='page_title'>
-  <%= title('Imports', :h1) %>
+  <%= title('Import participants (2019)', :h1) %>
 </div>
 <h3>Imports</h3>
 
-Import user data by uploading a csv pulled from CVent. You can specify corrections <%= link_to 'here', corrections_imports_path() %>.
+Import participant data for 2019. This is very specific to 2019,
+and probably shouldn't be used again unless modified.
 
 <% form_tag({:action => 'upload_file'}, :multipart => true) do %>
 <p><label for="upload_file">Select File</label> : 

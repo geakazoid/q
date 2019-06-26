@@ -1,9 +1,9 @@
 class ImportsController < ApplicationController
   require_role ['admin']
   
-  # GET /imports/participants
+  # GET /imports
   # lists participants import page
-  def participants
+  def index
   end
   
   # POST /imports/upload_participants_file
@@ -90,29 +90,5 @@ class ImportsController < ApplicationController
         redirect_to(imports_path)
       }
     end
-  end
-
-  # GET /imports/corrections
-  # lists import corrections page
-  def corrections
-    # make a db connections
-    connection = ActiveRecord::Base.connection
-  
-    # update our corrections in the database
-    if request.post?
-      connection.execute("update cvent_corrections set correction_list = '" + params[:corrections_text] + "'")
-      
-      respond_to do |format|
-        format.html {
-          flash[:notice] = "Corrections updated."
-          redirect_to(corrections_imports_path)
-        }
-      end
-    end
-    
-    result = connection.select_all("select correction_list from cvent_corrections limit 1")
-    @correction_list = result[0]['correction_list']
-    
-    #connection.close
   end
 end
