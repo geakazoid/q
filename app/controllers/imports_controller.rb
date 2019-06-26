@@ -66,24 +66,6 @@ class ImportsController < ApplicationController
       pr.save(false)
     end
     
-    # apply corrections
-    connection = ActiveRecord::Base.connection
-        result = connection.select_all("select correction_list from cvent_corrections limit 1")
-        list = result[0]['correction_list'].split(/\r\n/)
-        
-        list.each do |line|
-          correction = line.split(/,/)
-          3.times do |i|
-            correction[i].strip! unless correction[i].blank?
-          end
-          
-          pr = ParticipantRegistration.find_by_confirmation_number(correction[0])
-          unless pr.nil?
-            pr.send("#{correction[1]}=".to_sym, correction[2])
-            pr.save(false)
-          end
-    end
-    
     respond_to do |format|
       format.html {
         flash[:notice] = "File imported successfully."
