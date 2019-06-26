@@ -62,6 +62,7 @@ class ImportsController < ApplicationController
       pr.district = district unless district.nil?
       pr.medical_liability = true if medical_liability == "YES"
       pr.event_id = 3
+      pr.paid = true
 
       # save the participant registration
       pr.save(false)
