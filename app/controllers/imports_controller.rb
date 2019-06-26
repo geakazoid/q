@@ -6,8 +6,8 @@ class ImportsController < ApplicationController
   def index
   end
   
-  # POST /imports/upload_participants_file
-  def upload_participants_file
+  # POST /imports/upload_file
+  def upload_file
     upload = params['upload']
     name = upload['datafile'].original_filename
     directory = "public/imports"
