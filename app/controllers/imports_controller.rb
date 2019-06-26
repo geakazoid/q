@@ -33,7 +33,7 @@ class ImportsController < ApplicationController
       home_city = row[8]
       home_state_prov = row[9]
       home_zipcode = row[10]
-      mobile_phone = row[11]
+      home_phone = row[11]
       grade_completed = row[12]
       special_needs_details = row[16]
       emergency_contact_name = row[13]
@@ -48,7 +48,7 @@ class ImportsController < ApplicationController
       pr.email = email_address
       registration_type = 'staff' if registration_type == "volunteer&staff"
       pr.registration_type = registration_type
-      pr.mobile_phone = mobile_phone
+      pr.home_phone = home_phone
       pr.street = home_address
       pr.city = home_city
       pr.state = home_state_prov
@@ -61,6 +61,7 @@ class ImportsController < ApplicationController
       district = District.find_by_name(district_name)
       pr.district = district unless district.nil?
       pr.medical_liability = true if medical_liability == "YES"
+      pr.event_id = 3
 
       # save the participant registration
       pr.save(false)
