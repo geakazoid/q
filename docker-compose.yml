@@ -18,7 +18,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./sql/import.201901.sql:/docker-entrypoint-initdb.d/import.sql
+      - ./sql/import.sql:/docker-entrypoint-initdb.d/import.sql
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=q_dev
