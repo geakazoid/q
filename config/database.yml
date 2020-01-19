@@ -2,6 +2,7 @@ development:
   # Mysql Settings
   adapter: mysql
   encoding: utf8
+  host: q_db
   database: q_dev
   username: qsite
   password: qs209242
