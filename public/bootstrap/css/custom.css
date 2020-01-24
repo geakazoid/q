@@ -100,7 +100,7 @@ h1, h2, h3, h4, h5 {
 }
 
 a {
-  color: #BF0D3E;
+  color: #A7121C;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -329,4 +329,12 @@ h3 {
 
 #submit_registration {
   margin-top: 20px;
+}
+
+/* general title colors added for Q2020 */
+h1 {
+  color:#F36421
+}
+h4 {
+  color:#12A79D
 }
