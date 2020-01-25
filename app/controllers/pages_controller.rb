@@ -48,6 +48,7 @@ class PagesController < ApplicationController
   # POST /pages
   def create
     @page = Page.new(params[:page])
+    @events = Event.get_events
 
     respond_to do |format|
       if @page.save
