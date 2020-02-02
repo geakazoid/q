@@ -15,6 +15,7 @@ RUN /bin/bash -l -c "gem install json -v 1.7.5"
 RUN /bin/bash -l -c "gem install rack -v 1.1.6"
 RUN /bin/bash -l -c "gem install spreadsheet -v 1.1.4"
 RUN /bin/bash -l -c "gem install mysql -v 2.7 -- --with-mysql-config"
+RUN /bin/bash -l -c "gem install rdoc -v 2.4.2"
 RUN mkdir /app
 
 WORKDIR /app
