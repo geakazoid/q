@@ -102,8 +102,8 @@ class ParticipantRegistrationsController < ApplicationController
     @family_participant_registrations = current_user.family_participant_registrations
     @shared_users = Array.new
     @districts = District.find(:all, :order => 'name')
-    @registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
-    @registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
+    @registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal" and event_id = ' + Event.active_id.to_s, :order => 'sort')
+    @registration_options_other = RegistrationOption.all(:conditions => 'category = "other" and event_id = ' + Event.active_id.to_s, :order => 'sort')
     get_registered_teams
     get_group_leaders
     get_schools
@@ -190,8 +190,8 @@ class ParticipantRegistrationsController < ApplicationController
         prepare_session
         registration_fee = @participant_registration.amount_ordered * 100
         if (params[:registration_fee].to_i > 0 and params[:pay_by_check] != "true")
-          # send to 3rd party payment platform
-          format.html { redirect_to(AppConfig.convio_url + '&set.Value=' + registration_fee.to_s + '&set.custom.ucro_quiz_Id=' + @participant_registration.id.to_s) }
+          # send to transactions controller
+          format.html { redirect_to(new_transaction_url) }
         elsif (params[:pay_by_check] == "true")
           # no need to ask for payment, send to confirmation check page
           format.html { redirect_to(confirm_check_participant_registrations_url) }

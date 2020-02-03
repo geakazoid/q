@@ -7,6 +7,10 @@ class Event < ActiveRecord::Base
     find(:first, :conditions => 'active = true')
   end
 
+  def self.active_id
+    self.active_event.id
+  end
+
   def self.get_events
     events = Event.find(:all)
     events.each do |event|

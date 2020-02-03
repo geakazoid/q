@@ -108,7 +108,8 @@ class TeamRegistrationsController < ApplicationController
           @team_registration.save
           prepare_session
           if (@team_registration.amount_in_cents > 0)
-            format.html { redirect_to(AppConfig.convio_url + '&set.Value=' + @team_registration.amount_in_cents.to_s + '&set.custom.ucro_quiz_Id=' + @team_registration.id.to_s) }
+            # send to transactions controller
+            format.html { redirect_to(new_transaction_url) }
           else
             format.html { redirect_to(confirm_no_payment_team_registrations_url) }
           end

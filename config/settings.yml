@@ -3,8 +3,7 @@ development: &non_production_settings
   site_name: Quizzing Events DEV
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
-  regional_code: regionals2018
-  convio_url: https://secure2.convio.net/cn/site/Donation2?df_id=19881&19881.donation=form1&set.DonationLevel=21862
+  ecode: 61179253-75fc-4279-a70a-c6190fa6b171
   
 test:
   <<: *non_production_settings
@@ -14,13 +13,11 @@ staging:
   site_name: Quizzing Events
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
-  regional_code: regionals2018
-  convio_url: https://secure2.convio.net/cn/site/Donation2?df_id=19881&19881.donation=form1&set.DonationLevel=21862
+  ecode: 61179253-75fc-4279-a70a-c6190fa6b171
   
 production:
   site_url: http://www.quizzingevents.com
   site_name: Quizzing Events
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: false
-  regional_code: regionals2018
-  convio_url: https://secure2.convio.net/cn/site/Donation2?df_id=19861&19861.donation=form1&set.DonationLevel=21862
+  ecode: 61179253-75fc-4279-a70a-c6190fa6b171

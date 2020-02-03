@@ -124,6 +124,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :regenerate => :get}
   map.resources :teams
   map.resources :payments, :collection => {:receipt => :get}
+  map.resources :transactions
 
   # Home Page
   map.root :controller => 'pages', :action => 'home'

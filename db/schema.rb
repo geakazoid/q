@@ -9,21 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 80) do
-
-  create_table "Officials", :id => false, :force => true do |t|
-    t.integer  "id",          :default => 0, :null => false
-    t.integer  "user_id"
-    t.integer  "creator_id"
-    t.integer  "district_id"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "phone"
-    t.string   "email"
-    t.text     "roles"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(:version => 85) do
 
   create_table "actions", :force => true do |t|
     t.integer  "round_id",                     :null => false
@@ -162,6 +148,9 @@ ActiveRecord::Schema.define(:version => 80) do
     t.boolean  "enable_team_registration"
     t.boolean  "enable_equipment_registration"
     t.string   "team_code"
+    t.string   "participant_code"
+    t.boolean  "allow_optional_purchases"
+    t.boolean  "use_short_registration"
   end
 
   create_table "housing_rooms", :force => true do |t|
@@ -459,6 +448,7 @@ ActiveRecord::Schema.define(:version => 80) do
   end
 
   create_table "registration_options", :force => true do |t|
+    t.integer  "event_id"
     t.string   "item"
     t.integer  "price"
     t.integer  "sort"
@@ -604,6 +594,18 @@ ActiveRecord::Schema.define(:version => 80) do
     t.integer  "amount_in_cents"
     t.boolean  "discounted"
     t.integer  "coach_id"
+  end
+
+  create_table "transactions", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.integer  "participant_registration_id"
+    t.integer  "team_registration_id"
+    t.string   "email"
+    t.integer  "fee"
+    t.boolean  "complete"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|

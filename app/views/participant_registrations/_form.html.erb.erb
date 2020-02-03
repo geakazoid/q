@@ -8,17 +8,25 @@
     <%= pform.label :registration_type, 'Registration Type' %><br/>
     <% if !@participant_registration.new_record? %>
     <%= pform.select :registration_type,
-      {'Quizzer ($195)' => 'quizzer',
-      'Coach ($195)' => 'coach',
-      'Official / Volunteer ($150)' => 'official',
-      'Staff / Intern ($0)' => 'staff',
-      'Off-Campus Guest ($0)' => 'off-campus',
-      'Inactive' => 'inactive',
-      'Spectator' => 'spectator'},
+      [['Quizzer ($225)', 'quizzer'],
+      ['Coach ($225)', 'coach'],
+      ['Official / Volunteer ($175)', 'official'],
+      ['Staff ($0)', 'staff'],
+      ['On-campus Guest ($185)', 'on-campus'],
+      ['On-campus Guest Under 3 ($0)', 'on-campus-under3'],
+      ['Off-Campus Guest ($0)', 'off-campus'],
+      ['Inactive', 'inactive'],
+      ['Spectator', 'spectator']],
       {:prompt => "- Select -"}, {:onChange => "check_for_registration_type();"} %>
     <% else %>
     <%= pform.select :registration_type,
-      {'Off-Campus Guest ($0)' => 'off-campus'},
+      [['Quizzer ($225)', 'quizzer'],
+      ['Coach ($225)', 'coach'],
+      ['Official / Volunteer ($175)', 'official'],
+      ['Staff ($0)', 'staff'],
+      ['On-campus Guest ($185)', 'on-campus'],
+      ['On-campus Guest Under 3 ($0)', 'on-campus-under3'],
+      ['Off-Campus Guest ($0)', 'off-campus']],
       {:prompt => "- Select -"}, {:onChange => "check_for_registration_type();"} %>
     <% end %>
   </p>
@@ -177,7 +185,7 @@
     <%= pform.text_area :special_needs_details, :size => "60x6" %>
   </p>
   <p id='travel_type_row' style='display:none;'>
-    <%= pform.label :travel_type, 'How do you plan to travel to Q2018?' %><br/>
+    <%= pform.label :travel_type, 'How do you plan to travel to ' + Event.active_event.name + '?' %><br/>
     <%= pform.select :travel_type, ['I do not yet know how I am getting to the event.','I am flying to the event.','I am driving to the event.'], {:prompt => "- Select -"}, {:onChange => "check_travel_details()"} %>
   </p>
   <p id='travel_type_details_row' style='display:none;'>
@@ -190,17 +198,15 @@
     Please check any optional purchases you'd like to make. These will be added to your total.
   </p>
   <div id='optional_purchases_row'>
-    <div id='optional_purchases_meals_row' style='display:none;'>
-      <%= hidden_field_tag "participant_registration[registration_option_ids][]", nil %>
-      <h4>Meals</h4>
-      <p>
-        <% @registration_options_meals.each do |registration_option| -%>
-          <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
-          <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
-          <span id='option_label_<%=h registration_option.id -%>'><%=h registration_option.item -%> ($<%=h registration_option.price %>)</span><br/>
-        <% end -%>
-      </p>
-    </div>
+    <div id='optional_purchases_other_row'>
+    <p>
+      <% @registration_options_other.each do |registration_option| -%>
+        <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
+        <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
+        <span id='option_label_<%=h registration_option.id -%>'><%=h registration_option.item -%> ($<%=h registration_option.price %>)</span><br/>
+      <% end -%>
+    </p>
+  </div>
   </div>
   <% end %>
   <div id='releases_row'>
@@ -256,7 +262,7 @@
   var user_district = '<%= current_user.district_id %>';
 
   /* fees */
-  var fees = {'quizzer': 195, 'coach': 195, 'official': 150, 'staff': 0, 'off-campus': 0}
+  var fees = {'quizzer': 225, 'coach': 225, 'official': 175, 'staff': 0, 'on-campus': 185, 'on-campus-under3': 0, 'off-campus': 0}
 
   function update_fee() {
     $('#fees_row').hide()
@@ -308,7 +314,6 @@
     $('#shirt_size_row').hide()
     $('#special_needs_row').hide()
     $('#travel_type_row').hide()
-    $('#optional_purchases_meals_row').hide()
     $('#option_21').hide()
     $('#option_label_21').hide()
     $('#releases_row').hide()
@@ -342,7 +347,6 @@
       $('#over18_row').show()
     }
     if ($('#participant_registration_registration_type').val() == "off-campus") {
-      $('#optional_purchases_meals_row').show()
       $('#option_21').prop('checked', false);
     }
     update_fee()
