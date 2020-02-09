@@ -15,11 +15,12 @@
 <% end %>
 
 <form id='cvent_form' action='http://sandbox-www.cvent.com/Events/APIs/Reg.aspx' method='post'>
-  <input type='hidden' name='ecode' value='8909af05-34d6-499e-af72-e62154f644ce'>
+  <input type='hidden' name='ecode' value='<%= AppConfig.ecode %>'>
   <input type='hidden' name='first_name' value='<%= current_user.first_name %>'>
   <input type='hidden' name='last_name' value='<%= current_user.last_name %>'>
   <input type='hidden' name='email_address' value='<%= @transaction.email %>'>
   <input type='hidden' name='designation' value='<%= @transaction.fee %>'>
+  <input type='hidden' name='target' value='Registration'>
   <% if AppConfig.test_mode %>
     <input type='submit' name='submit' value='Redirect to CVent'>
   <% end %>

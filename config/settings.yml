@@ -3,7 +3,7 @@ development: &non_production_settings
   site_name: Quizzing Events DEV
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
-  ecode: 61179253-75fc-4279-a70a-c6190fa6b171
+  ecode: 42425fbd-074c-4de9-8d65-09d7b4364396
   
 test:
   <<: *non_production_settings
@@ -13,7 +13,7 @@ staging:
   site_name: Quizzing Events
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
-  ecode: 61179253-75fc-4279-a70a-c6190fa6b171
+  ecode: 42425fbd-074c-4de9-8d65-09d7b4364396
   
 production:
   site_url: http://www.quizzingevents.com
