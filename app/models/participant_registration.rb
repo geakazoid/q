@@ -38,6 +38,7 @@ class ParticipantRegistration < ActiveRecord::Base
   validates_presence_of :email
   validates_presence_of :gender, :if => "!self.off_campus?"
   validates_inclusion_of :over_18, :in => [true, false], :if => "self.coach?", :message => "must be selected", :unless => "self.using_short_registration?"
+  validates_inclusion_of :over_9, :in => [true, false], :if => "self.quizzer? or self.on_campus?", :message => "must be selected", :unless => "self.using_short_registration?"
   validates_presence_of :most_recent_grade, :if => "self.quizzer?"
   validates_presence_of :graduation_year, :if => "self.quizzer?", :unless => "self.using_short_registration?"
   validates_presence_of :street, :if => "!self.off_campus?"
@@ -58,6 +59,7 @@ class ParticipantRegistration < ActiveRecord::Base
   validates_presence_of :shirt_size, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :travel_type, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :travel_type_details, :if => "self.travel_type == 'I am flying to the event.'", :unless => "self.using_short_registration?"
+  validates_presence_of :understand_refund_policy, :if => "self.quizzer? or self.coach? or self.official? or self.on_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :understand_form_completion, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :understand_background_check, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
 
@@ -417,6 +419,11 @@ class ParticipantRegistration < ActiveRecord::Base
   # returns if this registration is for an off-campus guest
   def off_campus?
     self.registration_type == 'off-campus'
+  end
+
+  # returns if this registration is for an on-campus guest
+  def on_campus?
+    self.registration_type == 'on-campus'
   end
 
   # returns if this registration is for an exhibitor

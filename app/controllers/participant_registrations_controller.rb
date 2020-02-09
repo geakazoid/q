@@ -155,8 +155,8 @@ class ParticipantRegistrationsController < ApplicationController
     @participant_registration.payment_type = 'full'
 
     @districts = District.find(:all, :order => 'name')
-    @registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
-    @registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
+    @registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal" and event_id = ' + Event.active_id.to_s, :order => 'sort')
+    @registration_options_other = RegistrationOption.all(:conditions => 'category = "other" and event_id = ' + Event.active_id.to_s, :order => 'sort')
     get_registered_teams
     get_group_leaders
     get_schools
@@ -201,8 +201,8 @@ class ParticipantRegistrationsController < ApplicationController
         end
       else
         @districts = District.find(:all, :order => "name")
-        @registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
-        @registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
+        @registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal" and event_id = ' + Event.active_id.to_s, :order => 'sort')
+        @registration_options_other = RegistrationOption.all(:conditions => 'category = "other" and event_id = ' + Event.active_id.to_s, :order => 'sort')
         @family_participant_registrations = current_user.family_participant_registrations
         get_registered_teams
         get_group_leaders

@@ -55,6 +55,10 @@
     <%= pform.label :gender, 'Gender' %><br/>
     <%= pform.select :gender, ['Male','Female'], :prompt => '- Select -' %>
   </p>
+  <p id='over9_row' style='display:none;'>
+    <%= pform.label :over_9, 'Will you be over the age of 9 at the time of the event?' %><br/>
+    <%= pform.select :over_9, {'Yes' => true,'No' => false}, :prompt => '- Select -' %>
+  </p>
   <p id='over18_row' style='display:none;'>
     <%= pform.label :over_18, 'Are you 18 years of age or older?' %><br/>
     <%= pform.select :over_18, {'Yes' => true,'No' => false}, :prompt => '- Select -' %>
@@ -65,7 +69,7 @@
   </p>
   <p id='graduation_year_row' style='display:none;'>
     <%= pform.label :graduation_year, 'What is your graduation year?' %><br/>
-    <%= pform.select :graduation_year, ['2018','2019','2020','2021','2022','2023','2024','After 2024'], {:prompt => "- Select -"} %>
+    <%= pform.select :graduation_year, ['2020','2021','2022','2023','2024','2025','2026','After 2026'], {:prompt => "- Select -"} %>
   </p>
   <h3>Contact Information</h3>
   <p id='street_row' style='display:none;'>
@@ -211,6 +215,7 @@
   <% end %>
   <div id='releases_row'>
     <h3>Releases</h3>
+    <span id='understand_refund_policy_row' style='display:none;'><%= pform.check_box :understand_refund_policy %>&nbsp;&nbsp;<label>I understand the Q2020 refund policy that can be found under the <a target="_blank" href="http://www.quizzingevents.com/pages/81-faqs">Registration FAQs</a> section.</label><br/></span>
     <%= pform.check_box :understand_form_completion %>&nbsp;&nbsp;<label>I understand that I will be required to fill out a medical liability form.</label> (<a target="_blank" href="/files/Adult Medical and Liability Release.pdf">Download Adult</a> :: <a target="_blank" href="/files/Student Medical and Liability Release.pdf">Download Student</a>)<br/>
     <%= pform.check_box :understand_background_check %>&nbsp;&nbsp;<label>I understand that I will be required to complete a background check form.</label>
   </div>
@@ -314,9 +319,11 @@
     $('#shirt_size_row').hide()
     $('#special_needs_row').hide()
     $('#travel_type_row').hide()
-    $('#option_21').hide()
     $('#option_label_21').hide()
     $('#releases_row').hide()
+    $('#over18_row').hide()
+    $('#over9_row').hide()
+    $('#understand_refund_policy_row').hide()
     if ($('#participant_registration_registration_type').val() != "off-campus") {
       $('#gender_row').show()
       $('#street_row').show()
@@ -330,24 +337,27 @@
       $('#shirt_size_row').show()
       $('#special_needs_row').show()
       $('#travel_type_row').show()
-      $('#option_21').show()
-      $('#option_label_21').show()
       $('#releases_row').show()
+    }
+    if ($('#participant_registration_registration_type').val() == "on-campus") {
+      $('#over9_row').show()
+      $('#understand_refund_policy_row').show()
     }
     if ($('#participant_registration_registration_type').val() == "quizzer") {
       $('#most_recent_grade_row').show()
       $('#graduation_year_row').show()
       $('#coach_name_row').show()
+      $('#over9_row').show()
+      $('#understand_refund_policy_row').show()
     }
     if ($('#participant_registration_registration_type').val() == "official") {
       $('#planning_on_coaching_row').show()
+      $('#understand_refund_policy_row').show()
     }
     if ($('#participant_registration_registration_type').val() == "coach") {
       $('#planning_on_officiating_row').show()
       $('#over18_row').show()
-    }
-    if ($('#participant_registration_registration_type').val() == "off-campus") {
-      $('#option_21').prop('checked', false);
+      $('#understand_refund_policy_row').show()
     }
     update_fee()
   }

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 85) do
+ActiveRecord::Schema.define(:version => 86) do
 
   create_table "actions", :force => true do |t|
     t.integer  "round_id",                     :null => false
@@ -343,6 +343,8 @@ ActiveRecord::Schema.define(:version => 85) do
     t.boolean  "special_needs_na"
     t.text     "travel_type_details"
     t.text     "notes"
+    t.boolean  "over_9"
+    t.boolean  "understand_refund_policy"
   end
 
   create_table "participant_registrations_registration_options", :id => false, :force => true do |t|

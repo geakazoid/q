@@ -1,7 +1,7 @@
 class Add2020RegistrationOptions < ActiveRecord::Migration
   def self.up
     # add 2020 options
-    options = [["Linens","9","1","other","4"],
+    options = [["Linens","10","1","other","4"],
                ["Decades Quizzing","5","2","other","4"]
     ]
     options.each do |item|
