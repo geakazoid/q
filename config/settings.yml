@@ -10,8 +10,8 @@ test:
   <<: *non_production_settings
 
 staging:
-  site_url: https://dev.quizzingevents.com
-  public_site_url: https://dev.quizzingevents.com
+  site_url: https://qdev.nazquizzing.org
+  public_site_url: https://qdev.nazquizzing.org
   site_name: Quizzing Events
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
