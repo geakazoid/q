@@ -78,7 +78,7 @@ class TransactionsController < ApplicationController
       raw_data = JSON.parse(request.raw_post)
       data = {}
       data['messageTime'] = raw_data['messageTime'].to_time.to_formatted_s(:long_ordinal)
-      data['confirmation_number'] = raw_data['message'][0]['confirmation_number']
+      data['confirmation_number'] = raw_data['message'][0]['confirmationNumber']
       data['order_number'] = raw_data['message'][0]['orders'][0]['order_number']
       data['email'] = raw_data['message'][0]['email']
       data['fullname'] = raw_data['message'][0]['fullname']
