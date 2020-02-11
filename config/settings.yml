@@ -1,5 +1,6 @@
 development: &non_production_settings
   site_url: http://localhost:3000
+  public_site_url: http://www.quizzingevents.com
   site_name: Quizzing Events DEV
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
@@ -9,7 +10,8 @@ test:
   <<: *non_production_settings
 
 staging:
-  site_url: http://dev.quizzingevents.com
+  site_url: https://dev.quizzingevents.com
+  public_site_url: https://dev.quizzingevents.com
   site_name: Quizzing Events
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
@@ -17,6 +19,7 @@ staging:
   
 production:
   site_url: http://www.quizzingevents.com
+  public_site_url: http://www.quizzingevents.com
   site_name: Quizzing Events
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: false

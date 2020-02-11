@@ -124,7 +124,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :regenerate => :get}
   map.resources :teams
   map.resources :payments, :collection => {:receipt => :get}
-  map.resources :transactions
+  map.resources :transactions, :collection => {:webhook => [:get,:post]}
 
   # Home Page
   map.root :controller => 'pages', :action => 'home'

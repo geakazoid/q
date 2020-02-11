@@ -107,12 +107,8 @@ class TeamRegistrationsController < ApplicationController
           @team_registration.audit_user = current_user
           @team_registration.save
           prepare_session
-          if (@team_registration.amount_in_cents > 0)
-            # send to transactions controller
-            format.html { redirect_to(new_transaction_url) }
-          else
-            format.html { redirect_to(confirm_no_payment_team_registrations_url) }
-          end
+          # send to transactions controller
+          format.html { redirect_to(new_transaction_url) }
         when 'save_action'
           flash[:notice] = 'Team Registration saved successfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
           format.html { redirect_to(root_url) }

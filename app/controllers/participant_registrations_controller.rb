@@ -189,15 +189,12 @@ class ParticipantRegistrationsController < ApplicationController
         # add participant_registration to the session
         prepare_session
         registration_fee = @participant_registration.amount_ordered * 100
-        if (params[:registration_fee].to_i > 0 and params[:pay_by_check] != "true")
-          # send to transactions controller
-          format.html { redirect_to(new_transaction_url) }
-        elsif (params[:pay_by_check] == "true")
+        if (params[:pay_by_check] == "true")
           # no need to ask for payment, send to confirmation check page
           format.html { redirect_to(confirm_check_participant_registrations_url) }
         else
           # no need to ask for payment. send to confirmation process
-          format.html { redirect_to(confirm_participant_registrations_url) }
+          format.html { redirect_to(new_transaction_url) }
         end
       else
         @districts = District.find(:all, :order => "name")
