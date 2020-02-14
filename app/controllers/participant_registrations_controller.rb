@@ -193,8 +193,8 @@ class ParticipantRegistrationsController < ApplicationController
           # no need to ask for payment, send to confirmation check page
           format.html { redirect_to(confirm_check_participant_registrations_url) }
         else
-          # no need to ask for payment. send to confirmation process
-          format.html { redirect_to(new_transaction_url) }
+          # send to transactions controller
+          format.html { redirect_to(AppConfig.site_url + '/transactions/new') }
         end
       else
         @districts = District.find(:all, :order => "name")

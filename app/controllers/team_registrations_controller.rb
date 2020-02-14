@@ -108,7 +108,7 @@ class TeamRegistrationsController < ApplicationController
           @team_registration.save
           prepare_session
           # send to transactions controller
-          format.html { redirect_to(new_transaction_url) }
+          format.html { redirect_to(AppConfig.site_url + '/transactions/new') }
         when 'save_action'
           flash[:notice] = 'Team Registration saved successfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
           format.html { redirect_to(root_url) }

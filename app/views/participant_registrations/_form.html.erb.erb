@@ -64,7 +64,7 @@
     <%= pform.select :over_18, {'Yes' => true,'No' => false}, :prompt => '- Select -' %>
   </p>
   <p id='most_recent_grade_row' style='display:none;'>
-    <%= pform.label :most_recent_grade, 'Grade most recently completed in the summer of 2018?' %><br/>
+    <%= pform.label :most_recent_grade, 'Grade most recently completed in the summer of 2020?' %><br/>
     <%= pform.select :most_recent_grade, ['Below 6th grade','6th grade','7th grade','8th grade','9th grade','10th grade','11th grade','12th grade'], {:prompt => "- Select -"} %>
   </p>
   <p id='graduation_year_row' style='display:none;'>
@@ -216,8 +216,8 @@
   <div id='releases_row'>
     <h3>Releases</h3>
     <span id='understand_refund_policy_row' style='display:none;'><%= pform.check_box :understand_refund_policy %>&nbsp;&nbsp;<label>I understand the Q2020 refund policy that can be found under the <a target="_blank" href="http://www.quizzingevents.com/pages/81-faqs">Registration FAQs</a> section.</label><br/></span>
-    <%= pform.check_box :understand_form_completion %>&nbsp;&nbsp;<label>I understand that I will be required to fill out a medical liability form.</label> (<a target="_blank" href="/files/Adult Medical and Liability Release.pdf">Download Adult</a> :: <a target="_blank" href="/files/Student Medical and Liability Release.pdf">Download Student</a>)<br/>
-    <%= pform.check_box :understand_background_check %>&nbsp;&nbsp;<label>I understand that I will be required to complete a background check form.</label>
+    <span id='understand_form_completion_row'><%= pform.check_box :understand_form_completion %>&nbsp;&nbsp;<label>I understand that I will be required to fill out a medical liability form.</label> (<a target="_blank" href="http://www.quizzingevents.com/pages/85-medical-liability-forms">Download Liability Forms</a>)<br/></span>
+    <span id='understand_background_check_row' style='display:none;'><%= pform.check_box :understand_background_check %>&nbsp;&nbsp;<label>I understand that I will be required to complete a background check. (<a target="_blank" href="https://orders.natsb.com/cgi-bin/pub/unsolicited_portal?guid=5qzQ7NUKC1UPYWzNwYvy8h8aXw6g7YQS#subject">Submit Background Check</a>)</label></span>
   </div>
   <% if !@participant_registration.new_record? && admin? %>
   <div id='payment_info_row'>
@@ -324,6 +324,22 @@
     $('#over18_row').hide()
     $('#over9_row').hide()
     $('#understand_refund_policy_row').hide()
+    $('#understand_background_check_row').hide()
+    /* hide decades option by default */
+    var decades = $("span:contains('Decades Quizzing ($5)')")
+    decades.hide()
+    decades.prev().hide()
+    decades.prev().prev().hide()
+
+    if ($('#participant_registration_registration_type').val() != "quizzer" && $('#participant_registration_registration_type').val() != "on-campus-under3") {
+      $('#understand_background_check_row').show()
+
+      /* show the decades option */
+      var decades = $("span:contains('Decades Quizzing ($5)')")
+      decades.show()
+      decades.prev().show()
+      decades.prev().prev().show()
+    }
     if ($('#participant_registration_registration_type').val() != "off-campus") {
       $('#gender_row').show()
       $('#street_row').show()
