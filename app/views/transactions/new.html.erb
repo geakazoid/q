@@ -14,7 +14,7 @@
   <p>Please wait while we redirect you for payment...</p>
 <% end %>
 
-<form id='cvent_form' action='http://sandbox-www.cvent.com/Events/APIs/Reg.aspx' method='post'>
+<form id='cvent_form' action='<%= AppConfig.cvent_post_url %>' method='post'>
   <input type='hidden' name='ecode' value='<%= AppConfig.ecode %>'>
   <input type='hidden' name='first_name' value='<%= current_user.first_name %>'>
   <input type='hidden' name='last_name' value='<%= current_user.last_name %>'>
