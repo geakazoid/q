@@ -1,6 +1,6 @@
 development: &non_production_settings
   site_url: http://localhost:3000
-  public_site_url: http://www.quizzingevents.com
+  public_site_url: https://www.quizzingevents.com
   site_name: Quizzing Events DEV
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: true
@@ -20,10 +20,10 @@ staging:
   ecode: 42425fbd-074c-4de9-8d65-09d7b4364396
   
 production:
-  site_url: http://www.quizzingevents.com
-  public_site_url: http://www.quizzingevents.com
+  site_url: https://www.quizzingevents.com
+  public_site_url: https://www.quizzingevents.com
   site_name: Quizzing Events
   admin_email: Quizzing Events <info@quizzingevents.com>
   test_mode: false
   cvent_post_url: https://www.cvent.com/Events/APIs/Reg.aspx
-  ecode: 61179253-75fc-4279-a70a-c6190fa6b171
+  ecode: d5f126c9-a5af-40a4-86e0-40e90c968098
