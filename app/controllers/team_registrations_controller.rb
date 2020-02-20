@@ -30,15 +30,13 @@ class TeamRegistrationsController < ApplicationController
 
   # GET /team_registrations/new
   def new
-    # if params[:key] != '549e474379a414690497b030be880080' and !admin?
-      # @page = Page.find_by_label('Closed Team Registration Text')
-      # respond_to do |format|
-        # format.html {
-          # render "team_registrations/closed"
-        # }
-      # end
-      # return
-    # end
+    # if registration is closed and we don't have a code we redirect
+    if !Event.active_event.enable_team_registration? and params[:code] != Event.active_event.team_code
+      respond_to do |format|
+        format.html { redirect_to(root_url) }
+      end
+      return
+    end
 
     @team_registration = TeamRegistration.new
     @districts = District.find(:all, :order => "name")
