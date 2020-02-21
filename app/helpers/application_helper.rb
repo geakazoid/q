@@ -89,7 +89,7 @@ module ApplicationHelper
     
     equipment_total = current_user.equipment_registrations.size
 
-    info = "My Registrations"
+    info = "<h4>My Registrations</h4>"
     info << "<p>"
 
     if team_total > 0
@@ -116,7 +116,8 @@ module ApplicationHelper
     if team_total == 0 and participant_total == 0 and equipment_total == 0
       info << "You do not have any registrations."
     end
-    info << "<p>"
+    info << "</p>"
+    info << "<div class='alert alert-danger' style='margin-bottom:10px;'><strong>Note!</strong> Paid registrations may take several minutes to appear on quizzingevents.com.</div>"
   end
   
   def test_output(output)
