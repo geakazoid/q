@@ -54,7 +54,7 @@ class ParticipantRegistration < ActiveRecord::Base
   validates_presence_of :district
   validates_presence_of :group_leader_text, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :coach_name, :if => "self.quizzer?", :unless => "self.using_short_registration?"
-  validates_inclusion_of :planning_on_coaching, :in => [true, false], :if => "self.official?", :message => "must be selected", :unless => "self.using_short_registration?"
+  validates_inclusion_of :planning_on_coaching, :in => [true, false], :if => "self.official? or self.staff?", :message => "must be selected", :unless => "self.using_short_registration?"
   validates_inclusion_of :planning_on_officiating, :in => [true, false], :if => "self.coach?", :message => "must be selected", :unless => "self.using_short_registration?"
   validates_presence_of :shirt_size, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :travel_type, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
@@ -414,6 +414,11 @@ class ParticipantRegistration < ActiveRecord::Base
   # returns if this registration is for a core staff member
   def core_staff?
     self.registration_type == 'core_staff'
+  end
+
+  # returns if this registration is for a staff member
+  def staff?
+    self.registration_type == 'staff'
   end
 
   # returns if this registration is for an off-campus guest

@@ -375,6 +375,9 @@
       $('#over18_row').show()
       $('#understand_refund_policy_row').show()
     }
+    if ($('#participant_registration_registration_type').val() == "staff") {
+      $('#planning_on_coaching_row').show()
+    }
     update_fee()
   }
 
