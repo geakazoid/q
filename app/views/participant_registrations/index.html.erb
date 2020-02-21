@@ -15,6 +15,7 @@
       <thead>
         <tr>
           <th>Name</th>
+          <th>Registration Type</th>
           <th>Registration Time</th>
         </tr>
       </thead>
@@ -22,6 +23,7 @@
         <% @user.owned_participant_registrations.each do |participant_registration| %>
           <tr>
             <td><%= participant_registration.full_name %></td>
+            <td><%= participant_registration.formatted_registration_type %></td>
             <td><%= participant_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
           </tr>
         <% end %>
