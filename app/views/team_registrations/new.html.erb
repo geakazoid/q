@@ -3,7 +3,10 @@
 </div>
 <%= render :partial => 'pages/page', :locals => { :page => @page } if !@page.nil? %>
 <p>
-    Please use the form below to register a new team or teams.
+    Please use the form below to register a new team or teams. You must register at least
+    one team and may not register more than five on a single submission. You may use this form
+    multiple times if you are registering more than five teams. Each submission must be paid
+    for separately.
 </p>
 <% form_for @team_registration do |f| %>
   <%= error_messages_for :team_registration, :header_message => "There were errors with your registration.", :message => "We encountered the following problems:" %>
