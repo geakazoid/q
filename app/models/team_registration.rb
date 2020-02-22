@@ -30,6 +30,12 @@ class TeamRegistration < ActiveRecord::Base
   validates_format_of :email, :with => RE_EMAIL_OK, :message => MSG_EMAIL_BAD
 
   # custom validations
+  validate do |team_registration|
+    team_registration.errors.add_to_base("You must register at least one team.") if team_registration.teams.size < 1
+    team_registration.errors.add_to_base("You cannot register more than five teams at once.") if team_registration.teams.size > 5
+  end
+
+  # custom validations
   validate_on_create :has_registration_code
 
   # before save to store out audit information
@@ -62,12 +68,12 @@ class TeamRegistration < ActiveRecord::Base
     # look through teams on this registration to see if any of them
     # require a registration code
     self.teams.each do |team|
-      if team.division.code_required?
+      if !team.division.nil? and team.division.code_required?
         registration_code_required = true
       end
     end
     if !self.complete? and registration_code_required and self.registration_code != Event.active_event.team_code
-      errors.add_to_base('You must provide a correct registration code in order to register for one or more of the selected divisions')
+      errors.add_to_base('You must provide a registration code in order to register for one or more of the selected divisions')
     end
   end
 
