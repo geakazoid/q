@@ -18,7 +18,7 @@ class TeamRegistration < ActiveRecord::Base
   RE_DOMAIN_HEAD  = '(?:[A-Z0-9\-]+\.)+'
   RE_DOMAIN_TLD   = '(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|jobs|museum)'
   RE_EMAIL_OK     = /\A#{RE_EMAIL_NAME}@#{RE_DOMAIN_HEAD}#{RE_DOMAIN_TLD}\z/i
-  MSG_EMAIL_BAD   = "should look like an email address."
+  MSG_EMAIL_BAD   = "should look like an email address"
     
   # validations
   validates_presence_of :district
@@ -31,8 +31,8 @@ class TeamRegistration < ActiveRecord::Base
 
   # custom validations
   validate do |team_registration|
-    team_registration.errors.add_to_base("You must register at least one team.") if team_registration.teams.size < 1
-    team_registration.errors.add_to_base("You cannot register more than five teams at once.") if team_registration.teams.size > 5
+    team_registration.errors.add_to_base("You must register at least one team") if team_registration.teams.size < 1
+    team_registration.errors.add_to_base("You cannot register more than five teams at once") if team_registration.teams.size > 5
   end
 
   # custom validations
