@@ -61,7 +61,7 @@ class ParticipantRegistration < ActiveRecord::Base
   validates_presence_of :travel_type_details, :if => "self.travel_type == 'I am flying to the event.'", :unless => "self.using_short_registration?"
   validates_presence_of :understand_refund_policy, :if => "self.quizzer? or self.coach? or self.official? or self.on_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :understand_form_completion, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
-  validates_presence_of :understand_background_check, :if => "!self.off_campus? and !self.quizzer?", :unless => "self.using_short_registration?"
+  validates_presence_of :understand_background_check, :if => "!self.off_campus? and !self.quizzer? and !self.on_campus_under3?", :unless => "self.using_short_registration?"
 
   HUMANIZED_ATTRIBUTES = {:street => "Address", :home_phone => "Primary Phone", :district => "District and Field", :group_leader_text => "Group Leader"}
 
@@ -429,6 +429,11 @@ class ParticipantRegistration < ActiveRecord::Base
   # returns if this registration is for an on-campus guest
   def on_campus?
     self.registration_type == 'on-campus'
+  end
+
+   # returns if this registration is for an on-campus guest under 3
+   def on_campus_under3?
+    self.registration_type == 'on-campus-under3'
   end
 
   # returns if this registration is for an exhibitor
