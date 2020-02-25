@@ -205,9 +205,11 @@
     <div id='optional_purchases_other_row'>
     <p>
       <% @registration_options_other.each do |registration_option| -%>
+        <span>
         <%= check_box_tag "participant_registration[registration_option_ids][]", registration_option.id, @participant_registration.registration_options.include?(registration_option), {:id => "option_" + registration_option.id.to_s, :onChange => "update_fee()"} -%> 
         <input type="hidden" id="option_price_<%= registration_option.id %>" value="<%= registration_option.price %>">
         <span id='option_label_<%=h registration_option.id -%>'><%=h registration_option.item -%> ($<%=h registration_option.price %>)</span><br/>
+        </span>
       <% end -%>
     </p>
   </div>
@@ -327,34 +329,29 @@
     $('#understand_background_check_row').hide()
     /* hide decades option by default */
     var decades = $("span:contains('Decades Quizzing ($5)')")
-    decades.hide()
-    decades.prev().hide()
-    decades.prev().prev().hide()
+    decades.parent().hide()
     /* hide sunday housing option by default */
     var sunday_housing = $("span:contains('Sunday Housing (June 14th) ($25)')")
-    sunday_housing.hide()
-    sunday_housing.prev().hide()
-    sunday_housing.prev().prev().hide()
+    sunday_housing.parent().hide()
+    /* hide linens option by default */
+    var linens = $("span:contains('Linens (bed sheets, blanket, pillow, bath towel, hand towel) ($10)')")
+    linens.parent().hide()
 
-    if ($('#participant_registration_registration_type').val() != "quizzer" && $('#participant_registration_registration_type').val() != "on-campus-under3") {
+    if ($('#participant_registration_registration_type').val() != "" && $('#participant_registration_registration_type').val() != "quizzer" && $('#participant_registration_registration_type').val() != "on-campus-under3") {
       $('#understand_background_check_row').show()
 
       /* show the decades option */
       var decades = $("span:contains('Decades Quizzing ($5)')")
-      decades.show()
-      decades.prev().show()
-      decades.prev().prev().show()
+      decades.parent().show()
     }
-    if ($('#participant_registration_registration_type').val() != "off-campus" && $('#participant_registration_registration_type').val() != "staff") {
+    if ($('#participant_registration_registration_type').val() != "" && $('#participant_registration_registration_type').val() != "off-campus" && $('#participant_registration_registration_type').val() != "staff") {
       $('#understand_background_check_row').show()
 
       /* show the sunday housing option */
       var sunday_housing = $("span:contains('Sunday Housing (June 14th) ($25)')")
-      sunday_housing.show()
-      sunday_housing.prev().show()
-      sunday_housing.prev().prev().show()
+      sunday_housing.parent().show()
     }
-    if ($('#participant_registration_registration_type').val() != "off-campus") {
+    if ($('#participant_registration_registration_type').val() != "" && $('#participant_registration_registration_type').val() != "off-campus") {
       $('#gender_row').show()
       $('#street_row').show()
       $('#city_row').show()
@@ -368,6 +365,10 @@
       $('#special_needs_row').show()
       $('#travel_type_row').show()
       $('#releases_row').show()
+
+      /* show linens option */
+      var linens = $("span:contains('Linens (bed sheets, blanket, pillow, bath towel, hand towel) ($10)')")
+      linens.parent().show()
     }
     if ($('#participant_registration_registration_type').val() == "on-campus") {
       $('#over9_row').show()
