@@ -330,6 +330,11 @@
     decades.hide()
     decades.prev().hide()
     decades.prev().prev().hide()
+    /* hide sunday housing option by default */
+    var sunday_housing = $("span:contains('Sunday Housing (June 14th) ($25)')")
+    sunday_housing.hide()
+    sunday_housing.prev().hide()
+    sunday_housing.prev().prev().hide()
 
     if ($('#participant_registration_registration_type').val() != "quizzer" && $('#participant_registration_registration_type').val() != "on-campus-under3") {
       $('#understand_background_check_row').show()
@@ -339,6 +344,15 @@
       decades.show()
       decades.prev().show()
       decades.prev().prev().show()
+    }
+    if ($('#participant_registration_registration_type').val() != "off-campus" && $('#participant_registration_registration_type').val() != "staff") {
+      $('#understand_background_check_row').show()
+
+      /* show the sunday housing option */
+      var sunday_housing = $("span:contains('Sunday Housing (June 14th) ($25)')")
+      sunday_housing.show()
+      sunday_housing.prev().show()
+      sunday_housing.prev().prev().show()
     }
     if ($('#participant_registration_registration_type').val() != "off-campus") {
       $('#gender_row').show()
