@@ -337,20 +337,6 @@
     var linens = $("span:contains('Linens (bed sheets, blanket, pillow, bath towel, hand towel) ($10)')")
     linens.parent().hide()
 
-    if ($('#participant_registration_registration_type').val() != "" && $('#participant_registration_registration_type').val() != "quizzer" && $('#participant_registration_registration_type').val() != "on-campus-under3") {
-      $('#understand_background_check_row').show()
-
-      /* show the decades option */
-      var decades = $("span:contains('Decades Quizzing ($5)')")
-      decades.parent().show()
-    }
-    if ($('#participant_registration_registration_type').val() != "" && $('#participant_registration_registration_type').val() != "off-campus" && $('#participant_registration_registration_type').val() != "staff" && $('#participant_registration_registration_type').val() != "on-campus-under3") {
-      $('#understand_background_check_row').show()
-
-      /* show the sunday housing option */
-      var sunday_housing = $("span:contains('Sunday Housing (June 14th) ($25)')")
-      sunday_housing.parent().show()
-    }
     if ($('#participant_registration_registration_type').val() != "" && $('#participant_registration_registration_type').val() != "off-campus") {
       $('#gender_row').show()
       $('#street_row').show()
@@ -373,6 +359,18 @@
     if ($('#participant_registration_registration_type').val() == "on-campus") {
       $('#over9_row').show()
       $('#understand_refund_policy_row').show()
+      $('#understand_background_check_row').show()
+      /* show the decades option */
+      var decades = $("span:contains('Decades Quizzing ($5)')")
+      decades.parent().show()
+      /* show the sunday housing option */
+      var sunday_housing = $("span:contains('Sunday Housing (June 14th) ($25)')")
+      sunday_housing.parent().show()
+    }
+    if ($('#participant_registration_registration_type').val() == "off-campus") {
+      /* show the decades option */
+      var decades = $("span:contains('Decades Quizzing ($5)')")
+      decades.parent().show()
     }
     if ($('#participant_registration_registration_type').val() == "quizzer") {
       $('#most_recent_grade_row').show()
@@ -380,18 +378,39 @@
       $('#coach_name_row').show()
       $('#over9_row').show()
       $('#understand_refund_policy_row').show()
+      /* show the sunday housing option */
+      var sunday_housing = $("span:contains('Sunday Housing (June 14th) ($25)')")
+      sunday_housing.parent().show()
     }
     if ($('#participant_registration_registration_type').val() == "official") {
       $('#planning_on_coaching_row').show()
       $('#understand_refund_policy_row').show()
+      $('#understand_background_check_row').show()
+      /* show the decades option */
+      var decades = $("span:contains('Decades Quizzing ($5)')")
+      decades.parent().show()
+      /* show the sunday housing option */
+      var sunday_housing = $("span:contains('Sunday Housing (June 14th) ($25)')")
+      sunday_housing.parent().show()
     }
     if ($('#participant_registration_registration_type').val() == "coach") {
       $('#planning_on_officiating_row').show()
       $('#over18_row').show()
       $('#understand_refund_policy_row').show()
+      $('#understand_background_check_row').show()
+      /* show the decades option */
+      var decades = $("span:contains('Decades Quizzing ($5)')")
+      decades.parent().show()
+      /* show the sunday housing option */
+      var sunday_housing = $("span:contains('Sunday Housing (June 14th) ($25)')")
+      sunday_housing.parent().show()
     }
     if ($('#participant_registration_registration_type').val() == "staff") {
       $('#planning_on_coaching_row').show()
+      $('#understand_background_check_row').show()
+      /* show the decades option */
+      var decades = $("span:contains('Decades Quizzing ($5)')")
+      decades.parent().show()
     }
     update_fee()
   }
