@@ -37,7 +37,7 @@ class ParticipantRegistration < ActiveRecord::Base
   validates_presence_of :last_name
   validates_presence_of :email
   validates_presence_of :gender, :if => "!self.off_campus?"
-  validates_inclusion_of :over_18, :in => [true, false], :if => "self.coach?", :message => "must be selected", :unless => "self.using_short_registration?"
+  validates_inclusion_of :over_18, :in => [true, false], :if => "self.coach? or self.on_campus?", :message => "must be selected", :unless => "self.using_short_registration?"
   validates_inclusion_of :over_9, :in => [true, false], :if => "self.quizzer? or self.on_campus?", :message => "must be selected", :unless => "self.using_short_registration?"
   validates_presence_of :most_recent_grade, :if => "self.quizzer?"
   validates_presence_of :graduation_year, :if => "self.quizzer?", :unless => "self.using_short_registration?"
