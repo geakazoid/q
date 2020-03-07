@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 86) do
+ActiveRecord::Schema.define(:version => 87) do
 
   create_table "actions", :force => true do |t|
     t.integer  "round_id",                     :null => false
@@ -374,24 +374,13 @@ ActiveRecord::Schema.define(:version => 86) do
   end
 
   create_table "payments", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "team_registration_id"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "address"
-    t.string   "city"
-    t.string   "state"
-    t.string   "zipcode"
-    t.string   "credit_card_number"
-    t.string   "phone"
-    t.string   "email"
-    t.integer  "amount_in_cents"
-    t.text     "response"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "country"
-    t.integer  "participant_registration_id"
-    t.text     "details"
+    t.string  "identifier"
+    t.string  "first_name"
+    t.string  "last_name"
+    t.string  "email"
+    t.integer "fee"
+    t.text    "description"
+    t.boolean "paid"
   end
 
   create_table "quiz_divisions", :force => true do |t|
@@ -603,6 +592,7 @@ ActiveRecord::Schema.define(:version => 86) do
     t.integer  "event_id"
     t.integer  "participant_registration_id"
     t.integer  "team_registration_id"
+    t.integer  "payment_id"
     t.string   "email"
     t.integer  "fee"
     t.boolean  "complete"

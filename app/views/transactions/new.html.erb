@@ -5,8 +5,8 @@
 <% if AppConfig.test_mode %>
   <p>The following values are being sent to CVent.</p>
   <p>
-    First Name: <%= current_user.first_name %><br/>
-    Last Name: <%= current_user.last_name %><br/>
+    First Name: <%= @first_name %><br/>
+    Last Name: <%= @last_name %><br/>
     Email Address: <%= @transaction.email %><br/>
     Designation / Fee: <%= @transaction.fee %>
   </p>
@@ -16,8 +16,8 @@
 
 <form id='cvent_form' action='<%= AppConfig.cvent_post_url %>' method='post'>
   <input type='hidden' name='ecode' value='<%= AppConfig.ecode %>'>
-  <input type='hidden' name='first_name' value='<%= current_user.first_name %>'>
-  <input type='hidden' name='last_name' value='<%= current_user.last_name %>'>
+  <input type='hidden' name='first_name' value='<%= @first_name %>'>
+  <input type='hidden' name='last_name' value='<%= @last_name %>'>
   <input type='hidden' name='email_address' value='<%= @transaction.email %>'>
   <input type='hidden' name='designation' value='<%= @transaction.fee %>'>
   <input type='hidden' name='target' value='Registration'>

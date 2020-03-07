@@ -137,20 +137,6 @@ class ParticipantRegistrationsController < ApplicationController
     # define shared users (if any)
     @shared_users = @participant_registration.shared_users
 
-    registerable_items = RegisterableItem.all
-    registerable_items.each do |registerable_item|
-      registration_item = RegistrationItem.find(:first, :conditions => "participant_registration_id = #{@participant_registration.id.to_s} and registerable_item_id = #{registerable_item.id.to_s}")
-      if registration_item.nil?
-        @participant_registration.registration_items.build({ :registerable_item => registerable_item })
-      end
-    end
-
-    # generate list of other family registrations if we haven't paid anything yet
-    if !@participant_registration.paid_any_registration_fee?
-      @participant_registration.family_registrations = @participant_registration.related_family_registrations
-      @family_participant_registrations = @participant_registration.family_participant_registrations
-    end
-
     # set default payment type
     @participant_registration.payment_type = 'full'
 

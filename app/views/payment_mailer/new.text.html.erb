@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title><%= @subject %></title>
+    <title>Please pay the following amount.</title>
     <style>
     /* -------------------------------------
         INLINED WITH htmlemail.io/inline
@@ -102,7 +102,7 @@
           <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 
             <!-- START CENTERED WHITE CONTAINER -->
-            <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Dear <%= @first_name %>, Thank you for your registration and payment. Please print this receipt for your records.</span>
+            <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Dear <%= @payment.first_name %>, Your registration requires a supplemental payment.</span>
             <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
 
               <!-- START MAIN CONTENT AREA -->
@@ -114,56 +114,23 @@
                         <div style='text-align: center; margin-bottom: 15px;'>
                           <%= image_tag(AppConfig.public_site_url + Event.active_event.logo.url(:original), {:alt => Event.active_event.title, :title => Event.active_event.title}) %>
                         </div>
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Dear <%= @first_name %>,</p>
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Thank you for your registration and payment. Please print this receipt for your records.</p>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Dear <%= @payment.first_name %>,</p>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Your registration requires a supplemental payment. Please see the details below and click the link to submit payment.</p>
                         
-                        <h2>Transaction Information:</h2>
+                        <h2>Payment Information:</h2>
                         <div class='receipt_details'>
                           <div class='row'>
-                            <span class='label'>Transaction Time:</span>
-                            <span class='details'><%= @data['messageTime'] %></span>
+                            <span class='label'>Description:</span>
+                            <span class='details'><%= @payment.description %></span>
                           </div>
                           <div class='row'>
-                            <span class='label'>Confirmation Number:</span>
-                            <span class='details'><%= @data['confirmation_number'] %></span>
+                            <span class='label'>Fee:</span>
+                            <span class='details'>$<%= @payment.fee %></span>
                           </div>
-                          <div class='row' style='font-weight: bold;'>
-                            <span class='label'>Payment Amount:</span>
-                            <span class='details'>$<%= @transaction.fee %>.00</span>
+                          <div class='row'>
+                            <a href="<%= AppConfig.site_url %>/payment/<%= @payment.identifier %>">Click here to submit payment.</a>
                           </div>
                         </div>
-                        <div style='clear: both;'></div>
-                        <% if (!@transaction.payment.nil?) %>
-                          <h2>Extra Information:</h2>
-                          <div class='receipt_details'>
-                            <div class='row'>
-                              <span class='label'>Description:</span>
-                              <span class='details'><% @transaction.payment.description %></span>
-                            </div>
-                          </div>
-                        <% else %>
-                          <h2>Registration Information:</h2>
-                          <div class='receipt_details'>
-                            <% if (!@transaction.team_registration.nil?) %>
-                              <% @transaction.team_registration.teams.each do |team| %>
-                                <div class='row'>
-                                  <span class='label'>Team:</span>
-                                  <span class='details'><%= team.name %> (<%= team.division.name %>) - $<%= team.amount_in_cents / 100 %></span>
-                                </div>
-                              <% end %>
-                            <% end %>
-                            <% if (!@transaction.participant_registration.nil?) %>
-                              <div class='row'>
-                                <span class='label'>Participant:</span>
-                                <span class='details'><%= @transaction.participant_registration.full_name %></span>
-                              </div>
-                              <div class='row'>
-                                <span class='label'>Registration Type:</span>
-                                <span class='details'><%= @transaction.participant_registration.formatted_registration_type %></span>
-                              </div>
-                            <% end %>
-                          </div>
-                        <% end %>
                         <p>
                           Sincerely,<br/>
                           <%= Event.active_event.name %> Event Staff

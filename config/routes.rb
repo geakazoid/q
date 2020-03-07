@@ -22,11 +22,8 @@ ActionController::Routing::Routes.draw do |map|
   # tiny mce upload
   map.tinymce_upload 'tinymce/upload', :controller => 'pages', :action => 'tinymce_upload'
   
-  #map.convio_fail '/convio/fail', :controller => 'payments', :action => 'fail'
-  #map.convio_success '/convio/success', :controller => 'payments', :action => 'success'
-  map.convio_return '/process/post-process.php', :controller => 'payments', :action => 'confirm'
-  
   map.connect 'statistics/:name', :controller => 'statistics', :action => 'show'
+  map.connect 'payment/:identifier', :controller => 'payments', :action => 'email_payment'
 
   # Restful Authentication Resources
   map.resources :users, :member => ['activate_user'], :collection => {:download => :get} do |users|
@@ -123,7 +120,7 @@ ActionController::Routing::Routes.draw do |map|
                                 :filter => :get,
                                 :regenerate => :get}
   map.resources :teams
-  map.resources :payments, :collection => {:receipt => :get}
+  map.resources :payments
   map.resources :transactions, :collection => {:webhook => [:get,:post]}
 
   # Home Page

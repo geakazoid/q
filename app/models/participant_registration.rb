@@ -5,8 +5,6 @@ class ParticipantRegistration < ActiveRecord::Base
   belongs_to :ministry_project
   belongs_to :event
   has_many :participant_registration_users
-  has_many :registration_items
-  has_many :payments
   has_one :owner, :through => :participant_registration_users, :class_name => 'User', :source => :user, :conditions => 'owner = true'
   has_many :users, :through => :participant_registration_users
   has_many :shared_participant_registration_users, :class_name => 'ParticipantRegistrationUser', :conditions => 'owner = false'
@@ -20,9 +18,6 @@ class ParticipantRegistration < ActiveRecord::Base
 
   # keep track of changes
   acts_as_audited :protect => false
-
-  # allow nested form values for registration items
-  accepts_nested_attributes_for :registration_items, :allow_destroy => true
 
   # serialize our audit log
   serialize :audit
@@ -328,69 +323,6 @@ class ParticipantRegistration < ActiveRecord::Base
     self.amount_due == 0
   end
 
-  # return total paid amount
-  def total_paid_amount
-    payment_amount = 0
-    self.payments.each do |payment|
-      payment_amount += payment.amount_in_cents
-    end
-    payment_amount / 100
-  end
-
-  # return registration paid amount
-  def paid_registration_amount
-    payment_amount = 0
-    self.payments.each do |payment|
-      payment_amount += payment.details['registration_amount'].to_i unless payment.details['registration_amount'].nil?
-    end
-    payment_amount / 100
-  end
-
-  # return extras paid amount
-  def paid_extras_amount
-    total_paid_amount - paid_registration_amount
-  end
-
-  # return whether we've paid for any of our registration fee
-  def paid_any_registration_fee?
-    # quick check for registrations that are free
-    return true if paid?
-    # otherwise see if we've paid anything
-    paid_registration_amount > 0
-  end
-
-  # return whether we've paid for the full registration fee
-  def paid_full_registration_fee?
-    if self.new_record?
-      return false
-    else
-      paid_registration_amount >= (self.registration_fee - registration_discount) / 100
-    end
-  end
-
-  # return whether we've bought the passed in extra
-  def bought_extra?(extra)
-    bought = false
-    self.payments.each do |payment|
-      bought = true unless payment.details[extra].nil?
-    end
-    bought
-  end
-
-  # count the bought number of the passed in extra
-  def count_bought_extra(extra)
-    if self.new_record?
-      return 0
-    else
-      count = 0
-      self.payments.each do |payment|
-        count += payment.details[extra].to_i unless payment.details[extra].nil?
-      end
-
-      return count
-    end
-  end
-
   # returns if this registration is for a quizzer
   def quizzer?
     self.registration_type == 'quizzer'
@@ -498,213 +430,6 @@ class ParticipantRegistration < ActiveRecord::Base
     discount_in_cents > 0
   end
 
-  # return the discount amount being applied to the registration fee
-  def registration_discount
-    return 0 if discount_in_cents.nil?
-    if discount_in_cents > 0
-      left_to_pay = registration_fee - (paid_registration_amount * 100)
-      logger.info("Left To Pay: " + left_to_pay.to_s)
-      if discount_in_cents > left_to_pay
-        return left_to_pay
-      else
-        return discount_in_cents
-      end
-    end
-  end
-
-  # return the discount amount being applied to any extras
-  def extras_discount
-    return 0 if discount_in_cents.nil?
-    if discount_in_cents > 0
-      left_to_pay = registration_fee - (paid_registration_amount * 100)
-      if discount_in_cents > left_to_pay
-        discount_for_extras = discount_in_cents - left_to_pay
-        if discount_for_extras > paid_extras_amount * 100
-          return discount_for_extras - paid_extras_amount * 100
-        else
-          return 0
-        end
-      else
-        return 0
-      end
-    end
-  end
-
-  # return the amount due for registration
-  def registration_amount_due
-    paid_amount = paid_registration_amount * 100
-    discount = registration_discount ? registration_discount : 0
-    payment_remaining = (registration_fee - paid_amount - discount) / 100
-  end
-
-  # return the amount due for extras
-  def extras_amount_due
-    discount = extras_discount ? extras_discount : 0
-    payment_remaining = (extras_fee - discount) / 100
-    payment_remaining = 0 if payment_remaining < 0
-    return payment_remaining
-  end
-
-  # return the total amount due
-  def total_amount_due
-    registration_amount_due + extras_amount_due
-  end
-
-  # return the discount amount being applied
-  # this is in dollars
-  def applied_discount
-    return 0 if discount_in_cents.nil?
-    discount_in_cents / 100
-  end
-
-  def arrival_shuttle_amount
-    return false unless bought_extra?('need_arrival_shuttle')
-    if core_staff? or small_child?
-      return 0
-    else
-      return 3
-    end
-  end
-
-  def departure_shuttle_amount
-    return false unless bought_extra?('need_departure_shuttle')
-    if core_staff? or small_child?
-      return 0
-    else
-      return 3
-    end
-  end
-
-  def housing_sunday_amount
-    return false unless bought_extra?('housing_sunday')
-    if core_staff? or small_child?
-      return 0
-    else
-      return 10
-    end
-  end
-
-  def housing_saturday_amount
-    return false unless bought_extra?('housing_saturday')
-    if core_staff? or small_child?
-      return 0
-    else
-      return 10
-    end
-  end
-
-  def breakfast_monday_amount
-    return false unless bought_extra?('breakfast_monday')
-    bought_breakfast = false
-    bought_lunch = false
-
-    # loop through our payments to find out when we purchased each meal on monday
-    # this is a total hack, but i'm pretty sure this is the best way to handle it.
-    # boo on me.
-    meals_bought_together = false
-    breakfast_bought_first = false
-    lunch_bought_first = false
-    # if we're core staff or a child we dont care about the price
-    if !core_staff? and !small_child?
-      payments.each do |payment|
-        if !meals_bought_together and !breakfast_bought_first and !lunch_bought_first
-          bought_breakfast = false
-          bought_lunch = false
-          payment.details.each do |key,detail|
-            if key == 'breakfast_monday'
-              bought_breakfast = true
-            end
-
-            if key == 'lunch_monday'
-              bought_lunch = true
-            end
-          end
-
-          if bought_breakfast and bought_lunch
-            meals_bought_together = true
-          elsif bought_breakfast
-            breakfast_bought_first = true
-          elsif bought_lunch
-            lunch_bought_first = true
-          end
-        end
-      end
-
-      if lunch_bought_first
-        return 4
-      else
-        return 5
-      end
-    else
-      return 0
-    end
-  end
-
-  def lunch_monday_amount
-    return false unless bought_extra?('lunch_monday')
-    bought_breakfast = false
-    bought_lunch = false
-
-    # loop through our payments to find out when we purchased each meal on monday
-    # this is a total hack, but i'm pretty sure this is the best way to handle it.
-    # boo on me.
-    meals_bought_together = false
-    breakfast_bought_first = false
-    lunch_bought_first = false
-    # if we're core staff or a child we dont care about the price
-    if !core_staff? and !small_child?
-      payments.each do |payment|
-        if !meals_bought_together and !breakfast_bought_first and !lunch_bought_first
-          bought_breakfast = false
-          bought_lunch = false
-          payment.details.each do |key,detail|
-            if key == 'breakfast_monday'
-              bought_breakfast = true
-            end
-
-            if key == 'lunch_monday'
-              bought_lunch = true
-            end
-          end
-
-          if bought_breakfast and bought_lunch
-            meals_bought_together = true
-          elsif bought_breakfast
-            breakfast_bought_first = true
-          elsif bought_lunch
-            lunch_bought_first = true
-          end
-        end
-      end
-
-      if breakfast_bought_first or meals_bought_together
-        return 5
-      else
-        return 6
-      end
-    else
-      return 0
-    end
-  end
-
-  def floor_fan_amount
-    return false unless bought_extra?('need_floorfan')
-    if core_staff? or small_child?
-      return 0
-    else
-      return 12
-    end
-  end
-
-  def pillow_amount
-    return false unless bought_extra?('need_pillow')
-    if core_staff? or small_child?
-      return 0
-    else
-      return 8
-    end
-  end
-
   # Return the registration type as a formatted value
   def formatted_registration_type
     types = {
@@ -748,45 +473,6 @@ class ParticipantRegistration < ActiveRecord::Base
   # returns whether the needed registration requires a background check
   def needs_background_check?
     core_staff? or volunteer? or official?
-  end
-
-  # returns a formatted list of extra shirts this registration bought
-  def extra_shirts
-    text = ''
-    if count_bought_extra('num_extra_youth_small_shirts') > 0
-      text += 'Youth Small (' + count_bought_extra('num_extra_youth_small_shirts').to_s + '), '
-    end
-    if count_bought_extra('num_extra_youth_medium_shirts') > 0
-      text += 'Youth Medium (' + count_bought_extra('num_extra_youth_medium_shirts').to_s + '), '
-    end
-    if count_bought_extra('num_extra_youth_large_shirts') > 0
-      text += 'Youth Large (' + count_bought_extra('num_extra_youth_large_shirts').to_s + '), '
-    end
-    if count_bought_extra('num_extra_small_shirts') > 0
-      text += 'Small (' + count_bought_extra('num_extra_small_shirts').to_s + '), '
-    end
-    if count_bought_extra('num_extra_medium_shirts') > 0
-      text += 'Medium (' + count_bought_extra('num_extra_medium_shirts').to_s + '), '
-    end
-    if count_bought_extra('num_extra_large_shirts') > 0
-      text += 'Large (' + count_bought_extra('num_extra_large_shirts').to_s + '), '
-    end
-    if count_bought_extra('num_extra_xlarge_shirts') > 0
-      text += 'X-Large (' + count_bought_extra('num_extra_xlarge_shirts').to_s + '), '
-    end
-    if count_bought_extra('num_extra_2xlarge_shirts') > 0
-      text += '2X-Large (' + count_bought_extra('num_extra_2xlarge_shirts').to_s + '), '
-    end
-    if count_bought_extra('num_extra_3xlarge_shirts') > 0
-      text += '3X-Large (' + count_bought_extra('num_extra_3xlarge_shirts').to_s + '), '
-    end
-    if count_bought_extra('num_extra_4xlarge_shirts') > 0
-      text += '4X-Large (' + count_bought_extra('num_extra_4xlarge_shirts').to_s + '), '
-    end
-    if count_bought_extra('num_extra_5xlarge_shirts') > 0
-      text += '5X-Large (' + count_bought_extra('num_extra_5xlarge_shirts').to_s + '), '
-    end
-    text.chop!.chop! unless text.blank?
   end
 
   # returns comma separated list of divisions this participant registration is in.
