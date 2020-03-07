@@ -112,7 +112,7 @@
                     <tr>
                       <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
                         <div style='text-align: center; margin-bottom: 15px;'>
-                          <%= image_tag(AppConfig.public_site_url + Event.active_event.logo.url(:original), {:alt => Event.active_event.title, :title => Event.active_event.title}) %>
+                          <%= image_tag(AppConfig.public_site_url + Event.active_event.logo.url(:original), {:alt => Event.active_event.title, :title => Event.active_event.title, :style => 'max-width: 580px;'}) %>
                         </div>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Dear <%= @payment.first_name %>,</p>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Your registration requires a supplemental payment. Please see the details below and click the link to submit payment.</p>
