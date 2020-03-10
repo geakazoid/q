@@ -1,6 +1,16 @@
 require 'digest/md5'
 
 class PaymentsController < ApplicationController
+  require_role 'admin', :except => [:email_payment]
+
+  # GET /payments
+  def index
+    @payments = Payment.find(:all, :order => "created_at")
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
 
   # GET /payments/new
   def new

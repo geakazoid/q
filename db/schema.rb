@@ -374,13 +374,15 @@ ActiveRecord::Schema.define(:version => 87) do
   end
 
   create_table "payments", :force => true do |t|
-    t.string  "identifier"
-    t.string  "first_name"
-    t.string  "last_name"
-    t.string  "email"
-    t.integer "fee"
-    t.text    "description"
-    t.boolean "paid"
+    t.string   "identifier"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "email"
+    t.integer  "fee"
+    t.text     "description"
+    t.boolean  "paid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "quiz_divisions", :force => true do |t|

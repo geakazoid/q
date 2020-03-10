@@ -12,6 +12,7 @@ class RepurposePayments < ActiveRecord::Migration
       t.integer :fee
       t.text :description
       t.boolean :paid
+      t.timestamps
     end
 
     # modify transactions table
