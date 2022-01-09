@@ -2,7 +2,7 @@ development:
   # Mysql Settings
   adapter: mysql
   encoding: utf8
-  host: q_db
+  host: q_dev_db
   database: q_dev
   username: qsite
   password: qs209242
@@ -21,7 +21,8 @@ staging:
   # Mysql Settings
   adapter: mysql
   encoding: utf8
-  database: q_dev
+  host: q_stage_db
+  database: q_stage
   username: qsite
   password: qs209242
   pool: 5
@@ -30,6 +31,7 @@ production:
   # Mysql Settings
   adapter: mysql
   encoding: utf8
+  host: q_db
   database: q
   username: qsite
   password: qs209242

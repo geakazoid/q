@@ -1,0 +1,36 @@
+version: '3'
+services:
+  frontend:
+    image: 634780534046.dkr.ecr.us-east-2.amazonaws.com/quizzing/q:latest
+    container_name: q_web
+    restart: always
+    networks:
+      - q
+      - web
+    working_dir: /app
+    volumes:
+      - ./application:/app
+    stdin_open: true
+    tty: true
+    command: bash -l -c "mongrel_rails start -e production"
+  db:
+    image: mysql:5.5
+    container_name: q_db
+    restart: always
+    ports:
+      - 127.0.0.1:3308:3306
+    networks:
+      - q
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=qs209242
+      - MYSQL_DATABASE=q
+      - MYSQL_USER=qsite
+      - MYSQL_PASSWORD=qs209242
+
+networks:
+  q:
+    external: false
+  web:
+    external: true
