@@ -2,7 +2,7 @@ version: '3'
 services:
   frontend:
     image: 634780534046.dkr.ecr.us-east-2.amazonaws.com/quizzing/q:latest
-    container_name: q_web
+    container_name: q_dev_web
     ports:
       - 3000:3000
     working_dir: /app
@@ -14,7 +14,7 @@ services:
     command: bash -l -c "mongrel_rails start"
   db:
     image: mysql:5.5
-    container_name: q_db
+    container_name: q_dev_db
     ports:
       - 3306:3306
     volumes:
