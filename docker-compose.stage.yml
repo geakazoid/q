@@ -12,7 +12,7 @@ services:
       - ./application:/app
     stdin_open: true
     tty: true
-    command: bash -l -c "mongrel_rails start"
+    command: bash -l -c "mongrel_rails start - e staging"
   db:
     image: mysql:5.5
     container_name: q_stage_db
