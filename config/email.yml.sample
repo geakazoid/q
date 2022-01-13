@@ -1,10 +1,10 @@
 development: &non_production_settings
-  :address: email-smtp.us-east-2.amazonaws.com
+  :address: smtp.server.com
   :port: 587
   :domain: quizzingevents.com
   :authentication: plain
-  :user_name: AKIAZHS66IUPDOP6QW4C
-  :password: BORKYdsMn4ZirhXVvlNscza2Nn1JdZT5Kz3hPq1QNLa9
+  :user_name: username
+  :password: password
   :enable_starttls_auto: true
 
 test:
