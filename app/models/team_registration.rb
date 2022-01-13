@@ -32,11 +32,11 @@ class TeamRegistration < ActiveRecord::Base
   # custom validations
   validate do |team_registration|
     team_registration.errors.add_to_base("You must register at least one team") if team_registration.teams.size < 1
-    team_registration.errors.add_to_base("You cannot register more than five teams at once") if team_registration.teams.size > 5
   end
 
   # custom validations
   validate_on_create :has_registration_code
+  validate_on_update :has_registration_code
 
   # before save to store out audit information
   before_save :prepare_audit
@@ -106,24 +106,6 @@ class TeamRegistration < ActiveRecord::Base
     # add an error for display if needed
     if registering_regional_team and num_regional_teams > 2
       errors.add_to_base('Each region may only register 2 regional teams. ' + self.district.region.num_regional_teams.to_s + ' team(s) have already been registered.')
-    end
-  end
-  
-  # validate that the current user had available team registrations
-  # this validation adds an error if a user attempts to register a
-  # team or teams and doesn't have enough registrations to do so.
-  def current_user_has_registrations
-    if (district_experienced_count > @audit_user.num_experienced_district_teams_available)
-      errors.add_to_base('You do not have enough district team registrations.')
-    end
-    if (district_novice_count > @audit_user.num_novice_district_teams_available)
-      errors.add_to_base('You do not have enough district team registrations.')
-    end
-    if (local_experienced_count > @audit_user.num_experienced_local_teams_available)
-      errors.add_to_base('You do not have enough local team registrations.')
-    end
-    if (local_novice_count > @audit_user.num_novice_local_teams_available)
-      errors.add_to_base('You do not have enough local team registrations.')
     end
   end
 

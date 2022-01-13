@@ -1,10 +1,11 @@
 development: &non_production_settings
-  :address: mail.realnets.com
+  :address: email-smtp.us-east-2.amazonaws.com
   :port: 587
-  :domain: nazquizzing.org
+  :domain: quizzingevents.com
   :authentication: plain
-  :user_name: website@nazquizzing.org
-  :password: qu1029iz
+  :user_name: AKIAZHS66IUPDOP6QW4C
+  :password: BORKYdsMn4ZirhXVvlNscza2Nn1JdZT5Kz3hPq1QNLa9
+  :enable_starttls_auto: true
 
 test:
   <<: *non_production_settings

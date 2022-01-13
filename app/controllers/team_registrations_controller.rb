@@ -102,14 +102,19 @@ class TeamRegistrationsController < ApplicationController
       if @team_registration.save
         case params[:commit_action]
         when 'registration_action'
-          @team_registration.audit_user = current_user
-          @team_registration.save
           prepare_session
-          # send to transactions controller
-          format.html { redirect_to(AppConfig.site_url + '/transactions/new') }
+          @team_registration.audit_user = current_user
+          if @team_registration.total_amount == 0
+            @team_registration.paid = true
+            @team_registration.save
+            format.html { redirect_to(confirm_no_payment_team_registrations_url) }
+          else
+            @team_registration.save
+            format.html { redirect_to(confirm_team_registrations_url) }
+          end
         when 'save_action'
-          flash[:notice] = 'Team Registration saved successfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
-          format.html { redirect_to(root_url) }
+          flash[:notice] = 'Team Registration saved successfully.'
+          format.html { redirect_to(user_team_registrations_path(current_user)) }
         end
       else
         @districts = District.find(:all)
@@ -156,37 +161,36 @@ class TeamRegistrationsController < ApplicationController
     respond_to do |format|
       if @team_registration.save
         if !@user.nil?
-          case params[:commit_action]
-          when 'payment_action'
-            # add team_registration to the session
-            session[:team_registration] = Hash.new
-            session[:team_registration][:id] = @team_registration.id
-            format.html { redirect_to(new_payment_url) }
-          when 'registration_action'
-            # mark the team_registration as paid
-            @team_registration.paid = true
-            @team_registration.audit_user = current_user
-            @team_registration.save
-          format.html { redirect_to(confirm_team_registrations_url) }
-          when 'save_action'
-            flash[:notice] = 'Team Registration saved successfully. It can be edited later on the team registrations page. This can be accessed by using the right sidebar.'
-            format.html { redirect_to(user_team_registrations_path(@user)) }
-          when 'update_action'
+          @team_registration.audit_user = current_user
+            
+          if !@team_registration.paid?
+            prepare_session
+            if @team_registration.total_amount == 0
+              @team_registration.paid = true
+              @team_registration.save
+              format.html { redirect_to(confirm_no_payment_team_registrations_url) }
+            else
+              format.html { redirect_to(confirm_team_registrations_url) }
+            end
+          else
             flash[:notice] = 'Team Registration updated successfully.'
             format.html { redirect_to(user_team_registrations_path(@user)) }
           end
         else
           # this is an admin update
-          flash[:notice] = 'Team Registration was successfully updated.'
+          flash[:notice] = 'Team Registration updated successfully.'
           format.html { redirect_to(team_registrations_path) }
         end
       else
+        @districts = District.find(:all, :order => "name")
+        @active_event = Event.active_event.id
+        @divisions = Division.find(:all, :conditions => "event_id = #{@active_event}" )
+        if (admin?)
+          @coaches = ParticipantRegistration.find(:all, :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and event_id = #{@active_event}", :order => "first_name asc, last_name asc")
+        else
+          @coaches = ParticipantRegistration.find(:all, :joins => "inner join districts on participant_registrations.district_id = districts.id inner join regions on districts.region_id = regions.id", :conditions => "(registration_type = 'coach' OR planning_on_coaching = 1) and region_id = #{current_user.district.region.id} and event_id = #{@active_event}")
+        end
         if !@user.nil?
-          if (!@team_registration.complete?)
-            @districts = District.find(:all, :order => "name")
-            @active_event = Event.active_event.id
-            @divisions = Division.find(:all, :conditions => "event_id = #{@active_event}" )
-          end
           format.html { render :action => "edit" }
         else
           format.html { render "team_registrations/admin/edit" }
@@ -223,21 +227,43 @@ class TeamRegistrationsController < ApplicationController
   
   # GET /team_registration/confirm
   def confirm
-    # clean up the session and save our registration
-    clean_up
+    redirect = false
+    if !session[:team_registration].nil?
+      @team_registration = TeamRegistration.find(session[:team_registration][:id])
+
+      # clean up the session
+      clean_up
+    else
+      redirect = true
+    end
 
     respond_to do |format|
-      format.html
+      if redirect == true
+        format.html { redirect_to(user_team_registrations_path(current_user)) }
+      else
+        format.html
+      end
     end
   end
 
   # GET /team_registration/confirm_no_payment
   def confirm_no_payment
-    # clean up the session and save our registration
-    clean_up
+    redirect = false
+    if !session[:team_registration].nil?
+      @team_registration = TeamRegistration.find(session[:team_registration][:id])
+
+      # clean up the session
+      clean_up
+    else
+      redirect = true
+    end
 
     respond_to do |format|
-      format.html
+      if redirect == true
+        format.html { redirect_to(user_team_registrations_path(current_user)) }
+      else
+        format.html
+      end
     end
   end
 
@@ -291,7 +317,7 @@ class TeamRegistrationsController < ApplicationController
     @team_registration.amount_in_cents = total_amount
   end
 
-  # prepare our session with the correct amount to pay for
+  # add the team registration to the session
   def prepare_session
     # prepare hash for storing team registration values
     session[:team_registration] = Hash.new
@@ -301,13 +327,6 @@ class TeamRegistrationsController < ApplicationController
   end
 
   def clean_up
-    @team_registration = TeamRegistration.find(session[:team_registration][:id])
-    @team_registration.audit_user = current_user
-    @team_registration.paid = true
-
-    # save our registration back to the database
-    @team_registration.save
-
     # clean up the session
     session[:team_registration] = nil
   end
