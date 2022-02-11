@@ -68,7 +68,13 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Register <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <% if Event.active_event.enable_participant_registration? %><li><a href="/participant_registrations/new">As A Participant</a></li><% end %>
+                  <% if Event.active_event.enable_participant_registration? %>
+                    <% if Event.active_event.participant_registration_link? %>
+                      <li><a href="<%= Event.active_event.participant_registration_link %>" target="_blank">As A Participant</a></li>
+                    <% else %>
+                      <li><a href="/participant_registrations/new">As A Participant</a></li>
+                    <% end %>
+                  <% end %>
                   <% if Event.active_event.enable_team_registration? %><li><a href="/team_registrations/new">A Team</a></li><% end %>
                   <% if Event.active_event.enable_equipment_registration? %><li><a href="/equipment_registrations/new">Equipment</a></li><% end %>
                 </ul>

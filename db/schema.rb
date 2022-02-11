@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 87) do
+ActiveRecord::Schema.define(:version => 88) do
 
   create_table "actions", :force => true do |t|
     t.integer  "round_id",                     :null => false
@@ -151,6 +151,7 @@ ActiveRecord::Schema.define(:version => 87) do
     t.string   "participant_code"
     t.boolean  "allow_optional_purchases"
     t.boolean  "use_short_registration"
+    t.string   "participant_registration_link"
   end
 
   create_table "housing_rooms", :force => true do |t|

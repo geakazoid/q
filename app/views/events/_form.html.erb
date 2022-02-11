@@ -30,6 +30,10 @@
     <%= event_form.label :use_short_registration, 'Use Short Participant Registration' %>
   </p>
   <p>
+    <%= event_form.label :participant_registration_link, 'Participant Registration Link (if not on this site)' %><br />
+    <%= event_form.text_field :participant_registration_link, :size => 50 %>
+  </p>
+  <p>
     <%= event_form.check_box :allow_optional_purchases, :size => 50 %>
     <%= event_form.label :active, 'Allow Optional Purchases' %>
   </p>
