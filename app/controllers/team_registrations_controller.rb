@@ -104,14 +104,12 @@ class TeamRegistrationsController < ApplicationController
         when 'registration_action'
           prepare_session
           @team_registration.audit_user = current_user
+          @team_registration.complete = true
           if @team_registration.total_amount == 0
             @team_registration.paid = true
-            @team_registration.save
-            format.html { redirect_to(confirm_no_payment_team_registrations_url) }
-          else
-            @team_registration.save
-            format.html { redirect_to(confirm_team_registrations_url) }
           end
+          @team_registration.save
+          format.html { redirect_to(confirm_no_payment_team_registrations_url) }
         when 'save_action'
           flash[:notice] = 'Team Registration saved successfully.'
           format.html { redirect_to(user_team_registrations_path(current_user)) }
@@ -163,10 +161,11 @@ class TeamRegistrationsController < ApplicationController
         if !@user.nil?
           @team_registration.audit_user = current_user
             
-          if !@team_registration.paid?
+          if !@team_registration.complete?
             prepare_session
             if @team_registration.total_amount == 0
               @team_registration.paid = true
+              @team_registration.complete = true
               @team_registration.save
               format.html { redirect_to(confirm_no_payment_team_registrations_url) }
             else

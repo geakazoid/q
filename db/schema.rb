@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 88) do
+ActiveRecord::Schema.define(:version => 89) do
 
   create_table "actions", :force => true do |t|
     t.integer  "round_id",                     :null => false
@@ -577,6 +577,7 @@ ActiveRecord::Schema.define(:version => 88) do
     t.text     "audit"
     t.string   "regional_code"
     t.integer  "event_id"
+    t.boolean  "complete"
   end
 
   create_table "teams", :force => true do |t|

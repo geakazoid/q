@@ -188,11 +188,6 @@ class TeamRegistration < ActiveRecord::Base
   def audit_user=(user)
     @audit_user = user
   end
-
-  # return whether this team registration is complete or not
-  def complete?
-    self.paid?
-  end
   
   private
   

@@ -56,7 +56,7 @@
     <%= test_output("Registration Code: " + Event.active_event.team_code) if AppConfig.test_mode %>
   </div>
   <p id="fees_row" style="display:none" class="alert alert-info">
-    You will be unable to select quizzers for your teams until this registration is paid. To pay this registration you will need to submit a payment of $<span id="fee_display"></span> by check to the global NYI office.
+  You will need to make sure you submit a payment for your teams of $<span id="fee_display"></span> during the participant registration process. However, you will still be able to select quizzers for your teams once you've submitted this registration.
   </p>
   <p>
     <%= hidden_field_tag :commit_action, 'registration_action' %>
