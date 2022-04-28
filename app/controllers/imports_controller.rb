@@ -75,7 +75,7 @@ class ImportsController < ApplicationController
       airport_shuttle = row[68].strip
       housing_sunday = row[69].strip
       
-      pr = ParticipantRegistration.find_by_confirmation_number(confirmation_number)
+      pr = ParticipantRegistration.find_by_confirmation_number_and_first_name_and_last_name(confirmation_number,first_name,last_name)
       if pr.nil?
         pr = ParticipantRegistration.new
       end
