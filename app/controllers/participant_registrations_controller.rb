@@ -213,7 +213,7 @@ class ParticipantRegistrationsController < ApplicationController
     @participant_registration.audit_user = current_user
 
     respond_to do |format|
-      validate = @participant_registration.inactive? ? false : true 
+      validate = false
       if @participant_registration.save(validate)
         # deleted any shared users that have been removed
         # only do this if we're the owner

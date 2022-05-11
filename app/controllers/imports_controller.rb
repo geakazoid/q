@@ -26,10 +26,14 @@ class ImportsController < ApplicationController
       confirmation_number = row[0].strip
       first_name = row[1].strip
       last_name = row[2].strip
+      gender = row[6].strip
+      gender = gender == 'M' ? 'Male' : 'Female'
+      graduation_year = row[46].strip
       registration_type = row[30].strip.downcase
       shirt_size = row[47].strip
       group_leader = row[53].strip
       group_leader_email = row[54].strip
+      coach_name = row[51].strip
 
       # where is the user from?
       local_church = row[43].strip
@@ -58,18 +62,18 @@ class ImportsController < ApplicationController
       special_needs_details = row[57].strip
 
       # roommate preference
-      roommate_preference = row[59].strip
-      roommate_notes = row[60].strip
+      roommate_preference = row[60].strip
+      roommate_notes = row[61].strip
       
       # plans
       planning_on_officiating = row[48].strip.downcase
       planning_on_coaching = row[49].strip.downcase
-      travel_type = row[62].strip
+      travel_type = row[63].strip
 
       # emergency contact logic
       emergency_contact = row[34].split(' - ')
-      emergency_contact_name = emergency_contact[0].strip
-      emergency_contact_number = emergency_contact[1].strip
+      emergency_contact_name = emergency_contact[0].strip unless emergency_contact[0].nil?
+      emergency_contact_number = emergency_contact[1].strip unless emergency_contact[1].nil?
 
       # add ons
       airport_shuttle = row[68].strip
@@ -82,6 +86,7 @@ class ImportsController < ApplicationController
 
       pr.first_name = first_name
       pr.last_name = last_name
+      pr.gender = gender
       pr.email = email_address
       registration_type = 'staff' if registration_type == "staff/intern"
       registration_type = 'official' if registration_type == "official/volunteer"
@@ -90,21 +95,27 @@ class ImportsController < ApplicationController
       pr.shirt_size = shirt_size
       pr.group_leader_text = group_leader
       pr.group_leader_email = group_leader_email
-      pr.special_needs_food_allergies = true if !food_allergies_details.empty?
-      pr.special_needs_other = true if !special_needs_details.empty?
-      pr.special_needs_details = special_needs_details
+      pr.coach_name = coach_name
+      pr.graduation_year = graduation_year
+      pr.special_needs_food_allergies = false # hardcoded due to how Q2022 registration asks this question
+      pr.special_needs_other = false # hardcoded due to how Q2022 registration asks this question
+      pr.special_needs_details = 'Special Needs: ' + special_needs_details + "\r\n" + 'Food Allergies: ' + food_allergies_details
       pr.emergency_contact_name = emergency_contact_name
       pr.emergency_contact_number = emergency_contact_number
       pr.roommate_preference_1 = roommate_preference
       pr.roommate_notes = roommate_notes
       pr.planning_on_officiating = true if planning_on_officiating == "yes"
       pr.planning_on_coaching = true if planning_on_coaching == "yes"
+      pr.planning_on_officiating = false if planning_on_officiating == "no"
+      pr.planning_on_coaching = false if planning_on_coaching == "no"
       district = District.find_by_name(district_name)
       pr.district = district unless district.nil?
+      pr.local_church = local_church
       pr.need_arrival_shuttle = true if airport_shuttle == 1
       pr.housing_sunday = true if housing_sunday == 1
       pr.event_id = 6 # q2022
       pr.confirmation_number = confirmation_number
+      pr.travel_type = travel_type
       pr.paid = true
 
       # save the participant registration
