@@ -553,7 +553,7 @@ class ReportsController < ApplicationController
       for i in 10..11
         sheet1.row(1).set_format(i,group_header_format)
       end
-      sheet1[1,12] = 'Registration Options'
+      sheet1[1,12] = 'Registration Options' if registration_options.size > 0
       for i in 12..(12+registration_options.size-1)
         sheet1.row(1).set_format(i,group_header_format)
       end
@@ -577,8 +577,6 @@ class ReportsController < ApplicationController
       registration_options.each do |registration_option|
         sheet1[2,column+=1] = registration_option.item
       end
-
-      sheet1[2,column+=1] = 'Medical Liability Received'
 
       sheet1.row(2).default_format = header_format
 
@@ -624,9 +622,6 @@ class ReportsController < ApplicationController
         registration_options.each do |registration_option|
           sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : ""
         end
-
-        # other stuff
-        sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
           
         # set format
         for i in 1..column
@@ -791,7 +786,7 @@ class ReportsController < ApplicationController
         # write out group headers
         sheet1[1,4] = 'Teams'
         sheet1[1,10] = 'Travel Information'
-        sheet1[1,12] = 'Registration Options'
+        sheet1[1,12] = 'Registration Options' if registration_options.size > 0
   
         # write out headers
         column = 0
@@ -812,8 +807,6 @@ class ReportsController < ApplicationController
         registration_options.each do |registration_option|
           sheet1[2,column+=1] = registration_option.item
         end
-
-        sheet1[2,column+=1] = 'Medical Liability Received'
 
         # keep track of t-shirt numbers
         shirt_size_count = Hash.new
@@ -857,9 +850,6 @@ class ReportsController < ApplicationController
           registration_options.each do |registration_option|
             sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : ""
           end
-
-          # other stuff
-          sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
           
           # set format
           for i in 1..column
