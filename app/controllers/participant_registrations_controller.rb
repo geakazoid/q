@@ -16,6 +16,8 @@ class ParticipantRegistrationsController < ApplicationController
       @events = Event.get_events
       #@participant_registrations = ParticipantRegistration.find(:all, :conditions => "event_id = #{@selected_event}", :order => "first_name asc, last_name asc")
       @participant_registrations = ParticipantRegistration.by_event(Event.active_event.id).ordered_by_last_name
+      @districts = District.all(:order => 'name')
+      @regions = Region.all(:order => 'name')
 
       # filter results if we have any filters
       unless session[:paid].blank?
@@ -36,6 +38,14 @@ class ParticipantRegistrationsController < ApplicationController
           @filter_applied = true
         end
       end
+      unless session[:district_id].blank?
+        @participant_registrations = @participant_registrations.by_district(session[:district_id])
+        @filter_applied = true
+      end
+      unless session[:region_id].blank?
+        @participant_registrations = @participant_registrations.by_region(session[:region_id])
+        @filter_applied = true
+      end
     end
 
     respond_to do |format|
@@ -45,7 +55,7 @@ class ParticipantRegistrationsController < ApplicationController
     end
   end
 
-    # GET /participant_registrations/filter/?parameters
+  # GET /participant_registrations/filter/?parameters
   # filter list based upon passed in filters
   def filter
     # if we aren't an admin or housing admin we shouldn't be here
@@ -55,16 +65,22 @@ class ParticipantRegistrationsController < ApplicationController
     if params[:clear] == 'true'
       session[:paid] = nil
       session[:group_leader] = nil
+      session[:district_id] = nil
+      session[:region_id] = nil
  
       flash[:notice] = 'All filters have been cleared.'
     else
       # update session values from passed in params
       session[:paid] = params[:paid] unless params[:paid].blank?
       session[:group_leader] = params[:group_leader] unless params[:group_leader].blank?
+      session[:district_id] = params[:district_id] unless params[:district_id].blank?
+      session[:region_id] = params[:region_id] unless params[:region_id].blank?
 
       # remove filters if none is passed
       session[:paid] = nil if params[:paid] == 'none'
       session[:group_leader] = nil if params[:group_leader] == 'none'
+      session[:district_id] = nil if params[:district_id] == 'none'
+      session[:region_id] = nil if params[:region_id] == 'none'
     
       flash[:notice] = 'Filters updated successfully.'
     end

@@ -39,6 +39,28 @@
     </td>
   </tr>
   <tr>
+      <td>
+        Filter By District:
+      </td>
+      <td>
+        <%= select_tag :filter_district, (session[:district_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@districts.collect {|d| [ d[:name], d[:id] ] }, session[:district_id].to_i), :onchange => "document.location='/participant_registrations/filter/?district_id=' + this.value;" %>
+        <% unless session[:district_id].blank? %>
+          <a href='/participant_registrations/filter/?district_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Filter By Field:
+      </td>
+      <td>
+        <%= select_tag :filter_region, (session[:region_id].blank? ? '<option>- Select -</option>' : '') + options_for_select(@regions.collect {|d| [ d[:name], d[:id] ] }, session[:region_id].to_i), :onchange => "document.location='/participant_registrations/filter/?region_id=' + this.value;" %>
+        <% unless session[:region_id].blank? %>
+          <a href='/participant_registrations/filter/?region_id=none'>Remove</a>
+        <% end %>
+      </td>
+    </tr>
+  <tr>
     <td>
       <% if @filter_applied %>
         <a href='/participant_registrations/filter/?clear=true'>Clear All Filters</a>
