@@ -76,8 +76,9 @@ class ImportsController < ApplicationController
       emergency_contact_number = emergency_contact[1].strip unless emergency_contact[1].nil?
 
       # add ons
-      airport_shuttle = row[68].strip
-      housing_sunday = row[69].strip
+      decades_quizzing = row[71].strip
+      housing_sunday = row[72].strip
+      airport_shuttle = row[73].strip
       
       pr = ParticipantRegistration.find_by_confirmation_number_and_first_name_and_last_name(confirmation_number,first_name,last_name)
       if pr.nil?
@@ -117,6 +118,24 @@ class ImportsController < ApplicationController
       pr.confirmation_number = confirmation_number
       pr.travel_type = travel_type
       pr.paid = true
+
+      # registration options
+      ro_decades_quizzing = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Decades Quizzing'" ])
+      ro_sunday_housing = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Sunday Night Housing - June 26'" ])
+      ro_airport_shuttle = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Airport Shuttle'" ])
+      pr.registration_options.clear
+      if decades_quizzing == "1"
+        logger.info("saving decdes quizzing")
+        pr.registration_options << ro_decades_quizzing
+      end
+      if housing_sunday == "1"
+        logger.info("saving sunday housing")
+        pr.registration_options << ro_sunday_housing
+      end
+      if airport_shuttle == "1"
+        logger.info("saving airport shuttle")
+        pr.registration_options << ro_airport_shuttle
+      end
 
       # save the participant registration
       pr.save(false)
