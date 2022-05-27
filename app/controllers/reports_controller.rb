@@ -666,6 +666,9 @@ class ReportsController < ApplicationController
       sheet1.row(pos).set_format(1,group_header_format)
       sheet1.row(pos).set_format(2,group_header_format)
       pos += 1
+      sheet1[pos,1] = "XSmall"
+      sheet1[pos,2] = !shirt_size_count["XSmall"].nil? ? shirt_size_count["XSmall"] : 0
+      pos += 1
       sheet1[pos,1] = "Small"
       sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
       pos += 1
@@ -675,17 +678,17 @@ class ReportsController < ApplicationController
       sheet1[pos,1] = "Large"
       sheet1[pos,2] = !shirt_size_count["Large"].nil? ? shirt_size_count["Large"] : 0
       pos += 1
-      sheet1[pos,1] = "X-Large"
-      sheet1[pos,2] = !shirt_size_count["X-Large"].nil? ? shirt_size_count["X-Large"] : 0
+      sheet1[pos,1] = "XLarge"
+      sheet1[pos,2] = !shirt_size_count["XLarge"].nil? ? shirt_size_count["XLarge"] : 0
       pos += 1
-      sheet1[pos,1] = "2X-Large"
-      sheet1[pos,2] = !shirt_size_count["2X-Large"].nil? ? shirt_size_count["2X-Large"] : 0
+      sheet1[pos,1] = "2XLarge"
+      sheet1[pos,2] = !shirt_size_count["2XLarge"].nil? ? shirt_size_count["2XLarge"] : 0
       pos += 1
-      sheet1[pos,1] = "3X-Large"
-      sheet1[pos,2] = !shirt_size_count["3X-Large"].nil? ? shirt_size_count["3X-Large"] : 0
+      sheet1[pos,1] = "3XLarge"
+      sheet1[pos,2] = !shirt_size_count["3XLarge"].nil? ? shirt_size_count["3XLarge"] : 0
       pos += 1
-      sheet1[pos,1] = "4X-Large"
-      sheet1[pos,2] = !shirt_size_count["4X-Large"].nil? ? shirt_size_count["4X-Large"] : 0
+      sheet1[pos,1] = "4XLarge"
+      sheet1[pos,2] = !shirt_size_count["4XLarge"].nil? ? shirt_size_count["4XLarge"] : 0
       pos += 1
       sheet1[pos,1] = "Undefined"
       sheet1[pos,2] = !shirt_size_count["undefined"].nil? ? shirt_size_count["undefined"] : 0
@@ -893,6 +896,9 @@ class ReportsController < ApplicationController
         sheet1[pos,1] = "Shirt Sizes"
         sheet1.row(pos).set_format(1,group_header_format)
         sheet1.row(pos).set_format(2,group_header_format)
+        pos += 1
+        sheet1[pos,1] = "XSmall"
+        sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
         pos += 1
         sheet1[pos,1] = "Small"
         sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
@@ -1149,6 +1155,9 @@ class ReportsController < ApplicationController
       sheet1[pos,1] = "Shirt Sizes"
       sheet1.row(pos).set_format(1,group_header_format)
       sheet1.row(pos).set_format(2,group_header_format)
+      pos += 1
+      sheet1[pos,1] = "XSmall"
+      sheet1[pos,2] = !shirt_size_count["XSmall"].nil? ? shirt_size_count["XSmall"] : 0
       pos += 1
       sheet1[pos,1] = "Small"
       sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
