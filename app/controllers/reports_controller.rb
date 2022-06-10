@@ -1251,7 +1251,8 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Monitor Details'
     sheet1.row(0).default_format = header_format
 
-    @equipment_registrations = EquipmentRegistration.all(:conditions => "event_id = #{params['event_id']}", :order => 'last_name asc')
+    active_event = !params['event_id'].nil? ? params['event_id'] : Event.active_event.id
+    @equipment_registrations = EquipmentRegistration.all(:conditions => "event_id = #{active_event}", :order => 'last_name asc')
 
     pos = 1
     @equipment_registrations.each do |equipment_registration|
