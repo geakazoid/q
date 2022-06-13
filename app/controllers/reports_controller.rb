@@ -336,7 +336,8 @@ class ReportsController < ApplicationController
     # write out headers
     column = 0
 
-    @teams = Team.all(:order => 'division_id asc, name asc')
+    active_event = !params['event_id'].nil? ? params['event_id'] : Event.active_event.id
+    @teams = Team.all(:joins => [:team_registration], :conditions => "event_id = #{active_event}", :order => 'last_name asc, first_name asc', :order => 'division_id asc, name asc')
 
     pos = 1
     @teams.each do |team|
