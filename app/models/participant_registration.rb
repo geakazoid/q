@@ -436,10 +436,10 @@ class ParticipantRegistration < ActiveRecord::Base
       'quizzer' => 'Quizzer',
       'coach' => 'Coach',
       'official' => 'Official / Volunteer',
-      'staff' => 'Staff',
-      'on-campus' => 'On Campus Guest',
-      'on-campus-under3' => 'On Campus Guest Under 3',
-      'off-campus' => 'Off Campus Guest'
+      'staff' => 'Staff / Intern',
+      'on-campus overnight guest' => 'On Campus Overnight Guest',
+      'off-campus spectator' => 'Off Campus Spectator',
+      'inactive' => 'Inactive'
     }
     return !registration_type.nil? ? types[registration_type] : ''
   end
