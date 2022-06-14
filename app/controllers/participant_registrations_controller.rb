@@ -956,4 +956,63 @@ class ParticipantRegistrationsController < ApplicationController
     end
 
   end
+
+  # correct group leaders that were linked incorrectly (not a group leader for the current event)
+  def fix_group_leaders
+    get_group_leaders
+
+    # keep counts
+    processed = 0
+    skipped = 0
+    matched = 0
+    not_matched = 0
+
+    participant_registrations = ParticipantRegistration.find(:all, :conditions => "event_id = #{params['event_id']}", :order => "first_name asc, last_name asc")
+    participant_registrations.each do |participant_registration|
+      processed += 1
+      if participant_registration.group_leader.nil? or participant_registration.group_leader.blank?
+        skipped += 1
+        next
+      end
+
+      # check by user type and skip if foound
+      if (participant_registration.registration_type == 'official')
+        skipped += 1
+        next
+      end
+      if (participant_registration.registration_type == 'staff')
+        skipped += 1
+        next
+      end
+
+      if (!participant_registration.group_leader.nil?)
+        found = false
+        @group_leaders.each do |group_leader, id|
+          if (id.to_s == participant_registration.group_leader.to_s)
+            found = true
+            logger.info("FOUND")
+          end
+        end
+
+        if (!found)
+          participant_registration.group_leader = ''
+          participant_registration.save(false)
+          matched += 1
+          next
+        end
+      end
+
+      not_matched += 1
+    end
+
+    flash[:notice] = "Fixed Group Leaders. Processed #{processed} registrations. #{skipped} registrations were skipped because they already have a correct group leader defined. #{matched} registrations were updated to no group leader. #{not_matched} registrations could not be matched and have not been modified."
+
+    logger.info(@group_leaders)
+    respond_to do |format|
+      format.html {
+        redirect_to(participant_registrations_url)
+      }
+    end
+
+  end
 end
