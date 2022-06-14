@@ -18,6 +18,7 @@ class ParticipantRegistrationsController < ApplicationController
       @participant_registrations = ParticipantRegistration.by_event(Event.active_event.id).ordered_by_last_name
       @districts = District.all(:order => 'name')
       @regions = Region.all(:order => 'name')
+      get_group_leaders
 
       # filter results if we have any filters
       unless session[:paid].blank?
@@ -29,14 +30,18 @@ class ParticipantRegistrationsController < ApplicationController
           @filter_applied = true
         end
       end
-      unless session[:group_leader].blank?
-        if (session[:group_leader] == 'defined')
+      unless session[:group_leader_assignment].blank?
+        if (session[:group_leader_assignment] == 'defined')
           @participant_registrations = @participant_registrations.group_leader_defined
           @filter_applied = true
-        elsif (session[:group_leader] == 'undefined')
+        elsif (session[:group_leader_assignment] == 'undefined')
           @participant_registrations = @participant_registrations.group_leader_undefined
           @filter_applied = true
         end
+      end
+      unless session[:group_leader].blank?
+        @participant_registrations = @participant_registrations.by_group_leader(session[:group_leader])
+        @filter_applied = true
       end
       unless session[:district_id].blank?
         @participant_registrations = @participant_registrations.by_district(session[:district_id])
@@ -64,6 +69,7 @@ class ParticipantRegistrationsController < ApplicationController
     # clear filters if requested
     if params[:clear] == 'true'
       session[:paid] = nil
+      session[:group_leader_assignment] = nil
       session[:group_leader] = nil
       session[:district_id] = nil
       session[:region_id] = nil
@@ -72,12 +78,14 @@ class ParticipantRegistrationsController < ApplicationController
     else
       # update session values from passed in params
       session[:paid] = params[:paid] unless params[:paid].blank?
+      session[:group_leader_assignment] = params[:group_leader_assignment] unless params[:group_leader_assignment].blank?
       session[:group_leader] = params[:group_leader] unless params[:group_leader].blank?
       session[:district_id] = params[:district_id] unless params[:district_id].blank?
       session[:region_id] = params[:region_id] unless params[:region_id].blank?
 
       # remove filters if none is passed
       session[:paid] = nil if params[:paid] == 'none'
+      session[:group_leader_assignment] = nil if params[:group_leader_assignment] == 'none'
       session[:group_leader] = nil if params[:group_leader] == 'none'
       session[:district_id] = nil if params[:district_id] == 'none'
       session[:region_id] = nil if params[:region_id] == 'none'

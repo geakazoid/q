@@ -29,11 +29,22 @@
   </tr>
   <tr>
     <td>
+      Filter By Group Leader Assignment:
+    </td>
+    <td>
+      <%= select_tag :filter_group_leader_assignment, (session[:group_leader_assignment].blank? ? '<option>- Select -</option>' : '') + options_for_select({'Defined' => 'defined','Undefined' => 'undefined'}, session[:group_leader_assignment]), :onchange => "document.location='/participant_registrations/filter/?group_leader_assignment=' + this.value;" %>
+      <% unless session[:group_leader_assignment].blank? %>
+        <a href='/participant_registrations/filter/?group_leader_assignment=none'>Remove</a>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td>
       Filter By Group Leader:
     </td>
     <td>
-      <%= select_tag :filter_paid, (session[:group_leader].blank? ? '<option>- Select -</option>' : '') + options_for_select({'Defined' => 'defined','Undefined' => 'undefined'}, session[:group_leader]), :onchange => "document.location='/participant_registrations/filter/?group_leader=' + this.value;" %>
-      <% unless session[:group_leader].blank? %>
+      <%= select_tag :filter_group_leader, options_for_select(@group_leaders, session[:group_leader].to_i), :onchange => "document.location='/participant_registrations/filter/?group_leader=' + this.value;" %>
+    <% unless session[:group_leader].blank? %>
         <a href='/participant_registrations/filter/?group_leader=none'>Remove</a>
       <% end %>
     </td>

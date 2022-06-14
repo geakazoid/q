@@ -125,15 +125,12 @@ class ImportsController < ApplicationController
       ro_airport_shuttle = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Airport Shuttle'" ])
       pr.registration_options.clear
       if decades_quizzing == "1"
-        logger.info("saving decdes quizzing")
         pr.registration_options << ro_decades_quizzing
       end
       if housing_sunday == "1"
-        logger.info("saving sunday housing")
         pr.registration_options << ro_sunday_housing
       end
       if airport_shuttle == "1"
-        logger.info("saving airport shuttle")
         pr.registration_options << ro_airport_shuttle
       end
 
