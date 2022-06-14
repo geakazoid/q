@@ -924,14 +924,7 @@ class ParticipantRegistrationsController < ApplicationController
         next
       end
       # check by group leader email
-      group_leader = User.find_by_email(participant_registration.group_leader_email) unless participant_registration.group_leader_email.blank? rescue nil
-      if participant_registration.id == 1690
-        logger.info("LOG: " + participant_registration.group_leader_email)
-      end
       group_leader = User.find(:first, :conditions => "event_id = #{Event.active_event.id} and email = '#{participant_registration.group_leader_email}'") unless participant_registration.group_leader_email.blank? rescue nil
-      if participant_registration.id == 1690
-        logger.info("LOG: " + group_leader.inspect)
-      end
       if (!group_leader.nil?)
         participant_registration.group_leader = group_leader.id
         # don't validate before save
@@ -942,9 +935,6 @@ class ParticipantRegistrationsController < ApplicationController
       # check by group leader name (in group_leader_text field)
       if !participant_registration.group_leader_text.nil? and !participant_registration.group_leader_text.blank?
         first_name,last_name = participant_registration.group_leader_text.split(' ')
-        if participant_registration.id == 1565
-          logger.info("LOG: " + first_name + ", " + last_name)
-        end
         group_leader = User.find(:first, :joins => [:team_registrations], :conditions => "event_id = #{Event.active_event.id} and users.first_name = '#{first_name}' and users.last_name = '#{last_name}'") rescue nil
         if (!group_leader.nil?)
           participant_registration.group_leader = group_leader.id
