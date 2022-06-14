@@ -135,9 +135,9 @@ class ReportsController < ApplicationController
   # this method should not be accessed directly
   def participant_registrations
 
-    registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
-    registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
-
+    registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal" and event_id = ' + Event.active_id.to_s, :order => 'sort')
+    registration_options_other = RegistrationOption.all(:conditions => 'category = "other" and event_id = ' + Event.active_id.to_s, :order => 'sort')
+    
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
     # write out headers
@@ -148,28 +148,20 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'First Name'
     sheet1[0,column+=1] = 'Last Name'
     sheet1[0,column+=1] = 'Email'
-    sheet1[0,column+=1] = 'Address'
-    sheet1[0,column+=1] = 'City'
-    sheet1[0,column+=1] = 'State'
-    sheet1[0,column+=1] = 'Zipcode'
-    sheet1[0,column+=1] = 'Country'
     sheet1[0,column+=1] = 'Gender'
-    sheet1[0,column+=1] = 'Age / Most Recent Grade'
     sheet1[0,column+=1] = 'Graduation Year'
-    sheet1[0,column+=1] = 'Over 18'
     sheet1[0,column+=1] = 'Primary Phone'
     sheet1[0,column+=1] = 'Group Leader'
     sheet1[0,column+=1] = 'Local Church'
     sheet1[0,column+=1] = 'District'
     sheet1[0,column+=1] = 'Field'
     sheet1[0,column+=1] = 'Shirt Size'
-    sheet1[0,column+=1] = 'Roommate Preference 1'
-    sheet1[0,column+=1] = 'Roommate Preference 2'
+    sheet1[0,column+=1] = 'Roommate Preference'
+    sheet1[0,column+=1] = 'Additional Roommate Notes'
     sheet1[0,column+=1] = 'Team 1'
     sheet1[0,column+=1] = 'Team 2'
     sheet1[0,column+=1] = 'Team 3'
     sheet1[0,column+=1] = 'Housing Assignment'
-    sheet1[0,column+=1] = 'Special Needs?'
     sheet1[0,column+=1] = 'Special Needs Details'
     sheet1[0,column+=1] = 'Travel Type'
     sheet1[0,column+=1] = 'Travel Details'
@@ -182,9 +174,6 @@ class ReportsController < ApplicationController
       sheet1[0,column+=1] = registration_option.item
     end
 
-    sheet1[0,column+=1] = 'Medical / Liability?'
-    sheet1[0,column+=1] = 'Payment Amount'
-    sheet1[0,column+=1] = 'Paid?'
     sheet1[0,column+=1] = 'Created On'
     sheet1[0,column+=1] = 'Updated On'
 
@@ -197,15 +186,8 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant_registration.first_name
       sheet1[pos,column+=1] = participant_registration.last_name
       sheet1[pos,column+=1] = participant_registration.email
-      sheet1[pos,column+=1] = participant_registration.street
-      sheet1[pos,column+=1] = participant_registration.city
-      sheet1[pos,column+=1] = participant_registration.state
-      sheet1[pos,column+=1] = participant_registration.zipcode
-      sheet1[pos,column+=1] = participant_registration.country
       sheet1[pos,column+=1] = participant_registration.gender
-      sheet1[pos,column+=1] = participant_registration.most_recent_grade
       sheet1[pos,column+=1] = participant_registration.graduation_year
-      sheet1[pos,column+=1] = participant_registration.over_18? ? 'YES' : 'NO'
       sheet1[pos,column+=1] = participant_registration.home_phone
       sheet1[pos,column+=1] = participant_registration.group_leader_name
       sheet1[pos,column+=1] = participant_registration.local_church
@@ -221,7 +203,7 @@ class ReportsController < ApplicationController
       end
       sheet1[pos,column+=1] = participant_registration.shirt_size
       sheet1[pos,column+=1] = participant_registration.roommate_preference_1
-      sheet1[pos,column+=1] = participant_registration.roommate_preference_2
+      sheet1[pos,column+=1] = participant_registration.roommate_notes
 
       # teams
       if participant_registration.teams.size == 0
@@ -240,6 +222,10 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant_registration.teams[0].name_with_division
         sheet1[pos,column+=1] = participant_registration.teams[1].name_with_division
         sheet1[pos,column+=1] = participant_registration.teams[2].name_with_division
+      else
+        sheet1[pos,column+=1] = 'Invalid Teams'
+        sheet1[pos,column+=1] = 'Invalid Teams'
+        sheet1[pos,column+=1] = 'Invalid Teams'
       end
 
       # housing
@@ -253,14 +239,6 @@ class ReportsController < ApplicationController
       end
 
       # special needs
-      special_needs = ''
-      special_needs += 'Food Allergies, ' if participant_registration.special_needs_food_allergies
-      special_needs += 'Handicap Accessible, ' if participant_registration.special_needs_handicap_accessible
-      special_needs += 'Hearing Impaired, ' if participant_registration.special_needs_hearing_impaired
-      special_needs += 'Vision Impaired, ' if participant_registration.special_needs_vision_impaired
-      special_needs += 'Other, ' if participant_registration.special_needs_other
-      special_needs.chomp(' ,')
-      sheet1[pos,column+=1] = special_needs
       sheet1[pos,column+=1] = participant_registration.special_needs_details
 
       sheet1[pos,column+=1] = participant_registration.travel_type
@@ -274,9 +252,6 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant_registration.registration_options.include?(registration_option) ? "YES" : "NO"
       end
 
-      sheet1[pos,column+=1] = participant_registration.medical_liability? ? 'YES' : 'NO'
-      sheet1[pos,column+=1] = participant_registration.amount_ordered
-      sheet1[pos,column+=1] = participant_registration.paid? ? 'YES' : 'NO'
       sheet1[pos,column+=1] = participant_registration.created_at.strftime("%m/%d/%Y %H:%M:%S")
       sheet1[pos,column+=1] = participant_registration.updated_at.strftime("%m/%d/%Y %H:%M:%S")
       pos += 1
