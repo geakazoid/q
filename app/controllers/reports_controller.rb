@@ -1364,6 +1364,9 @@ class ReportsController < ApplicationController
   def housing_by_building
     book = Spreadsheet::Workbook.new
 
+    # registration options (unrelated to meeals)
+    registration_options = RegistrationOption.all(:conditions => 'category = "other" and event_id = ' + Event.active_id.to_s, :order => 'sort')
+
     if (!params['building_id'].blank?)
       sheet1 = book.create_worksheet
 
@@ -1385,10 +1388,14 @@ class ReportsController < ApplicationController
       sheet1[1,column+=1] = 'Participant'
       sheet1[1,column+=1] = 'Gender'
       sheet1[1,column+=1] = 'Role'
-      sheet1[1,column+=1] = 'Age Group / Grade'
       sheet1[1,column+=1] = 'District'
       sheet1[1,column+=1] = 'Field'
       sheet1[1,column+=1] = 'Group Leader'
+      registration_options.each do |registration_option|
+        if registration_option.item.match(/housing/i)
+          sheet1[1,column+=1] = registration_option.item
+        end
+      end
       sheet1.row(1).default_format = header_format
 
       pos = 2
@@ -1399,7 +1406,6 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.full_name_reversed
         sheet1[pos,column+=1] = participant.gender
         sheet1[pos,column+=1] = participant.formatted_registration_type
-        sheet1[pos,column+=1] = participant.most_recent_grade
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
@@ -1425,6 +1431,13 @@ class ReportsController < ApplicationController
           end
         end
         sheet1[pos,column+=1] = group_leader_name
+
+        # registrations options (unrelated to meals)
+        registration_options.each do |registration_option|
+          if registration_option.item.match(/housing/i)
+            sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+          end
+        end
 
         pos += 1
       end
@@ -1461,10 +1474,14 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'Participant'
         sheet1[1,column+=1] = 'Gender'
         sheet1[1,column+=1] = 'Role'
-        sheet1[1,column+=1] = 'Age Group / Grade'
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Field'
         sheet1[1,column+=1] = 'Group Leader'
+        registration_options.each do |registration_option|
+          if registration_option.item.match(/housing/i)
+            sheet1[1,column+=1] = registration_option.item
+          end
+        end
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1475,7 +1492,6 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.full_name_reversed
           sheet1[pos,column+=1] = participant.gender
           sheet1[pos,column+=1] = participant.formatted_registration_type
-          sheet1[pos,column+=1] = participant.most_recent_grade
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
@@ -1502,6 +1518,13 @@ class ReportsController < ApplicationController
           end
           sheet1[pos,column+=1] = group_leader_name
 
+          # registrations options (unrelated to meals)
+          registration_options.each do |registration_option|
+            if registration_option.item.match(/housing/i)
+              sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+            end
+          end
+
           pos += 1
         end
 
@@ -1524,6 +1547,9 @@ class ReportsController < ApplicationController
   # group leaders with one group leader per tab.
   def housing_by_group_leader
     book = Spreadsheet::Workbook.new
+
+    # registration options (unrelated to meeals)
+    registration_options = RegistrationOption.all(:conditions => 'category = "other" and event_id = ' + Event.active_id.to_s, :order => 'sort')
 
     if (!params['group_leader'].blank?)
       sheet1 = book.create_worksheet
@@ -1579,9 +1605,13 @@ class ReportsController < ApplicationController
       sheet1[1,column+=1] = 'Participant'
       sheet1[1,column+=1] = 'Gender'
       sheet1[1,column+=1] = 'Role'
-      sheet1[1,column+=1] = 'Age Group / Grade'
       sheet1[1,column+=1] = 'District'
       sheet1[1,column+=1] = 'Field'
+      registration_options.each do |registration_option|
+        if registration_option.item.match(/housing/i)
+          sheet1[1,column+=1] = registration_option.item
+        end
+      end
       sheet1.row(1).default_format = header_format
 
       pos = 2
@@ -1593,9 +1623,15 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.full_name_reversed
         sheet1[pos,column+=1] = participant.gender
         sheet1[pos,column+=1] = participant.formatted_registration_type
-        sheet1[pos,column+=1] = participant.most_recent_grade
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
+
+        # registrations options (unrelated to meals)
+        registration_options.each do |registration_option|
+          if registration_option.item.match(/housing/i)
+            sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+          end
+        end
 
         pos += 1
       end
@@ -1677,9 +1713,13 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'Participant'
         sheet1[1,column+=1] = 'Gender'
         sheet1[1,column+=1] = 'Role'
-        sheet1[1,column+=1] = 'Age Group / Grade'
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Field'
+        registration_options.each do |registration_option|
+          if registration_option.item.match(/housing/i)
+            sheet1[1,column+=1] = registration_option.item
+          end
+        end
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1691,9 +1731,15 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.full_name_reversed
           sheet1[pos,column+=1] = participant.gender
           sheet1[pos,column+=1] = participant.formatted_registration_type
-          sheet1[pos,column+=1] = participant.most_recent_grade
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
+
+          # registrations options (unrelated to meals)
+          registration_options.each do |registration_option|
+            if registration_option.item.match(/housing/i)
+              sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+            end
+          end
 
           pos += 1
         end
