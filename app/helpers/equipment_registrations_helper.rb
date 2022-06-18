@@ -3,7 +3,7 @@ module EquipmentRegistrationsHelper
   def equipment_admin_menu(equipment_registration)
     content = "<div class='menu' id='menu_" + equipment_registration.id.to_s + "'>"
     content += "<span id='spinner_" + equipment_registration.id.to_s + "' style='display:none;'><img style='vertical-align: middle;' src='/images/spinner_grey.gif'/></span>&nbsp;&nbsp;"
-    if admin?
+    if admin? or equipment_admin?
       content += "<span id='menu_text_" + equipment_registration.id.to_s + "'>"
       content += link_to_remote 'Modify',
                                 :url => edit_equipment_registration_path(equipment_registration),
