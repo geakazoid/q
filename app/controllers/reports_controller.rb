@@ -1225,6 +1225,9 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Interface Box Details'
     sheet1[0,column+=1] = 'Pad Set Details'
     sheet1[0,column+=1] = 'Monitor Details'
+    sheet1[0,column+=1] = 'Power Strip Details'
+    sheet1[0,column+=1] = 'Extension Cord Details'
+    sheet1[0,column+=1] = 'Recorder Details'
     sheet1.row(0).default_format = header_format
 
     active_event = !params['event_id'].nil? ? params['event_id'] : Event.active_event.id
@@ -1257,6 +1260,7 @@ class ReportsController < ApplicationController
           text += 'Quizmachine Version: ' + laptop.quizmachine_version + "\n"
           text += 'Username: ' + laptop.username + "\n" unless laptop.username.blank?
           text += 'Password: ' + laptop.password + "\n" unless laptop.password.blank?
+          text += 'Room: ' + laptop.room.name + "\n" unless laptop.room.nil?
           text += "\n"
           count += 1
         end
@@ -1272,6 +1276,7 @@ class ReportsController < ApplicationController
         equipment_registration.interface_boxes.each do |interface_box|
           text += 'Interface Box ' + count.to_s + "\n"
           text += 'Type: ' + interface_box.ib_type + "\n"
+          text += 'Room: ' + interface_box.room.name + "\n" unless interface_box.room.nil?
           text += "\n"
           count += 1
         end
@@ -1287,6 +1292,7 @@ class ReportsController < ApplicationController
         equipment_registration.pads.each do |string|
           text += 'String ' + count.to_s + "\n"
           text += 'Color: ' + string.color + "\n"
+          text += 'Room: ' + string.room.name + "\n" unless string.room.nil?
           text += "\n"
           count += 1
         end
@@ -1302,6 +1308,7 @@ class ReportsController < ApplicationController
         equipment_registration.monitors.each do |monitor|
           text += 'Monitor ' + count.to_s + "\n"
           text += 'Screen Size: ' + monitor.monitor_size + "\n" unless monitor.monitor_size.blank?
+          text += 'Room: ' + monitor.room.name + "\n" unless monitor.room.nil?
           text += "\n"
           count += 1
         end
@@ -1320,6 +1327,7 @@ class ReportsController < ApplicationController
           text += 'Model: ' + power_strip.model + "\n" unless power_strip.model.blank?
           text += 'Color: ' + power_strip.color + "\n" unless power_strip.color.blank?
           text += 'Number Of Plugs: ' + power_strip.number_of_plugs + "\n" unless power_strip.number_of_plugs.blank?
+          text += 'Room: ' + power_strip.room.name + "\n" unless power_strip.room.nil?
           text += "\n"
           count += 1
         end
@@ -1336,6 +1344,22 @@ class ReportsController < ApplicationController
           text += 'Extension Cord ' + count.to_s + "\n"
           text += 'Color: ' + extension_cord.color + "\n" unless extension_cord.color.blank?
           text += 'Length: ' + extension_cord.length + "\n" unless extension_cord.length.blank?
+          text += 'Room: ' + extension_cord.room.name + "\n" unless extension_cord.room.nil?
+          text += "\n"
+          count += 1
+        end
+        sheet1[pos,column+=1] = text
+      else
+        sheet1[pos,column+=1] = ''
+      end
+
+      # recorder details
+      if equipment_registration.recorders.size > 0
+        text = ''
+        count = 1
+        equipment_registration.recorders.each do |recorder|
+          text += 'Recorder ' + count.to_s + "\n"
+          text += 'Room: ' + recorder.room.name + "\n" unless recorder.room.nil?
           text += "\n"
           count += 1
         end
@@ -1348,7 +1372,7 @@ class ReportsController < ApplicationController
       pos += 1
     end
 
-    for i in 0..17
+    for i in 0..18
       sheet1.column(i).width = 25
     end
 
