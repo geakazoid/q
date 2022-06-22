@@ -123,6 +123,11 @@
                   <%= yield(:admin) %>
                 </div>
               <% end %>
+              <% if (admin? or equipment_admin?) and @content_for_equipment_admin %>
+                <div id="sidebar">
+                  <%= yield(:equipment_admin) %>
+                </div>
+              <% end %>
               <% if (admin? or housing_admin?) and @content_for_housing_admin %>
                 <div id="sidebar">
                   <%= yield(:housing_admin) %>
