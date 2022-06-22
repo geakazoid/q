@@ -1,0 +1,24 @@
+<div id='page_title'>
+  <%= title('Add New Rooms', :h1) %>
+</div>
+
+<p>
+  Add new rooms below. Please follow the following format: name. Example:
+  <pre>103
+110
+Auditorium B</pre>
+  Note: Rooms with the same name will not be added again.
+</p>
+<%= form_tag(rooms_path) %>
+  <p>
+    <label>Rooms</label><br />
+    <%= text_area_tag :room_info, nil, :size => "60x15" %>
+  </p>
+  <p>
+    <label>Event</label><br />
+    <%= select_tag :event_id, options_from_collection_for_select(@events, "id", "name", @selected_event.to_i) %>
+  </p>
+  <p>
+    <%= submit_tag 'Add Rooms', {:class => 'btn btn-primary'} %> or <%= link_to 'Cancel', rooms_path %>
+  </p>
+</p>
