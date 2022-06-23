@@ -1209,7 +1209,8 @@ class ReportsController < ApplicationController
 
     # write out headers
     column = 0
-    sheet1[0,column] = 'Name'
+    sheet1[0,column] = 'ID'
+    sheet1[0,column+=1] = 'Name'
     sheet1[0,column+=1] = 'Phone'
     sheet1[0,column+=1] = 'Email'
     sheet1[0,column+=1] = 'District'
@@ -1236,7 +1237,8 @@ class ReportsController < ApplicationController
     pos = 1
     @equipment_registrations.each do |equipment_registration|
       column = 0
-      sheet1[pos,column] = equipment_registration.full_name
+      sheet1[pos,column] = equipment_registration.id
+      sheet1[pos,column+=1] = equipment_registration.full_name
       sheet1[pos,column+=1] = equipment_registration.phone
       sheet1[pos,column+=1] = equipment_registration.email
       sheet1[pos,column+=1] = !equipment_registration.district.nil? ? equipment_registration.district.name : ''
@@ -1372,7 +1374,7 @@ class ReportsController < ApplicationController
       pos += 1
     end
 
-    for i in 0..18
+    for i in 0..19
       sheet1.column(i).width = 25
     end
 
