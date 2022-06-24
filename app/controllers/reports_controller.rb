@@ -1309,7 +1309,8 @@ class ReportsController < ApplicationController
         count = 1
         equipment_registration.monitors.each do |monitor|
           text += 'Monitor ' + count.to_s + "\n"
-          text += 'Screen Size: ' + monitor.monitor_size + "\n" unless monitor.monitor_size.blank?
+          text += 'Brand: ' + monitor.brand + "\n" unless monitor.brand.blank?
+          text += 'Screen Size: ' + monitor.ib_type + "\n" unless monitor.ib_type.blank?
           text += 'Room: ' + monitor.room.name + "\n" unless monitor.room.nil?
           text += "\n"
           count += 1
@@ -1381,6 +1382,119 @@ class ReportsController < ApplicationController
     book.write "#{RAILS_ROOT}/public/download/equipment_registrations.xls"
 
     send_file "#{RAILS_ROOT}/public/download/equipment_registrations.xls", :filename => "equipment_registrations.xls"
+  end
+
+  # create a downloadable excel of equipment
+  def equipment
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+
+    header_format = Spreadsheet::Format.new :weight => :bold, :horizontal_align => :left
+    format = Spreadsheet::Format.new :horizontal_align => :default, :vertical_align => :top
+
+    # write out headers
+    column = 0
+    sheet1[0,column] = 'ID'
+    sheet1[0,column+=1] = 'Name'
+    sheet1[0,column+=1] = 'Equipment Type'
+    sheet1[0,column+=1] = 'Equipment Details'
+    sheet1[0,column+=1] = 'Status'
+    sheet1[0,column+=1] = 'Room'
+    sheet1.row(0).default_format = header_format
+
+    active_event = !params['event_id'].nil? ? params['event_id'] : Event.active_event.id
+    @equipment_registrations = EquipmentRegistration.all(:conditions => "event_id = #{active_event}", :order => 'last_name asc')
+
+    pos = 1
+    @equipment_registrations.each do |equipment_registration|
+      equipment_registration.equipment.each do |equipment|
+        equipment_type = nil
+        equipment_type = 'Laptop' if equipment.equipment_type == 'laptop'
+        equipment_type = 'Interface Box' if equipment.equipment_type == 'interface_box'
+        equipment_type = 'String of Pads' if equipment.equipment_type == 'string_of_pads'
+        equipment_type = 'Monitor' if equipment.equipment_type == 'monitor'
+        equipment_type = 'Projector' if equipment.equipment_type == 'projector'
+        equipment_type = 'Power Strip' if equipment.equipment_type == 'power_strip'
+        equipment_type = 'Extension Cord' if equipment.equipment_type == 'extension_cord'
+        equipment_type = 'Recorder' if equipment.equipment_type == 'recorder'
+
+        if equipment_type.nil?
+          next
+        end
+
+        column = 0
+        sheet1[pos,column] = equipment.id
+        sheet1[pos,column+=1] = equipment_type
+        sheet1[pos,column+=1] = equipment_registration.full_name_reversed
+
+        text = ''
+
+        # laptop
+        if equipment.equipment_type == 'laptop'
+          text += 'OS: ' + equipment.operating_system + " \n"
+          text += 'Parallel Port: ' + equipment.parallel_port + " \n"
+          text += 'Quizmachine Version: ' + equipment.quizmachine_version + " \n"
+          text += 'Username: ' + equipment.username + " \n" unless equipment.username.blank?
+          text += 'Password: ' + equipment.password + " \n" unless equipment.password.blank?
+        end
+
+        # interface box
+        if equipment.equipment_type == 'interface_box'
+          text += 'Type: ' + equipment.ib_type + " \n"
+        end
+
+        # string of pads
+        if equipment.equipment_type == 'string_of_pads'
+          text += 'Color: ' + equipment.color + " \n"
+        end
+
+        # monitor
+        if equipment.equipment_type == 'monitor'
+          text += 'Brand: ' + equipment.brand + " \n" unless equipment.brand.blank?
+          text += 'Screen Size: ' + equipment.ib_type + " \n" unless equipment.monitor_size.blank?
+        end
+
+        # power strip
+        if equipment.equipment_type == 'power_strip'
+          text += 'Make: ' + equipment.make + " \n" unless equipment.make.blank?
+          text += 'Model: ' + equipment.model + " \n" unless equipment.model.blank?
+          text += 'Color: ' + equipment.color + " \n" unless equipment.color.blank?
+          text += 'Number Of Plugs: ' + equipment.number_of_plugs + " \n" unless equipment.number_of_plugs.blank?
+        end
+
+        # extension cord
+        if equipment.equipment_type == 'extension_cord'
+          text += 'Color: ' + equipment.color + " \n" unless equipment.color.blank?
+          text += 'Length: ' + equipment.length + " \n" unless equipment.length.blank?
+        end
+
+        # recorder
+        if equipment.equipment_type == 'recorder'
+          text += 'Color: ' + equipment.color + " \n" unless equipment.color.blank?
+          text += 'Length: ' + equipment.length + " \n" unless equipment.length.blank?
+        end
+
+        # write out equipment details
+        sheet1[pos,column+=1] = text
+
+        # status if defined
+        sheet1[pos,column+=1] = !equipment.status.nil? ? equipment.status : ''
+
+        # room if defined
+        sheet1[pos,column+=1] = !equipment.room.nil? ? equipment.room.name : ''
+
+        sheet1.row(pos).default_format = format
+        pos += 1
+      end
+    end
+
+    for i in 0..19
+      sheet1.column(i).width = 25
+    end
+
+    book.write "#{RAILS_ROOT}/public/download/equipment.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/equipment.xls", :filename => "equipment.xls"
   end
 
   # housing report by building
