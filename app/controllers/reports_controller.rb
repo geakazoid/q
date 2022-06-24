@@ -1424,8 +1424,8 @@ class ReportsController < ApplicationController
 
         column = 0
         sheet1[pos,column] = equipment.id
-        sheet1[pos,column+=1] = equipment_type
         sheet1[pos,column+=1] = equipment_registration.full_name_reversed
+        sheet1[pos,column+=1] = equipment_type
 
         text = ''
 
