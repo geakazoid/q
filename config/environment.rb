@@ -83,3 +83,5 @@ end
 
 # change error displaying
 ActionView::Base.field_error_proc = Proc.new { |html_tag, instance| "<span class=\"fieldWithErrors\">#{html_tag}</span>" }
+
+ExceptionNotifier.sender_address = %("Application Error" <errors@quizzingevents.com>)

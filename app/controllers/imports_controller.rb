@@ -17,52 +17,122 @@ class ImportsController < ApplicationController
     File.open(path, "wb") { |f| f.write(upload['datafile'].read) }
     
     first_row = true
-    FasterCSV.foreach(path, :quote_char => '"', :col_sep => ',') do |row|
+    FasterCSV.foreach(path, :quote_char => '"', :col_sep => ',', :converters => lambda{|v| v || ""}) do |row|
       if first_row
         first_row = false
         next
       end
       
-      first_name = row[1]
-      last_name = row[2]
-      registration_type = row[3].downcase
-      district_name = row[4]
-      field = row[5]
-      email_address = row[6]
-      home_address = row[7]
-      home_city = row[8]
-      home_state_prov = row[9]
-      home_zipcode = row[10]
-      home_phone = row[11]
-      grade_completed = row[12]
-      special_needs_details = row[16]
-      emergency_contact_name = row[13]
-      emergency_contact_number = row[14]
-      emergency_contact_email = row[15]
-      medical_liability = row[17]
+      confirmation_number = row[0].strip
+      first_name = row[1].strip
+      last_name = row[2].strip
+      gender = row[6].strip
+      gender = gender == 'M' ? 'Male' : 'Female'
+      graduation_year = row[46].strip
+      registration_type = row[30].strip.downcase
+      shirt_size = row[47].strip
+      group_leader = row[53].strip
+      group_leader_email = row[54].strip
+      coach_name = row[51].strip
+
+      # where is the user from?
+      local_church = row[43].strip
+      district_name = row[44].strip
+
+      # phone logic (multiple fields)
+      home_phone = row[8].strip
+      if home_phone.empty?
+        home_phone = row[9].strip
+      end
+      if home_phone.empty?
+        home_phone = row[10].strip
+      end
+
+      # email logic (multiple fields)
+      email_address = row[15].strip
+      if email_address.empty?
+        email_address = row[16].strip
+      end
+      if email_address.empty?
+        email_address = row[17].strip
+      end
+
+      # special needs
+      food_allergies_details = row[56].strip
+      special_needs_details = row[57].strip
+
+      # roommate preference
+      roommate_preference = row[60].strip
+      roommate_notes = row[61].strip
       
-      # doesn't currently handle more than one import
-      pr = ParticipantRegistration.new
-      pr.first_name = first_name.strip
-      pr.last_name = last_name.strip
+      # plans
+      planning_on_officiating = row[48].strip.downcase
+      planning_on_coaching = row[49].strip.downcase
+      travel_type = row[63].strip
+
+      # emergency contact logic
+      emergency_contact = row[34].split(' - ')
+      emergency_contact_name = emergency_contact[0].strip unless emergency_contact[0].nil?
+      emergency_contact_number = emergency_contact[1].strip unless emergency_contact[1].nil?
+
+      # add ons
+      decades_quizzing = row[71].strip
+      housing_sunday = row[72].strip
+      airport_shuttle = row[73].strip
+      
+      pr = ParticipantRegistration.find_by_confirmation_number_and_first_name_and_last_name(confirmation_number,first_name,last_name)
+      if pr.nil?
+        pr = ParticipantRegistration.new
+      end
+
+      pr.first_name = first_name
+      pr.last_name = last_name
+      pr.gender = gender
       pr.email = email_address
-      registration_type = 'staff' if registration_type == "volunteer&staff"
+      registration_type = 'staff' if registration_type == "staff/intern"
+      registration_type = 'official' if registration_type == "official/volunteer"
       pr.registration_type = registration_type
       pr.home_phone = home_phone
-      pr.street = home_address
-      pr.city = home_city
-      pr.state = home_state_prov
-      pr.zipcode = home_zipcode
-      pr.most_recent_grade = grade_completed
-      pr.special_needs_details = special_needs_details
+      pr.shirt_size = shirt_size
+      pr.group_leader_text = group_leader
+      pr.group_leader_email = group_leader_email
+      pr.coach_name = coach_name
+      pr.graduation_year = graduation_year
+      pr.special_needs_food_allergies = false # hardcoded due to how Q2022 registration asks this question
+      pr.special_needs_other = false # hardcoded due to how Q2022 registration asks this question
+      pr.special_needs_details = 'Special Needs: ' + special_needs_details + "\r\n" + 'Food Allergies: ' + food_allergies_details
       pr.emergency_contact_name = emergency_contact_name
       pr.emergency_contact_number = emergency_contact_number
-      pr.emergency_contact_relationship = emergency_contact_email
+      pr.roommate_preference_1 = roommate_preference
+      pr.roommate_notes = roommate_notes
+      pr.planning_on_officiating = true if planning_on_officiating == "yes"
+      pr.planning_on_coaching = true if planning_on_coaching == "yes"
+      pr.planning_on_officiating = false if planning_on_officiating == "no"
+      pr.planning_on_coaching = false if planning_on_coaching == "no"
       district = District.find_by_name(district_name)
       pr.district = district unless district.nil?
-      pr.medical_liability = true if medical_liability == "YES"
-      pr.event_id = 3
+      pr.local_church = local_church
+      pr.need_arrival_shuttle = true if airport_shuttle == 1
+      pr.housing_sunday = true if housing_sunday == 1
+      pr.event_id = 6 # q2022
+      pr.confirmation_number = confirmation_number
+      pr.travel_type = travel_type
       pr.paid = true
+
+      # registration options
+      ro_decades_quizzing = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Decades Quizzing'" ])
+      ro_sunday_housing = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Sunday Night Housing - June 26'" ])
+      ro_airport_shuttle = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Airport Shuttle'" ])
+      pr.registration_options.clear
+      if decades_quizzing == "1"
+        pr.registration_options << ro_decades_quizzing
+      end
+      if housing_sunday == "1"
+        pr.registration_options << ro_sunday_housing
+      end
+      if airport_shuttle == "1"
+        pr.registration_options << ro_airport_shuttle
+      end
 
       # save the participant registration
       pr.save(false)

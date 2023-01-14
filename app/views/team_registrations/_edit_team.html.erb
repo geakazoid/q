@@ -10,8 +10,7 @@
                                    :id,
                                    :name,
                                    {:prompt => '- Select -' },
-                                   {:class => 'division',
-                                   :onchange => 'javascript: //check_regional_selection()'} %>
+                                   {:class => 'division'}.merge((@team_registration.complete? and !admin?) ? {:disabled => 'disabled'} : {}) %>
     <% else %>
       <%= form.object.division.name %>
     <% end %>

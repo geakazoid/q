@@ -23,6 +23,7 @@
         <th>Name</th>
         <th>Registered Teams</th>
         <th>District / Region</th>
+        <th>Payment Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -32,6 +33,7 @@
           <td><%= team_registration.full_name %></td>
           <td><%= team_registration.teams.size %></td>
           <td><%= team_registration.district.display_with_region %></td>
+          <td><%= team_registration.paid? ? '<span class="label label-success">Paid</span>' : '<span class="label label-default">Pending</span>' %></td>
           <td>
             <%= link_to 'Show', team_registration_path(team_registration) %> :: 
             <%= link_to 'Edit', edit_team_registration_path(team_registration) %> :: 

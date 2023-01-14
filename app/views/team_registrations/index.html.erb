@@ -16,15 +16,17 @@
           <th>Name</th>
           <th>Registered Teams</th>
           <th>Created On</th>
+          <th>Payment Status</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <% @user.complete_team_registrations.each do |team_registration| %>
+        <% @user.team_registrations.each do |team_registration| %>
           <tr>
             <td><%= team_registration.full_name %></td>
             <td><%= team_registration.teams.size %></td>
             <td><%= team_registration.created_at.strftime("%m/%d/%Y at %I:%M %p") %></td>
+            <td><%= team_registration.paid? ? '<span class="label label-success">Paid</span>' : '<span class="label label-default">Pending</span>' %></td>
             <td><%= link_to 'Make Changes', edit_user_team_registration_path(@user, team_registration) %></td>
           </tr>
         <% end %>

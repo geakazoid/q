@@ -4,9 +4,10 @@
 <%= render :partial => 'pages/page', :locals => { :page => @page } if !@page.nil? %>
 <p>
     Please use the form below to register a new team or teams. You must register at least
-    one team and may not register more than five on a single submission. You may use this form
-    multiple times if you are registering more than five teams. Each submission must be paid
-    for separately.
+    one team. You may use this form multiple times to denote different groupings of teams
+    or register all teams on one team registration. Coaches and team names can be changed
+    up until registration is closed. Team divisions can only be modified until the
+    registrations is paid for.
 </p>
 <% form_for @team_registration do |f| %>
   <%= error_messages_for :team_registration, :header_message => "There were errors with your registration.", :message => "We encountered the following problems:" %>
@@ -49,13 +50,13 @@
     <% end %>
   </div>
   <%= add_team_link(f) %><br/><br/>
-  <p id='registration_code_row' style='display:none'>
+  <div id='registration_code_row' style='display:none'>
     <%= f.label :registration_code, 'Registration Code' %><br />
     <%= f.text_field :registration_code, {:id => "registration_code"} %>
-    <%= test_output("Registration Code: " + Event.active_event.team_code + "</label>") if AppConfig.test_mode %>
-  </p>
+    <%= test_output("Registration Code: " + Event.active_event.team_code) if AppConfig.test_mode %>
+  </div>
   <p id="fees_row" style="display:none" class="alert alert-info">
-    In order to complete your registration you will need to submit payment of $<span id="fee_display"></span>. You will be redirected to a third party site to submit your credit card payment.
+  You will need to make sure you submit a payment for your teams of $<span id="fee_display"></span> during the participant registration process. However, you will still be able to select quizzers for your teams once you've submitted this registration.
   </p>
   <p>
     <%= hidden_field_tag :commit_action, 'registration_action' %>
@@ -82,7 +83,7 @@
 
   function update_fee() {
     $('#fees_row').hide();
-    var divisions = $('.division');
+    var divisions = $('.division:visible');
     var fee = 0.00;
 
     for (i = 0; i < divisions.length; i++) {
@@ -102,7 +103,7 @@
    * team being selected requires a code we show a required code text field */
   function check_for_code_requirement() {
     $('#registration_code_row').hide();
-    var divisions = $('.division');
+    var divisions = $('.division:visible');
 
     for (i = 0; i < divisions.length; i++) {
       var division_id = divisions[i].options[divisions[i].selectedIndex].value;

@@ -135,9 +135,9 @@ class ReportsController < ApplicationController
   # this method should not be accessed directly
   def participant_registrations
 
-    registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal"', :order => 'sort')
-    registration_options_other = RegistrationOption.all(:conditions => 'category = "other"', :order => 'sort')
-
+    registration_options_meals = RegistrationOption.all(:conditions => 'category = "meal" and event_id = ' + Event.active_id.to_s, :order => 'sort')
+    registration_options_other = RegistrationOption.all(:conditions => 'category = "other" and event_id = ' + Event.active_id.to_s, :order => 'sort')
+    
     book = Spreadsheet::Workbook.new
     sheet1 = book.create_worksheet
     # write out headers
@@ -148,28 +148,20 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'First Name'
     sheet1[0,column+=1] = 'Last Name'
     sheet1[0,column+=1] = 'Email'
-    sheet1[0,column+=1] = 'Address'
-    sheet1[0,column+=1] = 'City'
-    sheet1[0,column+=1] = 'State'
-    sheet1[0,column+=1] = 'Zipcode'
-    sheet1[0,column+=1] = 'Country'
     sheet1[0,column+=1] = 'Gender'
-    sheet1[0,column+=1] = 'Age / Most Recent Grade'
     sheet1[0,column+=1] = 'Graduation Year'
-    sheet1[0,column+=1] = 'Over 18'
     sheet1[0,column+=1] = 'Primary Phone'
     sheet1[0,column+=1] = 'Group Leader'
     sheet1[0,column+=1] = 'Local Church'
     sheet1[0,column+=1] = 'District'
     sheet1[0,column+=1] = 'Field'
     sheet1[0,column+=1] = 'Shirt Size'
-    sheet1[0,column+=1] = 'Roommate Preference 1'
-    sheet1[0,column+=1] = 'Roommate Preference 2'
+    sheet1[0,column+=1] = 'Roommate Preference'
+    sheet1[0,column+=1] = 'Additional Roommate Notes'
     sheet1[0,column+=1] = 'Team 1'
     sheet1[0,column+=1] = 'Team 2'
     sheet1[0,column+=1] = 'Team 3'
     sheet1[0,column+=1] = 'Housing Assignment'
-    sheet1[0,column+=1] = 'Special Needs?'
     sheet1[0,column+=1] = 'Special Needs Details'
     sheet1[0,column+=1] = 'Travel Type'
     sheet1[0,column+=1] = 'Travel Details'
@@ -182,9 +174,6 @@ class ReportsController < ApplicationController
       sheet1[0,column+=1] = registration_option.item
     end
 
-    sheet1[0,column+=1] = 'Medical / Liability?'
-    sheet1[0,column+=1] = 'Payment Amount'
-    sheet1[0,column+=1] = 'Paid?'
     sheet1[0,column+=1] = 'Created On'
     sheet1[0,column+=1] = 'Updated On'
 
@@ -197,15 +186,8 @@ class ReportsController < ApplicationController
       sheet1[pos,column+=1] = participant_registration.first_name
       sheet1[pos,column+=1] = participant_registration.last_name
       sheet1[pos,column+=1] = participant_registration.email
-      sheet1[pos,column+=1] = participant_registration.street
-      sheet1[pos,column+=1] = participant_registration.city
-      sheet1[pos,column+=1] = participant_registration.state
-      sheet1[pos,column+=1] = participant_registration.zipcode
-      sheet1[pos,column+=1] = participant_registration.country
       sheet1[pos,column+=1] = participant_registration.gender
-      sheet1[pos,column+=1] = participant_registration.most_recent_grade
       sheet1[pos,column+=1] = participant_registration.graduation_year
-      sheet1[pos,column+=1] = participant_registration.over_18? ? 'YES' : 'NO'
       sheet1[pos,column+=1] = participant_registration.home_phone
       sheet1[pos,column+=1] = participant_registration.group_leader_name
       sheet1[pos,column+=1] = participant_registration.local_church
@@ -221,7 +203,7 @@ class ReportsController < ApplicationController
       end
       sheet1[pos,column+=1] = participant_registration.shirt_size
       sheet1[pos,column+=1] = participant_registration.roommate_preference_1
-      sheet1[pos,column+=1] = participant_registration.roommate_preference_2
+      sheet1[pos,column+=1] = participant_registration.roommate_notes
 
       # teams
       if participant_registration.teams.size == 0
@@ -240,6 +222,10 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant_registration.teams[0].name_with_division
         sheet1[pos,column+=1] = participant_registration.teams[1].name_with_division
         sheet1[pos,column+=1] = participant_registration.teams[2].name_with_division
+      else
+        sheet1[pos,column+=1] = 'Invalid Teams'
+        sheet1[pos,column+=1] = 'Invalid Teams'
+        sheet1[pos,column+=1] = 'Invalid Teams'
       end
 
       # housing
@@ -253,14 +239,6 @@ class ReportsController < ApplicationController
       end
 
       # special needs
-      special_needs = ''
-      special_needs += 'Food Allergies, ' if participant_registration.special_needs_food_allergies
-      special_needs += 'Handicap Accessible, ' if participant_registration.special_needs_handicap_accessible
-      special_needs += 'Hearing Impaired, ' if participant_registration.special_needs_hearing_impaired
-      special_needs += 'Vision Impaired, ' if participant_registration.special_needs_vision_impaired
-      special_needs += 'Other, ' if participant_registration.special_needs_other
-      special_needs.chomp(' ,')
-      sheet1[pos,column+=1] = special_needs
       sheet1[pos,column+=1] = participant_registration.special_needs_details
 
       sheet1[pos,column+=1] = participant_registration.travel_type
@@ -274,9 +252,6 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant_registration.registration_options.include?(registration_option) ? "YES" : "NO"
       end
 
-      sheet1[pos,column+=1] = participant_registration.medical_liability? ? 'YES' : 'NO'
-      sheet1[pos,column+=1] = participant_registration.amount_ordered
-      sheet1[pos,column+=1] = participant_registration.paid? ? 'YES' : 'NO'
       sheet1[pos,column+=1] = participant_registration.created_at.strftime("%m/%d/%Y %H:%M:%S")
       sheet1[pos,column+=1] = participant_registration.updated_at.strftime("%m/%d/%Y %H:%M:%S")
       pos += 1
@@ -336,7 +311,8 @@ class ReportsController < ApplicationController
     # write out headers
     column = 0
 
-    @teams = Team.all(:order => 'division_id asc, name asc')
+    active_event = !params['event_id'].nil? ? params['event_id'] : Event.active_event.id
+    @teams = Team.all(:joins => [:team_registration], :conditions => "event_id = #{active_event}", :order => 'last_name asc, first_name asc', :order => 'division_id asc, name asc')
 
     pos = 1
     @teams.each do |team|
@@ -553,7 +529,7 @@ class ReportsController < ApplicationController
       for i in 10..11
         sheet1.row(1).set_format(i,group_header_format)
       end
-      sheet1[1,12] = 'Registration Options'
+      sheet1[1,12] = 'Registration Options' if registration_options.size > 0
       for i in 12..(12+registration_options.size-1)
         sheet1.row(1).set_format(i,group_header_format)
       end
@@ -577,8 +553,6 @@ class ReportsController < ApplicationController
       registration_options.each do |registration_option|
         sheet1[2,column+=1] = registration_option.item
       end
-
-      sheet1[2,column+=1] = 'Medical Liability Received'
 
       sheet1.row(2).default_format = header_format
 
@@ -624,9 +598,6 @@ class ReportsController < ApplicationController
         registration_options.each do |registration_option|
           sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : ""
         end
-
-        # other stuff
-        sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
           
         # set format
         for i in 1..column
@@ -671,6 +642,9 @@ class ReportsController < ApplicationController
       sheet1.row(pos).set_format(1,group_header_format)
       sheet1.row(pos).set_format(2,group_header_format)
       pos += 1
+      sheet1[pos,1] = "XSmall"
+      sheet1[pos,2] = !shirt_size_count["XSmall"].nil? ? shirt_size_count["XSmall"] : 0
+      pos += 1
       sheet1[pos,1] = "Small"
       sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
       pos += 1
@@ -680,17 +654,17 @@ class ReportsController < ApplicationController
       sheet1[pos,1] = "Large"
       sheet1[pos,2] = !shirt_size_count["Large"].nil? ? shirt_size_count["Large"] : 0
       pos += 1
-      sheet1[pos,1] = "X-Large"
-      sheet1[pos,2] = !shirt_size_count["X-Large"].nil? ? shirt_size_count["X-Large"] : 0
+      sheet1[pos,1] = "XLarge"
+      sheet1[pos,2] = !shirt_size_count["XLarge"].nil? ? shirt_size_count["XLarge"] : 0
       pos += 1
-      sheet1[pos,1] = "2X-Large"
-      sheet1[pos,2] = !shirt_size_count["2X-Large"].nil? ? shirt_size_count["2X-Large"] : 0
+      sheet1[pos,1] = "2XLarge"
+      sheet1[pos,2] = !shirt_size_count["2XLarge"].nil? ? shirt_size_count["2XLarge"] : 0
       pos += 1
-      sheet1[pos,1] = "3X-Large"
-      sheet1[pos,2] = !shirt_size_count["3X-Large"].nil? ? shirt_size_count["3X-Large"] : 0
+      sheet1[pos,1] = "3XLarge"
+      sheet1[pos,2] = !shirt_size_count["3XLarge"].nil? ? shirt_size_count["3XLarge"] : 0
       pos += 1
-      sheet1[pos,1] = "4X-Large"
-      sheet1[pos,2] = !shirt_size_count["4X-Large"].nil? ? shirt_size_count["4X-Large"] : 0
+      sheet1[pos,1] = "4XLarge"
+      sheet1[pos,2] = !shirt_size_count["4XLarge"].nil? ? shirt_size_count["4XLarge"] : 0
       pos += 1
       sheet1[pos,1] = "Undefined"
       sheet1[pos,2] = !shirt_size_count["undefined"].nil? ? shirt_size_count["undefined"] : 0
@@ -791,7 +765,7 @@ class ReportsController < ApplicationController
         # write out group headers
         sheet1[1,4] = 'Teams'
         sheet1[1,10] = 'Travel Information'
-        sheet1[1,12] = 'Registration Options'
+        sheet1[1,12] = 'Registration Options' if registration_options.size > 0
   
         # write out headers
         column = 0
@@ -812,8 +786,6 @@ class ReportsController < ApplicationController
         registration_options.each do |registration_option|
           sheet1[2,column+=1] = registration_option.item
         end
-
-        sheet1[2,column+=1] = 'Medical Liability Received'
 
         # keep track of t-shirt numbers
         shirt_size_count = Hash.new
@@ -857,9 +829,6 @@ class ReportsController < ApplicationController
           registration_options.each do |registration_option|
             sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : ""
           end
-
-          # other stuff
-          sheet1[pos,column+=1] = participant.medical_liability? ? 'YES' : ''
           
           # set format
           for i in 1..column
@@ -904,6 +873,9 @@ class ReportsController < ApplicationController
         sheet1.row(pos).set_format(1,group_header_format)
         sheet1.row(pos).set_format(2,group_header_format)
         pos += 1
+        sheet1[pos,1] = "XSmall"
+        sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
+        pos += 1
         sheet1[pos,1] = "Small"
         sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
         pos += 1
@@ -913,17 +885,17 @@ class ReportsController < ApplicationController
         sheet1[pos,1] = "Large"
         sheet1[pos,2] = !shirt_size_count["Large"].nil? ? shirt_size_count["Large"] : 0
         pos += 1
-        sheet1[pos,1] = "X-Large"
-        sheet1[pos,2] = !shirt_size_count["X-Large"].nil? ? shirt_size_count["X-Large"] : 0
+        sheet1[pos,1] = "XLarge"
+        sheet1[pos,2] = !shirt_size_count["XLarge"].nil? ? shirt_size_count["XLarge"] : 0
         pos += 1
-        sheet1[pos,1] = "2X-Large"
-        sheet1[pos,2] = !shirt_size_count["2X-Large"].nil? ? shirt_size_count["2X-Large"] : 0
+        sheet1[pos,1] = "2XLarge"
+        sheet1[pos,2] = !shirt_size_count["2XLarge"].nil? ? shirt_size_count["2XLarge"] : 0
         pos += 1
-        sheet1[pos,1] = "3X-Large"
-        sheet1[pos,2] = !shirt_size_count["3X-Large"].nil? ? shirt_size_count["3X-Large"] : 0
+        sheet1[pos,1] = "3XLarge"
+        sheet1[pos,2] = !shirt_size_count["3XLarge"].nil? ? shirt_size_count["3XLarge"] : 0
         pos += 1
-        sheet1[pos,1] = "4X-Large"
-        sheet1[pos,2] = !shirt_size_count["4X-Large"].nil? ? shirt_size_count["4X-Large"] : 0
+        sheet1[pos,1] = "4XLarge"
+        sheet1[pos,2] = !shirt_size_count["4XLarge"].nil? ? shirt_size_count["4XLarge"] : 0
         pos += 1
         sheet1[pos,1] = "Undefined"
         sheet1[pos,2] = !shirt_size_count["undefined"].nil? ? shirt_size_count["undefined"] : 0
@@ -1160,6 +1132,9 @@ class ReportsController < ApplicationController
       sheet1.row(pos).set_format(1,group_header_format)
       sheet1.row(pos).set_format(2,group_header_format)
       pos += 1
+      sheet1[pos,1] = "XSmall"
+      sheet1[pos,2] = !shirt_size_count["XSmall"].nil? ? shirt_size_count["XSmall"] : 0
+      pos += 1
       sheet1[pos,1] = "Small"
       sheet1[pos,2] = !shirt_size_count["Small"].nil? ? shirt_size_count["Small"] : 0
       pos += 1
@@ -1169,17 +1144,17 @@ class ReportsController < ApplicationController
       sheet1[pos,1] = "Large"
       sheet1[pos,2] = !shirt_size_count["Large"].nil? ? shirt_size_count["Large"] : 0
       pos += 1
-      sheet1[pos,1] = "X-Large"
-      sheet1[pos,2] = !shirt_size_count["X-Large"].nil? ? shirt_size_count["X-Large"] : 0
+      sheet1[pos,1] = "XLarge"
+      sheet1[pos,2] = !shirt_size_count["XLarge"].nil? ? shirt_size_count["XLarge"] : 0
       pos += 1
-      sheet1[pos,1] = "2X-Large"
-      sheet1[pos,2] = !shirt_size_count["2X-Large"].nil? ? shirt_size_count["2X-Large"] : 0
+      sheet1[pos,1] = "2XLarge"
+      sheet1[pos,2] = !shirt_size_count["2XLarge"].nil? ? shirt_size_count["2XLarge"] : 0
       pos += 1
-      sheet1[pos,1] = "3X-Large"
-      sheet1[pos,2] = !shirt_size_count["3X-Large"].nil? ? shirt_size_count["3X-Large"] : 0
+      sheet1[pos,1] = "3XLarge"
+      sheet1[pos,2] = !shirt_size_count["3XLarge"].nil? ? shirt_size_count["3XLarge"] : 0
       pos += 1
-      sheet1[pos,1] = "4X-Large"
-      sheet1[pos,2] = !shirt_size_count["4X-Large"].nil? ? shirt_size_count["4X-Large"] : 0
+      sheet1[pos,1] = "4XLarge"
+      sheet1[pos,2] = !shirt_size_count["4XLarge"].nil? ? shirt_size_count["4XLarge"] : 0
       pos += 1
       sheet1[pos,1] = "Undefined"
       sheet1[pos,2] = !shirt_size_count["undefined"].nil? ? shirt_size_count["undefined"] : 0
@@ -1234,7 +1209,8 @@ class ReportsController < ApplicationController
 
     # write out headers
     column = 0
-    sheet1[0,column] = 'Name'
+    sheet1[0,column] = 'ID'
+    sheet1[0,column+=1] = 'Name'
     sheet1[0,column+=1] = 'Phone'
     sheet1[0,column+=1] = 'Email'
     sheet1[0,column+=1] = 'District'
@@ -1250,14 +1226,19 @@ class ReportsController < ApplicationController
     sheet1[0,column+=1] = 'Interface Box Details'
     sheet1[0,column+=1] = 'Pad Set Details'
     sheet1[0,column+=1] = 'Monitor Details'
+    sheet1[0,column+=1] = 'Power Strip Details'
+    sheet1[0,column+=1] = 'Extension Cord Details'
+    sheet1[0,column+=1] = 'Recorder Details'
     sheet1.row(0).default_format = header_format
 
-    @equipment_registrations = EquipmentRegistration.all(:conditions => "event_id = #{params['event_id']}", :order => 'last_name asc')
+    active_event = !params['event_id'].nil? ? params['event_id'] : Event.active_event.id
+    @equipment_registrations = EquipmentRegistration.all(:conditions => "event_id = #{active_event}", :order => 'last_name asc')
 
     pos = 1
     @equipment_registrations.each do |equipment_registration|
       column = 0
-      sheet1[pos,column] = equipment_registration.full_name
+      sheet1[pos,column] = equipment_registration.id
+      sheet1[pos,column+=1] = equipment_registration.full_name
       sheet1[pos,column+=1] = equipment_registration.phone
       sheet1[pos,column+=1] = equipment_registration.email
       sheet1[pos,column+=1] = !equipment_registration.district.nil? ? equipment_registration.district.name : ''
@@ -1281,6 +1262,7 @@ class ReportsController < ApplicationController
           text += 'Quizmachine Version: ' + laptop.quizmachine_version + "\n"
           text += 'Username: ' + laptop.username + "\n" unless laptop.username.blank?
           text += 'Password: ' + laptop.password + "\n" unless laptop.password.blank?
+          text += 'Room: ' + laptop.room.name + "\n" unless laptop.room.nil?
           text += "\n"
           count += 1
         end
@@ -1296,6 +1278,7 @@ class ReportsController < ApplicationController
         equipment_registration.interface_boxes.each do |interface_box|
           text += 'Interface Box ' + count.to_s + "\n"
           text += 'Type: ' + interface_box.ib_type + "\n"
+          text += 'Room: ' + interface_box.room.name + "\n" unless interface_box.room.nil?
           text += "\n"
           count += 1
         end
@@ -1311,6 +1294,7 @@ class ReportsController < ApplicationController
         equipment_registration.pads.each do |string|
           text += 'String ' + count.to_s + "\n"
           text += 'Color: ' + string.color + "\n"
+          text += 'Room: ' + string.room.name + "\n" unless string.room.nil?
           text += "\n"
           count += 1
         end
@@ -1325,7 +1309,9 @@ class ReportsController < ApplicationController
         count = 1
         equipment_registration.monitors.each do |monitor|
           text += 'Monitor ' + count.to_s + "\n"
-          text += 'Screen Size: ' + monitor.monitor_size + "\n" unless monitor.monitor_size.blank?
+          text += 'Brand: ' + monitor.brand + "\n" unless monitor.brand.blank?
+          text += 'Screen Size: ' + monitor.ib_type + "\n" unless monitor.ib_type.blank?
+          text += 'Room: ' + monitor.room.name + "\n" unless monitor.room.nil?
           text += "\n"
           count += 1
         end
@@ -1344,6 +1330,7 @@ class ReportsController < ApplicationController
           text += 'Model: ' + power_strip.model + "\n" unless power_strip.model.blank?
           text += 'Color: ' + power_strip.color + "\n" unless power_strip.color.blank?
           text += 'Number Of Plugs: ' + power_strip.number_of_plugs + "\n" unless power_strip.number_of_plugs.blank?
+          text += 'Room: ' + power_strip.room.name + "\n" unless power_strip.room.nil?
           text += "\n"
           count += 1
         end
@@ -1360,6 +1347,22 @@ class ReportsController < ApplicationController
           text += 'Extension Cord ' + count.to_s + "\n"
           text += 'Color: ' + extension_cord.color + "\n" unless extension_cord.color.blank?
           text += 'Length: ' + extension_cord.length + "\n" unless extension_cord.length.blank?
+          text += 'Room: ' + extension_cord.room.name + "\n" unless extension_cord.room.nil?
+          text += "\n"
+          count += 1
+        end
+        sheet1[pos,column+=1] = text
+      else
+        sheet1[pos,column+=1] = ''
+      end
+
+      # recorder details
+      if equipment_registration.recorders.size > 0
+        text = ''
+        count = 1
+        equipment_registration.recorders.each do |recorder|
+          text += 'Recorder ' + count.to_s + "\n"
+          text += 'Room: ' + recorder.room.name + "\n" unless recorder.room.nil?
           text += "\n"
           count += 1
         end
@@ -1372,7 +1375,7 @@ class ReportsController < ApplicationController
       pos += 1
     end
 
-    for i in 0..17
+    for i in 0..19
       sheet1.column(i).width = 25
     end
 
@@ -1381,12 +1384,128 @@ class ReportsController < ApplicationController
     send_file "#{RAILS_ROOT}/public/download/equipment_registrations.xls", :filename => "equipment_registrations.xls"
   end
 
+  # create a downloadable excel of equipment
+  def equipment
+    book = Spreadsheet::Workbook.new
+    sheet1 = book.create_worksheet
+
+    header_format = Spreadsheet::Format.new :weight => :bold, :horizontal_align => :left
+    format = Spreadsheet::Format.new :horizontal_align => :default, :vertical_align => :top
+
+    # write out headers
+    column = 0
+    sheet1[0,column] = 'ID'
+    sheet1[0,column+=1] = 'Name'
+    sheet1[0,column+=1] = 'Equipment Type'
+    sheet1[0,column+=1] = 'Equipment Details'
+    sheet1[0,column+=1] = 'Status'
+    sheet1[0,column+=1] = 'Room'
+    sheet1.row(0).default_format = header_format
+
+    active_event = !params['event_id'].nil? ? params['event_id'] : Event.active_event.id
+    @equipment_registrations = EquipmentRegistration.all(:conditions => "event_id = #{active_event}", :order => 'last_name asc')
+
+    pos = 1
+    @equipment_registrations.each do |equipment_registration|
+      equipment_registration.equipment.each do |equipment|
+        equipment_type = nil
+        equipment_type = 'Laptop' if equipment.equipment_type == 'laptop'
+        equipment_type = 'Interface Box' if equipment.equipment_type == 'interface_box'
+        equipment_type = 'String of Pads' if equipment.equipment_type == 'string_of_pads'
+        equipment_type = 'Monitor' if equipment.equipment_type == 'monitor'
+        equipment_type = 'Projector' if equipment.equipment_type == 'projector'
+        equipment_type = 'Power Strip' if equipment.equipment_type == 'power_strip'
+        equipment_type = 'Extension Cord' if equipment.equipment_type == 'extension_cord'
+        equipment_type = 'Recorder' if equipment.equipment_type == 'recorder'
+
+        if equipment_type.nil?
+          next
+        end
+
+        column = 0
+        sheet1[pos,column] = equipment.id
+        sheet1[pos,column+=1] = equipment_registration.full_name_reversed
+        sheet1[pos,column+=1] = equipment_type
+
+        text = ''
+
+        # laptop
+        if equipment.equipment_type == 'laptop'
+          text += 'OS: ' + equipment.operating_system + " \n"
+          text += 'Parallel Port: ' + equipment.parallel_port + " \n"
+          text += 'Quizmachine Version: ' + equipment.quizmachine_version + " \n"
+          text += 'Username: ' + equipment.username + " \n" unless equipment.username.blank?
+          text += 'Password: ' + equipment.password + " \n" unless equipment.password.blank?
+        end
+
+        # interface box
+        if equipment.equipment_type == 'interface_box'
+          text += 'Type: ' + equipment.ib_type + " \n"
+        end
+
+        # string of pads
+        if equipment.equipment_type == 'string_of_pads'
+          text += 'Color: ' + equipment.color + " \n"
+        end
+
+        # monitor
+        if equipment.equipment_type == 'monitor'
+          text += 'Brand: ' + equipment.brand + " \n" unless equipment.brand.blank?
+          text += 'Screen Size: ' + equipment.ib_type + " \n" unless equipment.monitor_size.blank?
+        end
+
+        # power strip
+        if equipment.equipment_type == 'power_strip'
+          text += 'Make: ' + equipment.make + " \n" unless equipment.make.blank?
+          text += 'Model: ' + equipment.model + " \n" unless equipment.model.blank?
+          text += 'Color: ' + equipment.color + " \n" unless equipment.color.blank?
+          text += 'Number Of Plugs: ' + equipment.number_of_plugs + " \n" unless equipment.number_of_plugs.blank?
+        end
+
+        # extension cord
+        if equipment.equipment_type == 'extension_cord'
+          text += 'Color: ' + equipment.color + " \n" unless equipment.color.blank?
+          text += 'Length: ' + equipment.length + " \n" unless equipment.length.blank?
+        end
+
+        # recorder
+        if equipment.equipment_type == 'recorder'
+          text += 'Color: ' + equipment.color + " \n" unless equipment.color.blank?
+          text += 'Length: ' + equipment.length + " \n" unless equipment.length.blank?
+        end
+
+        # write out equipment details
+        sheet1[pos,column+=1] = text
+
+        # status if defined
+        sheet1[pos,column+=1] = !equipment.status.nil? ? equipment.status : ''
+
+        # room if defined
+        sheet1[pos,column+=1] = !equipment.room.nil? ? equipment.room.name : ''
+
+        sheet1.row(pos).default_format = format
+        pos += 1
+      end
+    end
+
+    for i in 0..19
+      sheet1.column(i).width = 25
+    end
+
+    book.write "#{RAILS_ROOT}/public/download/equipment.xls"
+
+    send_file "#{RAILS_ROOT}/public/download/equipment.xls", :filename => "equipment.xls"
+  end
+
   # housing report by building
   # produces an excel document for download based upon the passed in building_id
   # if no building id is passed in then we produce an excel document with all
   # buildings with one building per tab.
   def housing_by_building
     book = Spreadsheet::Workbook.new
+
+    # registration options (unrelated to meeals)
+    registration_options = RegistrationOption.all(:conditions => 'category = "other" and event_id = ' + Event.active_id.to_s, :order => 'sort')
 
     if (!params['building_id'].blank?)
       sheet1 = book.create_worksheet
@@ -1409,10 +1528,14 @@ class ReportsController < ApplicationController
       sheet1[1,column+=1] = 'Participant'
       sheet1[1,column+=1] = 'Gender'
       sheet1[1,column+=1] = 'Role'
-      sheet1[1,column+=1] = 'Age Group / Grade'
       sheet1[1,column+=1] = 'District'
       sheet1[1,column+=1] = 'Field'
       sheet1[1,column+=1] = 'Group Leader'
+      registration_options.each do |registration_option|
+        if registration_option.item.match(/housing/i)
+          sheet1[1,column+=1] = registration_option.item
+        end
+      end
       sheet1.row(1).default_format = header_format
 
       pos = 2
@@ -1423,7 +1546,6 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.full_name_reversed
         sheet1[pos,column+=1] = participant.gender
         sheet1[pos,column+=1] = participant.formatted_registration_type
-        sheet1[pos,column+=1] = participant.most_recent_grade
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
@@ -1449,6 +1571,13 @@ class ReportsController < ApplicationController
           end
         end
         sheet1[pos,column+=1] = group_leader_name
+
+        # registrations options (unrelated to meals)
+        registration_options.each do |registration_option|
+          if registration_option.item.match(/housing/i)
+            sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+          end
+        end
 
         pos += 1
       end
@@ -1485,10 +1614,14 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'Participant'
         sheet1[1,column+=1] = 'Gender'
         sheet1[1,column+=1] = 'Role'
-        sheet1[1,column+=1] = 'Age Group / Grade'
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Field'
         sheet1[1,column+=1] = 'Group Leader'
+        registration_options.each do |registration_option|
+          if registration_option.item.match(/housing/i)
+            sheet1[1,column+=1] = registration_option.item
+          end
+        end
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1499,7 +1632,6 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.full_name_reversed
           sheet1[pos,column+=1] = participant.gender
           sheet1[pos,column+=1] = participant.formatted_registration_type
-          sheet1[pos,column+=1] = participant.most_recent_grade
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
 
@@ -1526,6 +1658,13 @@ class ReportsController < ApplicationController
           end
           sheet1[pos,column+=1] = group_leader_name
 
+          # registrations options (unrelated to meals)
+          registration_options.each do |registration_option|
+            if registration_option.item.match(/housing/i)
+              sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+            end
+          end
+
           pos += 1
         end
 
@@ -1548,6 +1687,9 @@ class ReportsController < ApplicationController
   # group leaders with one group leader per tab.
   def housing_by_group_leader
     book = Spreadsheet::Workbook.new
+
+    # registration options (unrelated to meeals)
+    registration_options = RegistrationOption.all(:conditions => 'category = "other" and event_id = ' + Event.active_id.to_s, :order => 'sort')
 
     if (!params['group_leader'].blank?)
       sheet1 = book.create_worksheet
@@ -1603,9 +1745,13 @@ class ReportsController < ApplicationController
       sheet1[1,column+=1] = 'Participant'
       sheet1[1,column+=1] = 'Gender'
       sheet1[1,column+=1] = 'Role'
-      sheet1[1,column+=1] = 'Age Group / Grade'
       sheet1[1,column+=1] = 'District'
       sheet1[1,column+=1] = 'Field'
+      registration_options.each do |registration_option|
+        if registration_option.item.match(/housing/i)
+          sheet1[1,column+=1] = registration_option.item
+        end
+      end
       sheet1.row(1).default_format = header_format
 
       pos = 2
@@ -1617,9 +1763,15 @@ class ReportsController < ApplicationController
         sheet1[pos,column+=1] = participant.full_name_reversed
         sheet1[pos,column+=1] = participant.gender
         sheet1[pos,column+=1] = participant.formatted_registration_type
-        sheet1[pos,column+=1] = participant.most_recent_grade
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
         sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
+
+        # registrations options (unrelated to meals)
+        registration_options.each do |registration_option|
+          if registration_option.item.match(/housing/i)
+            sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+          end
+        end
 
         pos += 1
       end
@@ -1701,9 +1853,13 @@ class ReportsController < ApplicationController
         sheet1[1,column+=1] = 'Participant'
         sheet1[1,column+=1] = 'Gender'
         sheet1[1,column+=1] = 'Role'
-        sheet1[1,column+=1] = 'Age Group / Grade'
         sheet1[1,column+=1] = 'District'
         sheet1[1,column+=1] = 'Field'
+        registration_options.each do |registration_option|
+          if registration_option.item.match(/housing/i)
+            sheet1[1,column+=1] = registration_option.item
+          end
+        end
         sheet1.row(1).default_format = header_format
 
         pos = 2
@@ -1715,9 +1871,15 @@ class ReportsController < ApplicationController
           sheet1[pos,column+=1] = participant.full_name_reversed
           sheet1[pos,column+=1] = participant.gender
           sheet1[pos,column+=1] = participant.formatted_registration_type
-          sheet1[pos,column+=1] = participant.most_recent_grade
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.name : ''
           sheet1[pos,column+=1] = !participant.district.nil? ? participant.district.region.name : ''
+
+          # registrations options (unrelated to meals)
+          registration_options.each do |registration_option|
+            if registration_option.item.match(/housing/i)
+              sheet1[pos,column+=1] = participant.registration_options.include?(registration_option) ? "YES" : "NO"
+            end
+          end
 
           pos += 1
         end

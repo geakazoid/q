@@ -16,6 +16,9 @@ class ParticipantRegistrationsController < ApplicationController
       @events = Event.get_events
       #@participant_registrations = ParticipantRegistration.find(:all, :conditions => "event_id = #{@selected_event}", :order => "first_name asc, last_name asc")
       @participant_registrations = ParticipantRegistration.by_event(Event.active_event.id).ordered_by_last_name
+      @districts = District.all(:order => 'name')
+      @regions = Region.all(:order => 'name')
+      get_group_leaders
 
       # filter results if we have any filters
       unless session[:paid].blank?
@@ -27,14 +30,26 @@ class ParticipantRegistrationsController < ApplicationController
           @filter_applied = true
         end
       end
-      unless session[:group_leader].blank?
-        if (session[:group_leader] == 'defined')
+      unless session[:group_leader_assignment].blank?
+        if (session[:group_leader_assignment] == 'defined')
           @participant_registrations = @participant_registrations.group_leader_defined
           @filter_applied = true
-        elsif (session[:group_leader] == 'undefined')
+        elsif (session[:group_leader_assignment] == 'undefined')
           @participant_registrations = @participant_registrations.group_leader_undefined
           @filter_applied = true
         end
+      end
+      unless session[:group_leader].blank?
+        @participant_registrations = @participant_registrations.by_group_leader(session[:group_leader])
+        @filter_applied = true
+      end
+      unless session[:district_id].blank?
+        @participant_registrations = @participant_registrations.by_district(session[:district_id])
+        @filter_applied = true
+      end
+      unless session[:region_id].blank?
+        @participant_registrations = @participant_registrations.by_region(session[:region_id])
+        @filter_applied = true
       end
     end
 
@@ -45,7 +60,7 @@ class ParticipantRegistrationsController < ApplicationController
     end
   end
 
-    # GET /participant_registrations/filter/?parameters
+  # GET /participant_registrations/filter/?parameters
   # filter list based upon passed in filters
   def filter
     # if we aren't an admin or housing admin we shouldn't be here
@@ -54,17 +69,26 @@ class ParticipantRegistrationsController < ApplicationController
     # clear filters if requested
     if params[:clear] == 'true'
       session[:paid] = nil
+      session[:group_leader_assignment] = nil
       session[:group_leader] = nil
+      session[:district_id] = nil
+      session[:region_id] = nil
  
       flash[:notice] = 'All filters have been cleared.'
     else
       # update session values from passed in params
       session[:paid] = params[:paid] unless params[:paid].blank?
+      session[:group_leader_assignment] = params[:group_leader_assignment] unless params[:group_leader_assignment].blank?
       session[:group_leader] = params[:group_leader] unless params[:group_leader].blank?
+      session[:district_id] = params[:district_id] unless params[:district_id].blank?
+      session[:region_id] = params[:region_id] unless params[:region_id].blank?
 
       # remove filters if none is passed
       session[:paid] = nil if params[:paid] == 'none'
+      session[:group_leader_assignment] = nil if params[:group_leader_assignment] == 'none'
       session[:group_leader] = nil if params[:group_leader] == 'none'
+      session[:district_id] = nil if params[:district_id] == 'none'
+      session[:region_id] = nil if params[:region_id] == 'none'
     
       flash[:notice] = 'Filters updated successfully.'
     end
@@ -213,7 +237,7 @@ class ParticipantRegistrationsController < ApplicationController
     @participant_registration.audit_user = current_user
 
     respond_to do |format|
-      validate = @participant_registration.inactive? ? false : true 
+      validate = false
       if @participant_registration.save(validate)
         # deleted any shared users that have been removed
         # only do this if we're the owner
@@ -900,7 +924,7 @@ class ParticipantRegistrationsController < ApplicationController
         next
       end
       # check by group leader email
-      group_leader = User.find_by_email(participant_registration.group_leader_email) unless participant_registration.group_leader_email.blank? rescue nil
+      group_leader = User.find(:first, :conditions => "event_id = #{Event.active_event.id} and email = '#{participant_registration.group_leader_email}'") unless participant_registration.group_leader_email.blank? rescue nil
       if (!group_leader.nil?)
         participant_registration.group_leader = group_leader.id
         # don't validate before save
@@ -908,10 +932,10 @@ class ParticipantRegistrationsController < ApplicationController
         matched += 1
         next
       end
-      #check by group leader name (in group_leader_text field)
+      # check by group leader name (in group_leader_text field)
       if !participant_registration.group_leader_text.nil? and !participant_registration.group_leader_text.blank?
         first_name,last_name = participant_registration.group_leader_text.split(' ')
-        group_leader = User.find(:conditions => "first_name = #{first_name} and last_name = #{last_name}") rescue nil
+        group_leader = User.find(:first, :joins => [:team_registrations], :conditions => "event_id = #{Event.active_event.id} and users.first_name = '#{first_name}' and users.last_name = '#{last_name}'") rescue nil
         if (!group_leader.nil?)
           participant_registration.group_leader = group_leader.id
           # don't validate before save
@@ -925,6 +949,65 @@ class ParticipantRegistrationsController < ApplicationController
 
     flash[:notice] = "Updated Group Leaders. Processed #{processed} registrations. #{skipped} registrations were skipped because they already have a group leader defined. #{matched} registrations were matched and updated. #{not_matched} registrations could not be matched and have not been modified."
 
+    respond_to do |format|
+      format.html {
+        redirect_to(participant_registrations_url)
+      }
+    end
+
+  end
+
+  # correct group leaders that were linked incorrectly (not a group leader for the current event)
+  def fix_group_leaders
+    get_group_leaders
+
+    # keep counts
+    processed = 0
+    skipped = 0
+    matched = 0
+    not_matched = 0
+
+    participant_registrations = ParticipantRegistration.find(:all, :conditions => "event_id = #{params['event_id']}", :order => "first_name asc, last_name asc")
+    participant_registrations.each do |participant_registration|
+      processed += 1
+      if participant_registration.group_leader.nil? or participant_registration.group_leader.blank?
+        skipped += 1
+        next
+      end
+
+      # check by user type and skip if foound
+      if (participant_registration.registration_type == 'official')
+        skipped += 1
+        next
+      end
+      if (participant_registration.registration_type == 'staff')
+        skipped += 1
+        next
+      end
+
+      if (!participant_registration.group_leader.nil?)
+        found = false
+        @group_leaders.each do |group_leader, id|
+          if (id.to_s == participant_registration.group_leader.to_s)
+            found = true
+            logger.info("FOUND")
+          end
+        end
+
+        if (!found)
+          participant_registration.group_leader = ''
+          participant_registration.save(false)
+          matched += 1
+          next
+        end
+      end
+
+      not_matched += 1
+    end
+
+    flash[:notice] = "Fixed Group Leaders. Processed #{processed} registrations. #{skipped} registrations were skipped because they already have a correct group leader defined. #{matched} registrations were updated to no group leader. #{not_matched} registrations could not be matched and have not been modified."
+
+    logger.info(@group_leaders)
     respond_to do |format|
       format.html {
         redirect_to(participant_registrations_url)

@@ -34,9 +34,10 @@
                           'Quizzer' => 'quizzer',
                           'Coach' => 'coach',
                           'Official / Volunteer' => 'official',
-                          'Off-Campus Guest' => 'off-campus',
                           'Staff / Intern' => 'staff',
-                          'Spectator' => 'spectator'},
+                          'On Campus Overnight Guest' => 'on-campus overnight guest',
+                          'Off Campus Spectator' => 'off-campus spectator',
+                          'Inactive' => 'inactive'}.sort,
                           session[:registration_type]),
                         :onchange => "document.location='/participant_registrations/filter_housing/?registration_type=' + this.value;" %>
         <% unless session[:registration_type].blank? %>

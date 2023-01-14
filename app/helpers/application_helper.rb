@@ -82,6 +82,10 @@ module ApplicationHelper
     team_complete = current_user.complete_team_registrations.size
     team_incomplete = current_user.incomplete_team_registrations.size
     team_total = current_user.team_registrations.size
+    teams_count = 0
+    current_user.team_registrations.each do |team_registration|
+      teams_count = teams_count + team_registration.teams.size
+    end
 
     participant_complete = current_user.complete_participant_registrations.size
     participant_incomplete = current_user.incomplete_participant_registrations.size
@@ -94,7 +98,7 @@ module ApplicationHelper
 
     if team_total > 0
       info << "Team Registrations<br/>"
-      info << "#{team_complete} complete.<br/>"
+      info << "You have #{team_total} team registrations with #{teams_count} teams.<br/>"
       info << link_to("View my team registrations.", user_team_registrations_path(current_user))
       info << "<br/><br/>"
     end
@@ -117,7 +121,6 @@ module ApplicationHelper
       info << "You do not have any registrations."
     end
     info << "</p>"
-    info << "<div class='alert alert-danger' style='margin-bottom:10px;'><strong>Note!</strong> Paid registrations may take several minutes to appear on quizzingevents.com.</div>"
   end
   
   def test_output(output)

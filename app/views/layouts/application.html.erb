@@ -68,7 +68,13 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Register <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <% if Event.active_event.enable_participant_registration? %><li><a href="/participant_registrations/new">As A Participant</a></li><% end %>
+                  <% if Event.active_event.enable_participant_registration? %>
+                    <% if Event.active_event.participant_registration_link? %>
+                      <li><a href="<%= Event.active_event.participant_registration_link %>" target="_blank">As A Participant</a></li>
+                    <% else %>
+                      <li><a href="/participant_registrations/new">As A Participant</a></li>
+                    <% end %>
+                  <% end %>
                   <% if Event.active_event.enable_team_registration? %><li><a href="/team_registrations/new">A Team</a></li><% end %>
                   <% if Event.active_event.enable_equipment_registration? %><li><a href="/equipment_registrations/new">Equipment</a></li><% end %>
                 </ul>
@@ -117,6 +123,11 @@
                   <%= yield(:admin) %>
                 </div>
               <% end %>
+              <% if (admin? or equipment_admin?) and @content_for_equipment_admin %>
+                <div id="sidebar">
+                  <%= yield(:equipment_admin) %>
+                </div>
+              <% end %>
               <% if (admin? or housing_admin?) and @content_for_housing_admin %>
                 <div id="sidebar">
                   <%= yield(:housing_admin) %>
@@ -142,11 +153,11 @@
                     <li><%= link_to 'Divisions', divisions_path %></li>
                     <li><%= link_to 'Buildings', buildings_path %></li>
                     <li><%= link_to 'Districts', districts_path %></li>
-                    <li><%= link_to 'Regions', regions_path %></li>
+                    <li><%= link_to 'Fields', regions_path %></li>
                     <li><%= link_to 'Team Registrations', team_registrations_path %></li>
                     <li><%= link_to 'Participant Registrations', participant_registrations_path %></li>
                     <li><%= link_to 'Reports', reports_path %></li>
-                    <li><%= link_to 'One Time Payments', payments_path %></li>
+                    <li><%= link_to 'Import Participants', imports_path %></li>
                   </ul>
                 <% end %>
                 <% if equipment_admin? or admin? %>
@@ -155,6 +166,8 @@
                     <li><%= link_to 'Add New Equipment', new_equipment_registration_path() %></li>
                     <li><%= link_to 'View Equipment Registrations', equipment_registrations_path %></li>
                     <li><%= link_to 'Download Equipment Registrations', :controller => 'reports', :action => 'equipment_registrations' %></li>
+                    <li><%= link_to 'Download Equipment', :controller => 'reports', :action => 'equipment' %></li>
+                    <li><%= link_to 'Edit Rooms', rooms_path %></li>
                     <li><%= link_to 'Equipment Manager', equipment_index_path, :target => '_blank' %></li>
                   </ul>
                 <% end %>

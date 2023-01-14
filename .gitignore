@@ -2,7 +2,8 @@
 .history
 .vagrant
 .vscode
+config/database.yml
+config/email.yml
 log/*
 public/download/*
-public/imports/*
 sql/*
