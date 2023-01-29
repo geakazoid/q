@@ -31,21 +31,22 @@ class ParticipantRegistration < ActiveRecord::Base
   validates_presence_of :first_name
   validates_presence_of :last_name
   validates_presence_of :email
-  validates_presence_of :gender, :if => "!self.off_campus?"
+  validates_presence_of :gender, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_inclusion_of :over_18, :in => [true, false], :if => "self.coach? or self.on_campus?", :message => "must be selected", :unless => "self.using_short_registration?"
   validates_inclusion_of :over_9, :in => [true, false], :if => "self.quizzer? or self.on_campus?", :message => "must be selected", :unless => "self.using_short_registration?"
-  validates_presence_of :most_recent_grade, :if => "self.quizzer?"
+  validates_presence_of :most_recent_grade, :if => "self.quizzer?", :unless => "self.using_short_registration?"
   validates_presence_of :graduation_year, :if => "self.quizzer?", :unless => "self.using_short_registration?"
-  validates_presence_of :street, :if => "!self.off_campus?"
-  validates_presence_of :city, :if => "!self.off_campus?"
-  validates_presence_of :state, :if => "!self.off_campus?"
-  validates_presence_of :zipcode, :if => "!self.off_campus?"
-  validates_presence_of :country, :if => "!self.off_campus?"
-  validates_presence_of :home_phone
+  validates_presence_of :street, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
+  validates_presence_of :city, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
+  validates_presence_of :state, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
+  validates_presence_of :zipcode, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
+  validates_presence_of :country, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
+  validates_presence_of :home_phone, :unless => "self.using_short_registration?"
+  validates_presence_of :mobile_phone
   validates_presence_of :emergency_contact_name, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :emergency_contact_number, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :emergency_contact_relationship, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
-  validates_presence_of :local_church, :if => "!self.off_campus?"
+  validates_presence_of :local_church, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :district
   validates_presence_of :group_leader_text, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :coach_name, :if => "self.quizzer?", :unless => "self.using_short_registration?"
@@ -58,7 +59,7 @@ class ParticipantRegistration < ActiveRecord::Base
   validates_presence_of :understand_form_completion, :if => "!self.off_campus?", :unless => "self.using_short_registration?"
   validates_presence_of :understand_background_check, :if => "!self.off_campus? and !self.quizzer? and !self.on_campus_under3?", :unless => "self.using_short_registration?"
 
-  HUMANIZED_ATTRIBUTES = {:street => "Address", :home_phone => "Primary Phone", :district => "District and Field", :group_leader_text => "Group Leader"}
+  HUMANIZED_ATTRIBUTES = {:street => "Address", :home_phone => "Primary Phone", :mobile_phone => "Phone", :district => "District and Field", :group_leader_text => "Group Leader"}
 
   # This is purposefully imperfect -- it's just a check for bogus input. See
   # http://www.regular-expressions.info/email.html
