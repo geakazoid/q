@@ -28,16 +28,16 @@ class ImportsController < ApplicationController
       last_name = row[2].strip
       gender = row[6].strip
       gender = gender == 'M' ? 'Male' : 'Female'
-      graduation_year = row[46].strip
-      registration_type = row[30].strip.downcase
-      shirt_size = row[47].strip
-      group_leader = row[53].strip
-      group_leader_email = row[54].strip
-      coach_name = row[51].strip
+      graduation_year = row[54].strip
+      registration_type = row[37].strip.downcase
+      shirt_size = row[55].strip
+      group_leader = row[61].strip
+      group_leader_email = row[62].strip
+      coach_name = row[59].strip
 
       # where is the user from?
-      local_church = row[43].strip
-      district_name = row[44].strip
+      local_church = row[51].strip
+      district_name = row[52].strip
 
       # phone logic (multiple fields)
       home_phone = row[8].strip
@@ -58,27 +58,27 @@ class ImportsController < ApplicationController
       end
 
       # special needs
-      food_allergies_details = row[56].strip
-      special_needs_details = row[57].strip
+      food_allergies_details = row[64].strip
+      special_needs_details = row[65].strip
 
       # roommate preference
-      roommate_preference = row[60].strip
-      roommate_notes = row[61].strip
+      roommate_preference = row[68].strip
+      roommate_notes = row[69].strip
       
       # plans
-      planning_on_officiating = row[48].strip.downcase
-      planning_on_coaching = row[49].strip.downcase
-      travel_type = row[63].strip
+      planning_on_officiating = row[56].strip.downcase
+      planning_on_coaching = row[57].strip.downcase
+      travel_type = row[71].strip
 
       # emergency contact logic
-      emergency_contact = row[34].split(' - ')
+      emergency_contact = row[41].split(' - ')
       emergency_contact_name = emergency_contact[0].strip unless emergency_contact[0].nil?
       emergency_contact_number = emergency_contact[1].strip unless emergency_contact[1].nil?
 
       # add ons
-      decades_quizzing = row[71].strip
-      housing_sunday = row[72].strip
-      airport_shuttle = row[73].strip
+      #decades_quizzing = row[71].strip # not in q24
+      housing_sunday = row[78].strip #
+      #airport_shuttle = row[73].strip # not in q24
       
       pr = ParticipantRegistration.find_by_confirmation_number_and_first_name_and_last_name(confirmation_number,first_name,last_name)
       if pr.nil?
@@ -98,8 +98,8 @@ class ImportsController < ApplicationController
       pr.group_leader_email = group_leader_email
       pr.coach_name = coach_name
       pr.graduation_year = graduation_year
-      pr.special_needs_food_allergies = false # hardcoded due to how Q2022 registration asks this question
-      pr.special_needs_other = false # hardcoded due to how Q2022 registration asks this question
+      pr.special_needs_food_allergies = false # hardcoded due to how Q2024 registration asks this question
+      pr.special_needs_other = false # hardcoded due to how Q2024 registration asks this question
       pr.special_needs_details = 'Special Needs: ' + special_needs_details + "\r\n" + 'Food Allergies: ' + food_allergies_details
       pr.emergency_contact_name = emergency_contact_name
       pr.emergency_contact_number = emergency_contact_number
@@ -114,25 +114,25 @@ class ImportsController < ApplicationController
       pr.local_church = local_church
       pr.need_arrival_shuttle = true if airport_shuttle == 1
       pr.housing_sunday = true if housing_sunday == 1
-      pr.event_id = 6 # q2022
+      pr.event_id = 10 # q2024
       pr.confirmation_number = confirmation_number
       pr.travel_type = travel_type
       pr.paid = true
 
       # registration options
-      ro_decades_quizzing = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Decades Quizzing'" ])
-      ro_sunday_housing = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Sunday Night Housing - June 26'" ])
-      ro_airport_shuttle = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Airport Shuttle'" ])
+      #ro_decades_quizzing = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Decades Quizzing'" ])
+      ro_sunday_housing = RegistrationOption.find(:first, :conditions => [ "event_id = 10 and item = 'Sunday Night Housing - June 23'" ])
+      #ro_airport_shuttle = RegistrationOption.find(:first, :conditions => [ "event_id = 6 and item = 'Airport Shuttle'" ])
       pr.registration_options.clear
-      if decades_quizzing == "1"
-        pr.registration_options << ro_decades_quizzing
-      end
+      # if decades_quizzing == "1"
+      #   pr.registration_options << ro_decades_quizzing
+      # end
       if housing_sunday == "1"
         pr.registration_options << ro_sunday_housing
       end
-      if airport_shuttle == "1"
-        pr.registration_options << ro_airport_shuttle
-      end
+      # if airport_shuttle == "1"
+      #   pr.registration_options << ro_airport_shuttle
+      # end
 
       # save the participant registration
       pr.save(false)
