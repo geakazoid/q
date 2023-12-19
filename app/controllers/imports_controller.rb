@@ -112,7 +112,7 @@ class ImportsController < ApplicationController
       district = District.find_by_name(district_name)
       pr.district = district unless district.nil?
       pr.local_church = local_church
-      pr.need_arrival_shuttle = true if airport_shuttle == 1
+      #pr.need_arrival_shuttle = true if airport_shuttle == 1
       pr.housing_sunday = true if housing_sunday == 1
       pr.event_id = 10 # q2024
       pr.confirmation_number = confirmation_number
