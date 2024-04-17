@@ -7,7 +7,7 @@
 <% else %>
   You do not have any team registrations. Would you like to <%= link_to 'register one', new_team_registration_path %>?
 <% end  %>
-<% if @user.complete_team_registrations.size > 0 %>
+<% if @user.team_registrations.size > 0 %>
   <b>My Team Registrations</b>
   <div class="table-responsive"> 
     <table class="table table-striped">
