@@ -27,7 +27,7 @@ class ImportsController < ApplicationController
       first_name = row[1].strip
       last_name = row[2].strip
       gender = row[6].strip
-      gender = gender == 'M' ? 'Male' : 'Female'
+      # gender = gender == 'M' ? 'Male' : 'Female'
       # graduation_year = row[54].strip # removed
       registration_type = row[37].strip.downcase
       shirt_size = row[60].strip
@@ -91,7 +91,7 @@ class ImportsController < ApplicationController
       pr.gender = gender
       pr.email = email_address
       registration_type = 'staff' if registration_type == "staff/intern"
-      registration_type = 'official' if registration_type == "officials (invite only)"
+      registration_type = 'official' if registration_type == "Officials/Tech Team (invite only)"
       pr.registration_type = registration_type
       #pr.home_phone = home_phone
       pr.shirt_size = shirt_size
