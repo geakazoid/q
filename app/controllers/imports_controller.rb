@@ -91,7 +91,7 @@ class ImportsController < ApplicationController
       pr.gender = gender
       pr.email = email_address
       registration_type = 'staff' if registration_type == "staff/intern"
-      registration_type = 'official' if registration_type == "Officials/Tech Team (invite only)"
+      registration_type = 'official' if registration_type == "officials/tech team (invite only)"
       pr.registration_type = registration_type
       #pr.home_phone = home_phone
       pr.shirt_size = shirt_size
