@@ -78,7 +78,7 @@ class ImportsController < ApplicationController
       # add ons
       decades_quizzing = row[77].strip
       housing_sunday = row[80].strip
-      airport_shuttle = row[82].strip
+      airport_shuttle = row[84].strip
       linens = row[81].strip
       
       pr = ParticipantRegistration.find_by_confirmation_number_and_first_name_and_last_name(confirmation_number,first_name,last_name)
