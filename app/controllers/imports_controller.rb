@@ -76,7 +76,7 @@ class ImportsController < ApplicationController
       # emergency_contact_number = emergency_contact[1].strip unless emergency_contact[1].nil?
 
       # add ons
-      decades_quizzing = row[77].strip
+      decades_quizzing = row[79].strip
       housing_sunday = row[80].strip
       airport_shuttle = row[84].strip
       linens = row[81].strip
