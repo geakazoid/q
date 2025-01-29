@@ -115,7 +115,7 @@ class ImportsController < ApplicationController
       pr.local_church = local_church
       pr.need_arrival_shuttle = true if airport_shuttle == 1
       pr.housing_sunday = true if housing_sunday == 1
-      pr.event_id = 10 # q2024
+      pr.event_id = 11 # q2024
       pr.confirmation_number = confirmation_number
       pr.travel_type = travel_type
       pr.paid = true
